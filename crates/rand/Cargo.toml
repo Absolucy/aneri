@@ -1,0 +1,19 @@
+[package]
+name = "aneri-rand"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+ahash = "0.8"
+aneri-core = { path = "../core" }
+meowtonin = { workspace = true }
+parking_lot = "0.12"
+rand = "0.8"
+rand-wyrand = "0.1"
+rand_blake3 = "1"
+slotmap = "1"

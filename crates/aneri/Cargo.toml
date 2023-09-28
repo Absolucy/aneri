@@ -1,0 +1,50 @@
+[package]
+name = "aneri"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+aneri-crypto = { path = "../crypto", optional = true }
+aneri-dmi = { path = "../dmi", optional = true }
+aneri-encode = { path = "../encode", optional = true }
+aneri-file = { path = "../file", optional = true }
+aneri-logger = { path = "../logger", optional = true }
+aneri-rand = { path = "../rand", optional = true }
+aneri-regex = { path = "../regex", optional = true }
+aneri-sort = { path = "../sort", optional = true }
+aneri-sql = { path = "../sql", optional = true }
+aneri-time = { path = "../time", optional = true }
+aneri-util = { path = "../util", optional = true }
+meowtonin = { workspace = true }
+meowtonin-serde = { workspace = true }
+const_format = "0.2"
+snmalloc-rs = { version = "0.3", optional = true, features = ["build_cc"] }
+
+[build-dependencies]
+bosion = "1"
+
+[features]
+default = ["all"]
+# sub-crates
+all = ["dmi", "encode", "file", "logger", "rand", "regex", "sort", "sql", "time", "util"]
+crypto = ["aneri-crypto"]
+dmi = ["aneri-dmi"]
+encode = ["aneri-encode"]
+file = ["aneri-file"]
+logger = ["aneri-logger"]
+rand = ["aneri-rand"]
+regex = ["aneri-regex"]
+sort = ["aneri-sort"]
+sql = ["aneri-sql"]
+time = ["aneri-time"]
+util = ["aneri-util"]
+# misc features
+snmalloc = ["snmalloc-rs"]

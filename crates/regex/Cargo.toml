@@ -1,0 +1,18 @@
+[package]
+name = "aneri-regex"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+ahash = "0.8"
+aneri-core = { path = "../core" }
+meowtonin = { workspace = true }
+lru = "0.12"
+parking_lot = "0.12"
+regex = "1"
+slotmap = "1"

@@ -1,0 +1,18 @@
+[package]
+name = "aneri-logger"
+version.workspace = true
+authors.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+repository.workspace = true
+license.workspace = true
+publish.workspace = true
+
+[dependencies]
+ahash = "0.8"
+meowtonin = { workspace = true }
+chrono = "0.4"
+crossbeam-channel = "0.5"
+parking_lot = "0.12"
+scopeguard = "1"
+thread-priority = "0.15"
