@@ -1,0 +1,28 @@
+// DM Environment file for aneri.dme.
+// All manual changes should be made outside the BEGIN_ and END_ blocks.
+// New source code should be placed in .dm files: choose File/New --> Code File.
+
+// BEGIN_INTERNALS
+// END_INTERNALS
+
+// BEGIN_FILE_DIR
+#define FILE_DIR .
+// END_FILE_DIR
+
+// BEGIN_PREFERENCES
+#define DEBUG
+// END_PREFERENCES
+
+// BEGIN_INCLUDE
+#include "__spaceman_dmm.dm"
+#include "__thingymajig.dm"
+#include "_aneri.dm"
+#include "crypto.dm"
+#include "file.dm"
+#include "log.dm"
+#include "test.dm"
+#include "util.dm"
+#include "rand\global.dm"
+#include "rand\instanced.dm"
+// END_INCLUDE
+
