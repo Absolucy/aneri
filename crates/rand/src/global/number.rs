@@ -23,11 +23,17 @@ pub fn random_int_signed(secure: Option<bool>) -> i32 {
 }
 
 #[byond_fn]
-pub fn random_range_int_unsigned(min: u32, max: u32, secure: Option<bool>) -> u32 {
+pub fn random_range_int_unsigned(mut min: u32, mut max: u32, secure: Option<bool>) -> u32 {
+	if min > max {
+		std::mem::swap(&mut min, &mut max);
+	}
 	global(secure).gen_range(min..=max)
 }
 
 #[byond_fn]
-pub fn random_range_int_signed(min: i32, max: i32, secure: Option<bool>) -> i32 {
+pub fn random_range_int_signed(mut min: i32, mut max: i32, secure: Option<bool>) -> i32 {
+	if min > max {
+		std::mem::swap(&mut min, &mut max);
+	}
 	global(secure).gen_range(min..=max)
 }

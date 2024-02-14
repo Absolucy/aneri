@@ -48,11 +48,25 @@ pub fn instanced_random_int_signed(src: ByondSlotKey) -> Option<i32> {
 }
 
 #[byond_fn]
-pub fn instanced_random_range_int_unsigned(src: ByondSlotKey, min: u32, max: u32) -> Option<u32> {
+pub fn instanced_random_range_int_unsigned(
+	src: ByondSlotKey,
+	mut min: u32,
+	mut max: u32,
+) -> Option<u32> {
+	if min > max {
+		std::mem::swap(&mut min, &mut max);
+	}
 	range_impl(src, min..=max)
 }
 
 #[byond_fn]
-pub fn instanced_random_range_int_signed(src: ByondSlotKey, min: i32, max: i32) -> Option<i32> {
+pub fn instanced_random_range_int_signed(
+	src: ByondSlotKey,
+	mut min: i32,
+	mut max: i32,
+) -> Option<i32> {
+	if min > max {
+		std::mem::swap(&mut min, &mut max);
+	}
 	range_impl(src, min..=max)
 }

@@ -37,7 +37,6 @@ pub use aneri_sql;
 pub use aneri_time;
 #[cfg(feature = "util")]
 pub use aneri_util;
-
 /// Cleans up any resources used by Aneri.
 /// This should be run on initialization and shutdown.
 #[byond_fn]
@@ -51,12 +50,3 @@ pub fn cleanup() {
 	#[cfg(feature = "util")]
 	aneri_util::cleanup();
 }
-
-fn setup_panic_hook() {
-	eprintln!("panic hook setup");
-	std::panic::set_hook(Box::new(|panic_info| {
-		eprintln!("panic occured: {panic_info}");
-	}))
-}
-
-meowtonin::inventory::submit! {meowtonin::init::InitFunc(setup_panic_hook)}

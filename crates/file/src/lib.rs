@@ -32,6 +32,11 @@ pub fn file_read(path: PathBuf) -> Option<String> {
 #[byond_fn]
 pub fn file_write(path: PathBuf, data: String) -> bool {
 	let file_write_impl = || -> Option<()> {
+		if let Some(parent) = path.parent() {
+			if !parent.exists() {
+				std::fs::create_dir_all(parent).ok()?;
+			}
+		}
 		let mut file = File::create(path).ok().map(BufWriter::new)?;
 		file.write_all(data.as_bytes()).ok()?;
 		file.flush().ok()?;
@@ -44,7 +49,13 @@ pub fn file_write(path: PathBuf, data: String) -> bool {
 #[byond_fn]
 pub fn file_append(path: PathBuf, data: String) -> bool {
 	let file_append_impl = || -> Option<()> {
+		if let Some(parent) = path.parent() {
+			if !parent.exists() {
+				std::fs::create_dir_all(parent).ok()?;
+			}
+		}
 		let mut file = OpenOptions::new()
+			.create(true)
 			.append(true)
 			.open(path)
 			.ok()

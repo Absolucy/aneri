@@ -34,7 +34,7 @@ bosion = "1"
 [features]
 default = ["all"]
 # sub-crates
-all = ["dmi", "encode", "file", "logger", "rand", "regex", "sort", "sql", "time", "util"]
+all = ["crypto", "dmi", "encode", "file", "logger", "rand", "regex", "sort", "time", "util"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
 encode = ["aneri-encode"]
