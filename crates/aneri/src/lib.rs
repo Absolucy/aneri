@@ -50,3 +50,8 @@ pub fn cleanup() {
 	#[cfg(feature = "util")]
 	aneri_util::cleanup();
 }
+
+#[byond_fn]
+pub fn set_panic_output_folder(path: String) {
+	meowtonin::panic::set_panic_output_folder(path);
+}

@@ -17,7 +17,7 @@ meowtonin-serde = { git = "https://github.com/Absolucy/meowtonin" }
 faster-hex = "0.9"
 
 [profile.release]
-debug = "limited"
+debug = "full"
 lto = "thin"
 
 [profile.dev]

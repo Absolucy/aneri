@@ -5,10 +5,14 @@ use rand::Rng;
 
 #[byond_fn]
 pub fn instanced_prob(src: ByondSlotKey, probability: f64) -> Option<bool> {
+	if !probability.is_finite() {
+		return Some(true);
+	}
+	let probability = (probability / 100.0).clamp(0.0, 1.0);
 	instances()
 		.lock()
 		.get_mut(src)
-		.map(|rng| rng.gen_bool(probability / 100.0))
+		.map(|rng| rng.gen_bool(probability))
 }
 
 #[byond_fn]

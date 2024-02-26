@@ -48,3 +48,4 @@ time = ["aneri-time"]
 util = ["aneri-util"]
 # misc features
 snmalloc = ["snmalloc-rs"]
+rel-debugging = ["meowtonin/rel-debugging"]
