@@ -31,7 +31,7 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 				}
 			}
 		} else {
-			let _ = writeln!(file, "{}", log.message);
+			let _ = write!(file, "{}", log.message);
 		}
 		let _ = file.flush();
 	}
