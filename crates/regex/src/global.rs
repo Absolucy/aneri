@@ -14,6 +14,12 @@ const CACHE_SIZE: NonZeroUsize = unsafe { NonZeroUsize::new_unchecked(32) };
 static REGEX_CACHE: Lazy<Mutex<LruCache<String, Regex, RandomState>>> =
 	Lazy::new(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, RandomState::default())));
 
+pub fn clear_cache() {
+	if let Some(cache) = Lazy::get(&REGEX_CACHE) {
+		cache.lock().clear();
+	}
+}
+
 #[byond_fn]
 pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 	REGEX_CACHE

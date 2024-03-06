@@ -13,5 +13,6 @@ pub mod global;
 pub mod instance;
 
 pub fn cleanup() {
+	global::clear_cache();
 	instance::free_instances();
 }
