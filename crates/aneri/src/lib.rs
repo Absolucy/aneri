@@ -47,6 +47,8 @@ pub fn cleanup() {
 	aneri_rand::cleanup();
 	#[cfg(feature = "regex")]
 	aneri_regex::cleanup();
+	#[cfg(feature = "time")]
+	aneri_time::cleanup();
 	#[cfg(feature = "util")]
 	aneri_util::cleanup();
 }

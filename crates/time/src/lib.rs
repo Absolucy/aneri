@@ -2,15 +2,9 @@
 #[macro_use]
 extern crate meowtonin;
 
-use std::time::{SystemTime, UNIX_EPOCH};
+pub mod instant;
+pub mod timestamp;
 
-#[byond_fn]
-pub fn unix_timestamp() -> String {
-	format!(
-		"{:.6}",
-		SystemTime::now()
-			.duration_since(UNIX_EPOCH)
-			.unwrap()
-			.as_secs_f64()
-	)
+pub fn cleanup() {
+	instant::free_instances();
 }
