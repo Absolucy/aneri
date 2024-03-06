@@ -8,19 +8,15 @@ pub mod string;
 use aneri_core::ByondSlotKey;
 use dispatcher::RngDispatcher;
 use meowtonin::{ByondResult, ByondValue};
+use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use slotmap::SlotMap;
-use std::sync::OnceLock;
 
-static INSTANCES: OnceLock<Mutex<SlotMap<ByondSlotKey, RngDispatcher>>> = OnceLock::new();
-
-#[inline]
-pub(crate) fn instances() -> &'static Mutex<SlotMap<ByondSlotKey, RngDispatcher>> {
-	INSTANCES.get_or_init(Mutex::default)
-}
+static INSTANCES: Lazy<Mutex<SlotMap<ByondSlotKey, RngDispatcher>>> =
+	Lazy::new(|| Mutex::new(SlotMap::with_capacity_and_key(128)));
 
 pub(crate) fn free_instances() {
-	if let Some(instances) = INSTANCES.get() {
+	if let Some(instances) = Lazy::get(&INSTANCES) {
 		instances.lock().clear();
 	}
 }
@@ -33,10 +29,10 @@ pub fn rng_new(mut src: ByondValue, secure: Option<bool>, seed: Option<u32>) -> 
 	} else {
 		RngDispatcher::wyrand(seed)
 	};
-	instances().lock().insert(rng).save(&mut src)
+	INSTANCES.lock().insert(rng).save(&mut src)
 }
 
 #[byond_fn]
 pub fn rng_del(src: ByondSlotKey) -> bool {
-	instances().lock().remove(src).is_some()
+	INSTANCES.lock().remove(src).is_some()
 }

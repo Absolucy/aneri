@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use super::instances;
+use super::INSTANCES;
 use aneri_core::ByondSlotKey;
 use rand::{
 	distributions::{
@@ -13,7 +13,7 @@ fn rand_impl<Output>(src: ByondSlotKey) -> Option<Output>
 where
 	Standard: Distribution<Output>,
 {
-	instances().lock().get_mut(src).map(|rng| rng.gen())
+	INSTANCES.lock().get_mut(src).map(|rng| rng.gen())
 }
 
 fn range_impl<Output, Range>(src: ByondSlotKey, range: Range) -> Option<Output>
@@ -21,7 +21,7 @@ where
 	Output: SampleUniform,
 	Range: SampleRange<Output>,
 {
-	instances()
+	INSTANCES
 		.lock()
 		.get_mut(src)
 		.map(|rng| rng.gen_range(range))

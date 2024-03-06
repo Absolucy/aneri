@@ -1,26 +1,22 @@
 // SPDX-License-Identifier: MPL-2.0
 use ahash::RandomState;
 use lru::LruCache;
-use meowtonin::{ByondError, ByondResult, ByondValue};
+use meowtonin::{ByondError, ByondResult, ByondValue, ToByond};
+use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use regex::Regex;
-use std::{num::NonZeroUsize, sync::OnceLock};
+use std::num::NonZeroUsize;
 
 // SAFETY: This is a constant value where we always know it's non-zero.
 // If you change this to 0, then that is explicitly a skill issue.
 const CACHE_SIZE: NonZeroUsize = unsafe { NonZeroUsize::new_unchecked(32) };
 
-static REGEX_CACHE: OnceLock<Mutex<LruCache<String, Regex, RandomState>>> = OnceLock::new();
-
-#[inline(always)]
-fn cache() -> &'static Mutex<LruCache<String, Regex, RandomState>> {
-	REGEX_CACHE
-		.get_or_init(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, RandomState::default())))
-}
+static REGEX_CACHE: Lazy<Mutex<LruCache<String, Regex, RandomState>>> =
+	Lazy::new(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, RandomState::default())));
 
 #[byond_fn]
 pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
-	cache()
+	REGEX_CACHE
 		.lock()
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map(|regex| regex.is_match(&haystack))
@@ -29,7 +25,7 @@ pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 
 #[byond_fn]
 pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
-	let mut cache = cache().lock();
+	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
@@ -47,7 +43,7 @@ pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 
 #[byond_fn]
 pub fn regex_find_all(regex: String, haystack: String) -> ByondResult<ByondValue> {
-	let mut cache = cache().lock();
+	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
@@ -63,4 +59,48 @@ pub fn regex_find_all(regex: String, haystack: String) -> ByondResult<ByondValue
 		list.push_list(match_list)?;
 	}
 	Ok(list)
+}
+
+#[byond_fn]
+pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
+	let mut cache = REGEX_CACHE.lock();
+	let regex = cache
+		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.map_err(ByondError::boxed)?;
+	let mut list = ByondValue::new_list()?;
+	for matched in regex.split(&haystack) {
+		list.push_list(matched.to_byond()?)?;
+	}
+	Ok(list)
+}
+
+#[byond_fn]
+pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResult<ByondValue> {
+	let mut cache = REGEX_CACHE.lock();
+	let regex = cache
+		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.map_err(ByondError::boxed)?;
+	let mut list = ByondValue::new_list()?;
+	for matched in regex.splitn(&haystack, limit) {
+		list.push_list(matched.to_byond()?)?;
+	}
+	Ok(list)
+}
+
+#[byond_fn]
+pub fn regex_replace(regex: String, haystack: String, with: String) -> ByondResult<ByondValue> {
+	let mut cache = REGEX_CACHE.lock();
+	let regex = cache
+		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.map_err(ByondError::boxed)?;
+	regex.replace(&haystack, with).into_owned().to_byond()
+}
+
+#[byond_fn]
+pub fn regex_replace_all(regex: String, haystack: String, with: String) -> ByondResult<ByondValue> {
+	let mut cache = REGEX_CACHE.lock();
+	let regex = cache
+		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.map_err(ByondError::boxed)?;
+	regex.replace_all(&haystack, with).into_owned().to_byond()
 }

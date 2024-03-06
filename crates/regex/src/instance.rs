@@ -1,27 +1,23 @@
 // SPDX-License-Identifier: MPL-2.0
 use aneri_core::ByondSlotKey;
-use meowtonin::{ByondError, ByondResult, ByondValue};
+use meowtonin::{ByondError, ByondResult, ByondValue, ToByond};
+use once_cell::sync::Lazy;
 use parking_lot::RwLock;
 use regex::Regex;
 use slotmap::SlotMap;
-use std::sync::OnceLock;
 
-static INSTANCES: OnceLock<RwLock<SlotMap<ByondSlotKey, Regex>>> = OnceLock::new();
+static INSTANCES: Lazy<RwLock<SlotMap<ByondSlotKey, Regex>>> =
+	Lazy::new(|| RwLock::new(SlotMap::with_capacity_and_key(128)));
 
 pub(crate) fn free_instances() {
-	if let Some(instances) = INSTANCES.get() {
+	if let Some(instances) = Lazy::get(&INSTANCES) {
 		instances.write().clear();
 	}
 }
 
-#[inline(always)]
-fn instances() -> &'static RwLock<SlotMap<ByondSlotKey, Regex>> {
-	INSTANCES.get_or_init(RwLock::default)
-}
-
 #[byond_fn]
 pub fn regex_new(mut src: ByondValue, regex: String) -> ByondResult<()> {
-	let mut instances = instances().write();
+	let mut instances = INSTANCES.write();
 	let regex = Regex::new(&regex).map_err(ByondError::boxed)?;
 	instances
 		.insert(regex)
@@ -31,12 +27,12 @@ pub fn regex_new(mut src: ByondValue, regex: String) -> ByondResult<()> {
 
 #[byond_fn]
 pub fn regex_del(src: ByondSlotKey) -> bool {
-	instances().write().remove(src).is_some()
+	INSTANCES.write().remove(src).is_some()
 }
 
 #[byond_fn]
 pub fn instanced_regex_is_match(src: ByondSlotKey, haystack: String) -> Option<bool> {
-	instances()
+	INSTANCES
 		.read()
 		.get(src)
 		.map(|regex| regex.is_match(&haystack))
@@ -44,7 +40,7 @@ pub fn instanced_regex_is_match(src: ByondSlotKey, haystack: String) -> Option<b
 
 #[byond_fn]
 pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
-	let instances = instances().read();
+	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
 		None => return Ok(ByondValue::null()),
@@ -63,7 +59,7 @@ pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<
 
 #[byond_fn]
 pub fn instanced_regex_find_all(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
-	let instances = instances().read();
+	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
 		None => return Ok(ByondValue::null()),
@@ -80,4 +76,64 @@ pub fn instanced_regex_find_all(src: ByondSlotKey, haystack: String) -> ByondRes
 		list.push_list(match_list)?;
 	}
 	Ok(list)
+}
+
+#[byond_fn]
+pub fn instanced_regex_split(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
+	let instances = INSTANCES.read();
+	let regex = match instances.get(src) {
+		Some(regex) => regex,
+		None => return Ok(ByondValue::null()),
+	};
+	let mut list = ByondValue::new_list()?;
+	for matched in regex.split(&haystack) {
+		list.push_list(matched.to_byond()?)?;
+	}
+	Ok(list)
+}
+
+#[byond_fn]
+pub fn instanced_regex_splitn(
+	src: ByondSlotKey,
+	haystack: String,
+	limit: usize,
+) -> ByondResult<ByondValue> {
+	let instances = INSTANCES.read();
+	let regex = match instances.get(src) {
+		Some(regex) => regex,
+		None => return Ok(ByondValue::null()),
+	};
+	let mut list = ByondValue::new_list()?;
+	for matched in regex.splitn(&haystack, limit) {
+		list.push_list(matched.to_byond()?)?;
+	}
+	Ok(list)
+}
+
+#[byond_fn]
+pub fn instanced_regex_replace(
+	src: ByondSlotKey,
+	haystack: String,
+	with: String,
+) -> ByondResult<ByondValue> {
+	let instances = INSTANCES.read();
+	let regex = match instances.get(src) {
+		Some(regex) => regex,
+		None => return Ok(ByondValue::null()),
+	};
+	regex.replace(&haystack, with).into_owned().to_byond()
+}
+
+#[byond_fn]
+pub fn instanced_regex_replace_all(
+	src: ByondSlotKey,
+	haystack: String,
+	with: String,
+) -> ByondResult<ByondValue> {
+	let instances = INSTANCES.read();
+	let regex = match instances.get(src) {
+		Some(regex) => regex,
+		None => return Ok(ByondValue::null()),
+	};
+	regex.replace_all(&haystack, with).into_owned().to_byond()
 }

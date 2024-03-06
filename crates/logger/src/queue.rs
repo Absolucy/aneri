@@ -3,13 +3,11 @@
 use crate::message::LogMessage;
 use ahash::AHashMap;
 use crossbeam_channel::Sender;
+use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use std::{
 	path::{Path, PathBuf},
-	sync::{
-		atomic::{AtomicUsize, Ordering},
-		OnceLock,
-	},
+	sync::atomic::{AtomicUsize, Ordering},
 	time::{Duration, Instant},
 };
 
@@ -24,12 +22,13 @@ pub(crate) type LogQueues = AHashMap<PathBuf, MessageQueue>;
 const DEFAULT_CAPACITY: usize = 16;
 const SHUTDOWN_TIMEOUT: Duration = Duration::from_secs(10);
 
-static MESSAGE_QUEUE: OnceLock<Mutex<LogQueues>> = OnceLock::new();
+static MESSAGE_QUEUE: Lazy<Mutex<LogQueues>> =
+	Lazy::new(|| Mutex::new(AHashMap::with_capacity(DEFAULT_CAPACITY)));
 
 /// Clear the log message queue for a given path.
 /// Any existing log messages will still be written to the log file.
 pub fn clear_log_queue() {
-	if let Some(queue) = MESSAGE_QUEUE.get() {
+	if let Some(queue) = Lazy::get(&MESSAGE_QUEUE) {
 		queue.lock().clear();
 	}
 	let start = Instant::now();
@@ -44,7 +43,6 @@ pub fn clear_log_queue() {
 /// Returns the log queue for a given path, creating it if it doesn't exist.
 pub(crate) fn get_queue(path: &Path) -> MessageQueue {
 	MESSAGE_QUEUE
-		.get_or_init(|| Mutex::new(AHashMap::with_capacity(DEFAULT_CAPACITY)))
 		.lock()
 		.entry(path.to_path_buf())
 		.or_insert_with(|| initialize_queue(path))

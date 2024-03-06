@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use super::instances;
+use super::INSTANCES;
 use aneri_core::ByondSlotKey;
 use meowtonin::{ByondResult, ByondValue};
 use rand::{
@@ -19,7 +19,7 @@ pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Opt
 		1 => return options.read_list_index(&1).map(Some),
 		_ => {}
 	}
-	let mut instances = instances().lock();
+	let mut instances = INSTANCES.lock();
 	let rng = match instances.get_mut(src) {
 		Some(rng) => rng,
 		None => return Ok(None),
@@ -45,7 +45,7 @@ pub fn instanced_pick_weighted(
 		1 => return values.into_iter().next(),
 		_ => {}
 	}
-	let mut instances = instances().lock();
+	let mut instances = INSTANCES.lock();
 	let rng = instances.get_mut(src)?;
 	let dist = WeightedIndex::new(weights).ok()?;
 	values.into_iter().nth(dist.sample(&mut *rng))

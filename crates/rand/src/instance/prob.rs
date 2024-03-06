@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use super::instances;
+use super::INSTANCES;
 use aneri_core::ByondSlotKey;
 use rand::Rng;
 
@@ -9,7 +9,7 @@ pub fn instanced_prob(src: ByondSlotKey, probability: f64) -> Option<bool> {
 		return Some(true);
 	}
 	let probability = (probability / 100.0).clamp(0.0, 1.0);
-	instances()
+	INSTANCES
 		.lock()
 		.get_mut(src)
 		.map(|rng| rng.gen_bool(probability))
@@ -17,7 +17,7 @@ pub fn instanced_prob(src: ByondSlotKey, probability: f64) -> Option<bool> {
 
 #[byond_fn]
 pub fn instanced_prob_ratio(src: ByondSlotKey, numerator: u32, denominator: u32) -> Option<bool> {
-	instances()
+	INSTANCES
 		.lock()
 		.get_mut(src)
 		.map(|rng| rng.gen_ratio(numerator, denominator))
