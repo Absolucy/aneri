@@ -18,9 +18,9 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 	let mut file = OpenOptions::new()
 		.append(true)
 		.create(true)
-		.open(path)
+		.open(&path)
 		.map(BufWriter::new)
-		.expect("failed to open log file");
+		.unwrap_or_else(|err| panic!("failed to open log file at {}: {err:?}", path.display()));
 	while let Ok(log) = rx.recv() {
 		if log.format {
 			let mut lines = log.message.lines();
