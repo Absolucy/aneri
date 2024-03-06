@@ -10,6 +10,7 @@
 extern crate meowtonin;
 
 pub mod json;
+pub mod string;
 pub mod toml;
 pub mod uuid;
 
