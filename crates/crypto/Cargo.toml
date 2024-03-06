@@ -10,7 +10,7 @@ publish.workspace = true
 
 [dependencies]
 meowtonin = { workspace = true }
-blake3 = "1"
+blake3 = { version = "1", features = ["traits-preview"] }
 crc32c = "0.6"
 crc32fast = "1"
 digest = "0.10"
