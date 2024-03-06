@@ -5,3 +5,13 @@ use uuid::Uuid;
 pub fn uuid() -> String {
 	Uuid::new_v4().to_string()
 }
+
+#[byond_fn]
+pub fn cuid2(length: Option<u16>) -> String {
+	match length {
+		Some(length) if length > 0 => cuid2::CuidConstructor::new()
+			.with_length(length)
+			.create_id(),
+		_ => cuid2::create_id(),
+	}
+}
