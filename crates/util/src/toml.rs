@@ -3,6 +3,11 @@ use meowtonin::{ByondError, ByondResult, ByondValue};
 use std::path::PathBuf;
 
 #[byond_fn]
+pub fn toml_is_valid(toml: String) -> bool {
+	toml::from_str::<toml::Table>(&toml).is_ok()
+}
+
+#[byond_fn]
 pub fn toml_decode(toml: String) -> ByondResult<ByondValue> {
 	toml::from_str::<toml::Table>(&toml)
 		.map_err(ByondError::boxed)
