@@ -1,38 +1,9 @@
-name: Nightly Build
-on:
-    schedule:
-        - cron: "0 0 * * *"
-    workflow_dispatch:
+name: Build Nightlies
+on: push
 jobs:
-    check-changes:
-        runs-on: ubuntu-latest
-        env:
-            CACHE_FILE: ${{ github.workspace }}/.last-built-commit
-        outputs:
-            changed: ${{ steps.changed.outputs.changed }}
-        steps:
-            - uses: actions/checkout@v2
-              with:
-                  fetch-depth: 2
-            - name: Check if relevant code has changed
-              id: changed
-              run: |
-                  if git diff --quiet HEAD~1..HEAD -- crates/ .cargo/ .github/workflows/ Cargo.toml; then
-                    echo "changed=false" >> "${GITHUB_OUTPUT}"
-                  else
-                    echo "changed=true" >> "${GITHUB_OUTPUT}"
-                  fi
-
-            - name: Get last built commit
-              id: last-built
-              if: steps.changed.outputs.changed == 'true'
-              run: |
-                  echo "commit=$(cat ${{ env.CACHE_FILE }})" >> "${GITHUB_OUTPUT}"
     build:
-        name: Build Nightly Releases
+        name: Build Releases
         runs-on: ${{ matrix.os.runner }}
-        needs: check-changes
-        if: ${{ needs.check-changes.outputs.changed == 'true' }}
         strategy:
             fail-fast: false
             matrix:
@@ -43,6 +14,11 @@ jobs:
                     - name: win
                       runner: windows-latest
                       target: i686-pc-windows-msvc
+                features:
+                    - name: default
+                      features: all
+                    - name: release-debug
+                      features: all,rel-debugging
         steps:
             - uses: actions/checkout@v2
             - name: Setup Rust toolchain
@@ -56,18 +32,13 @@ jobs:
                   sudo apt-get update
                   sudo apt-get install libgcc-s1:i386 g++-multilib zlib1g-dev:i386 libssl-dev:i386
             - name: Build
-              run: cargo build --release --package aneri --target ${{ matrix.os.target }}
+              run: cargo build --release --package aneri --target "${{ matrix.os.target }}" --no-default-features --features "${{ matrix.features.features }}"
               env:
                   PKG_CONFIG_ALLOW_CROSS: 1
-            - name: Cache last built commit
-              id: cache-commit
-              run: |
-                  echo "$GITHUB_SHA" > "${{ github.workspace }}/.last-built-commit"
-                  echo "commit=${GITHUB_SHA}" >> "${GITHUB_OUTPUT}"
             - name: Upload artifacts
               uses: actions/upload-artifact@v4
               with:
-                  name: aneri-${{ matrix.os.name }}
+                  name: aneri-${{ matrix.os.name }}-${{ matrix.features.name }}
                   if-no-files-found: error
                   path: |
                       target/${{ matrix.os.target }}/release/aneri.dll
