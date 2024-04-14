@@ -13,7 +13,7 @@ ahash = "0.8"
 aneri-core = { path = "../core" }
 meowtonin = { workspace = true }
 lru = "0.12"
-parking_lot = "0.12"
+parking_lot = { workspace = true }
 regex = "1"
 slotmap = "1"
-once_cell = "1"
+once_cell = { workspace = true }
