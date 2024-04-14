@@ -32,8 +32,14 @@ pub fn instanced_pick_weighted(
 	src: ByondSlotKey,
 	options: ByondValue,
 ) -> ByondResult<Option<ByondValue>> {
-	if !options.is_list() || options.length::<usize>()? < 1 {
+	if !options.is_list() {
 		return Ok(None);
+	}
+	let length = options.length::<usize>()?;
+	match length {
+		0 => return Ok(None),
+		1 => return options.read_list_index(&1).map(Some),
+		_ => {}
 	}
 	let options = options.read_assoc_list()?;
 	let weights = options
