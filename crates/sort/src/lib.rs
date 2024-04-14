@@ -7,6 +7,7 @@ use std::cmp::Ordering;
 
 #[byond_fn]
 pub fn sort(mut list: Vec<ByondValue>, proc_name: String) -> Vec<ByondValue> {
+	let original_len = list.len();
 	glidesort::sort_in_vec_by(&mut list, |a, b| {
 		match meowtonin::call_global::<_, _, _, Option<isize>>(&proc_name, [a, b])
 			.expect("sort proc failed")
@@ -15,5 +16,6 @@ pub fn sort(mut list: Vec<ByondValue>, proc_name: String) -> Vec<ByondValue> {
 			None => Ordering::Equal,
 		}
 	});
+	list.truncate(original_len);
 	list
 }
