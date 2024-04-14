@@ -6,12 +6,21 @@ use parking_lot::RwLock;
 use slotmap::SlotMap;
 use std::time::Instant;
 
+const DEFAULT_CAPACITY: usize = 16;
+
 static INSTANCES: Lazy<RwLock<SlotMap<ByondSlotKey, Instant>>> =
-	Lazy::new(|| RwLock::new(SlotMap::with_capacity_and_key(128)));
+	Lazy::new(|| RwLock::new(SlotMap::with_capacity_and_key(DEFAULT_CAPACITY)));
 
 pub(crate) fn free_instances() {
 	if let Some(instances) = Lazy::get(&INSTANCES) {
-		instances.write().clear();
+		let mut instances = instances.write();
+		if instances.capacity() > DEFAULT_CAPACITY {
+			// Don't use clear(), so we reclaim memory.
+			*instances = SlotMap::with_capacity_and_key(DEFAULT_CAPACITY);
+		} else {
+			// If we're at the default capacity, it's a waste of time to reallocate.
+			instances.clear();
+		}
 	}
 }
 
