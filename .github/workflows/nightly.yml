@@ -19,6 +19,10 @@ jobs:
                       features: all
                     - name: release-debug
                       features: all,rel-debugging
+                    - name: snmalloc
+                      features: all,snmalloc
+                    - name: release-debug-snmalloc
+                      features: all,snmalloc,rel-debugging
         steps:
             - uses: actions/checkout@v2
             - name: Setup Rust toolchain
