@@ -8,6 +8,14 @@ pub fn toml_is_valid(toml: String) -> bool {
 }
 
 #[byond_fn]
+pub fn toml_file_is_valid(path: PathBuf) -> bool {
+	std::fs::read_to_string(path)
+		.ok()
+		.and_then(|file| toml::from_str::<toml::Table>(&file).ok())
+		.is_some()
+}
+
+#[byond_fn]
 pub fn toml_decode(toml: String) -> ByondResult<ByondValue> {
 	toml::from_str::<toml::Table>(&toml)
 		.map_err(ByondError::boxed)
