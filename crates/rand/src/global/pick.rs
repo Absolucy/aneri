@@ -23,7 +23,7 @@ pub fn pick(options: ByondValue, secure: Option<bool>) -> ByondResult<Option<Byo
 
 #[byond_fn]
 pub fn pick_weighted(options: ByondValue, secure: Option<bool>) -> ByondResult<Option<ByondValue>> {
-	if options.length::<usize>()? < 1 {
+	if !options.is_list() || options.length::<usize>()? < 1 {
 		return Ok(None);
 	}
 	let options = options.read_assoc_list()?;
