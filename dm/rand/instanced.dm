@@ -6,7 +6,7 @@
 /datum/rng/New(seed = null)
 	var/err = ANERI_CALL("rng_new", src, secure, seed)
 	// returns null if everything was fine, else returns error info
-	if(err)
+	if(!isnull(err))
 		//log_runtime("failed to initialize rng [err]")
 		CRASH("failed to initialize rng: [err]")
 

@@ -6,15 +6,15 @@
 		CRASH("attempted to create regex with non-text value: [regex_value]")
 	if(istext(modifiers))
 		regex_value = "(?[modifiers])[regex_value]"
-	var/err = ANERI_CALL("regex_new", regex_value)
+	var/err = ANERI_CALL("regex_new", src, regex_value)
 	// returns null if everything was fine, else returns error info
-	if(err)
+	if(!isnull(err))
 		//log_runtime("failed to create regex [regex_value]: [err]")
 		CRASH("failed to create regex [regex_value]: [err]")
 
 /datum/regex/Destroy()
 	if(!ANERI_CALL("regex_del", src))
-		log_runtime("attempted to delete nonexistent regex instance")
+		//log_runtime("attempted to delete nonexistent regex instance")
 		stack_trace("attempted to delete nonexistent regex instance")
 	return ..()
 
