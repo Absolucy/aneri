@@ -15,5 +15,5 @@ meowtonin = { workspace = true }
 lru = "0.12"
 parking_lot = { workspace = true }
 regex = "1"
-slotmap = "1"
+slotmap = { workspace = true }
 once_cell = { workspace = true }

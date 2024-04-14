@@ -17,7 +17,7 @@ mysql_async = { version = "0.33", default-features = false, features = ["minimal
 scopeguard = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
-slotmap = "1"
+slotmap = { workspace = true }
 crossbeam-channel = "0.5"
 static_init = "1"
 
