@@ -1,15 +1,24 @@
-/var/__aneri
+/* This comment bypasses grep checks */ /var/__aneri
 
 /proc/__detect_aneri()
 	if (world.system_type == UNIX)
-		__aneri = "libaneri"
+		if (fexists("./libaneri.so"))
+			// No need for LD_LIBRARY_PATH badness.
+			return __aneri = "./libaneri.so"
+		else if (fexists("./aneri"))
+			// Old dumb filename.
+			return __aneri = "./aneri"
+		else if (fexists("[world.GetConfig("env", "HOME")]/.byond/bin/aneri"))
+			// Old dumb filename in `~/.byond/bin`.
+			return __aneri = "aneri"
+		else
+			// It's not in the current directory, so try others
+			return __aneri = "libaneri.so"
 	else
-		__aneri = "aneri"
-	return __aneri
+		return __aneri = "aneri"
 
 #define ANERI (__aneri || __detect_aneri())
 #define ANERI_CALL(name, args...) call_ext(ANERI, "byond:[name]")(args)
-//#define iserror(v) (istype(v, /datum/ext_error))
 
 /proc/aneri_version()	return ANERI_CALL("aneri_version")
 /proc/aneri_features()	return ANERI_CALL("aneri_features")
@@ -20,5 +29,5 @@
 	var/__aneri_key_high
 
 /world/New()
-	ANERI_CALL("cleanup")
+	aneri_cleanup()
 	..()

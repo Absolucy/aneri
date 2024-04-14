@@ -1,38 +1,58 @@
-/datum/aneri/rng/New(secure = FALSE, seed)
-	ANERI_CALL("rng_new", src, secure, seed)
+/// A (non-cryptographic) PRNG instance, using WyRand.
+/datum/rng
+	parent_type = /datum/aneri
+	var/secure = FALSE
 
-/datum/aneri/rng/Del()
-	ANERI_CALL("rng_del", src)
+/datum/rng/New(seed = null)
+	var/err = ANERI_CALL("rng_new", src, secure, seed)
+	// returns null if everything was fine, else returns error info
+	if(err)
+		//log_runtime("failed to initialize rng [err]")
+		CRASH("failed to initialize rng: [err]")
 
-/datum/aneri/rng/proc/alphanumeric_string(length = 8)
-	return ANERI_CALL("instanced_random_string_alphanumeric", src, length)
+/datum/rng/Destroy()
+	if(!ANERI_CALL("rng_del", src))
+		//log_runtime("attempted to delete nonexistent rng instance")
+		stack_trace("attempted to delete nonexistent rng instance")
+	return ..()
 
-/datum/aneri/rng/proc/byte()
+/datum/rng/proc/byte()
 	return ANERI_CALL("instanced_random_byte", src)
 
-/datum/aneri/rng/proc/float()
+/datum/rng/proc/float()
 	return ANERI_CALL("instanced_random_float", src)
 
-/datum/aneri/rng/proc/uint()
+/datum/rng/proc/uint()
 	return ANERI_CALL("instanced_random_int_unsigned", src)
 
-/datum/aneri/rng/proc/int()
+/datum/rng/proc/int()
 	return ANERI_CALL("instanced_random_int_signed", src)
 
-/datum/aneri/rng/proc/uint_range(min = 0, max = 100)
+/datum/rng/proc/ranged_uint(min = 0, max)
+	if(!isnum(min) || !isnum(max))
+		CRASH("invalid arguments to /datum/rng/proc/ranged_uint")
 	return ANERI_CALL("instanced_random_range_int_unsigned", src, min, max)
 
-/datum/aneri/rng/proc/int_range(min = 0, max = 100)
+/datum/rng/proc/ranged_int(min = 0, max)
+	if(!isnum(min) || !isnum(max))
+		CRASH("invalid arguments to /datum/rng/proc/ranged_int")
 	return ANERI_CALL("instanced_random_range_int_signed", src, min, max)
 
-/datum/aneri/rng/proc/chance(val)
-	return ANERI_CALL("instanced_prob", src, val)
+/datum/rng/proc/pick_from(list/choices)
+	return ANERI_CALL("instanced_pick", src, choices)
 
-/datum/aneri/rng/proc/chance_ratio(numerator, denominator)
+/datum/rng/proc/pick_weighted(list/choices)
+	return ANERI_CALL("instanced_pick_weighted", src, choices)
+
+/datum/rng/proc/chance(percent) // "prob" is a reserved word, so we do "chance" instead
+	return ANERI_CALL("instanced_prob", src, percent)
+
+/datum/rng/proc/prob_ratio(numerator, denominator)
 	return ANERI_CALL("instanced_prob_ratio", src, numerator, denominator)
 
-/datum/aneri/rng/proc/pick_from(list/values)
-	return ANERI_CALL("instanced_pick", src, values)
+/datum/rng/proc/string(length = 16)
+	return ANERI_CALL("instanced_random_string_alphanumeric", src, length)
 
-/datum/aneri/rng/proc/weighted_pick_from(list/values)
-	return ANERI_CALL("instanced_pick_weighted", src, values)
+/// A cryptographic PRNG instance, using Blake3.
+/datum/rng/secure
+	secure = TRUE
