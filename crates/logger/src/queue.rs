@@ -29,7 +29,14 @@ static MESSAGE_QUEUE: Lazy<Mutex<LogQueues>> =
 /// Any existing log messages will still be written to the log file.
 pub fn clear_log_queue() {
 	if let Some(queue) = Lazy::get(&MESSAGE_QUEUE) {
-		queue.lock().clear();
+		let mut queue = queue.lock();
+		if queue.capacity() > DEFAULT_CAPACITY {
+			// Don't use clear(), so we reclaim memory.
+			*queue = AHashMap::with_capacity(DEFAULT_CAPACITY);
+		} else {
+			// If we're at the default capacity, it's a waste of time to reallocate.
+			queue.clear();
+		}
 	}
 	let start = Instant::now();
 	while THREAD_COUNT.load(Ordering::SeqCst) > 0 {

@@ -12,12 +12,21 @@ use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use slotmap::SlotMap;
 
+const DEFAULT_CAPACITY: usize = 16;
+
 static INSTANCES: Lazy<Mutex<SlotMap<ByondSlotKey, RngDispatcher>>> =
-	Lazy::new(|| Mutex::new(SlotMap::with_capacity_and_key(128)));
+	Lazy::new(|| Mutex::new(SlotMap::with_capacity_and_key(DEFAULT_CAPACITY)));
 
 pub(crate) fn free_instances() {
 	if let Some(instances) = Lazy::get(&INSTANCES) {
-		instances.lock().clear();
+		let mut instances = instances.lock();
+		if instances.capacity() > DEFAULT_CAPACITY {
+			// Don't use clear(), so we reclaim memory.
+			*instances = SlotMap::with_capacity_and_key(DEFAULT_CAPACITY);
+		} else {
+			// If we're at the default capacity, it's a waste of time to reallocate.
+			instances.clear();
+		}
 	}
 }
 
