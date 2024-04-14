@@ -12,11 +12,43 @@ extern crate meowtonin;
 use ::digest::{FixedOutputReset, Update};
 use blake3::Hasher as Blake3;
 use md5::{Digest, Md5};
+use once_cell::sync::Lazy;
+use parking_lot::Mutex;
 use sha1::Sha1;
 use sha2::{Sha224, Sha256, Sha384, Sha512, Sha512_224, Sha512_256};
 use sha3::{Sha3_224, Sha3_256, Sha3_384, Sha3_512};
-use std::{cell::RefCell, path::PathBuf, thread::LocalKey};
+use std::path::PathBuf;
 use xxhash_rust::{xxh3::Xxh3, xxh32::Xxh32, xxh64::Xxh64};
+
+macro_rules! impl_hasher {
+	($(($name:ident, $hasher:ty, $initializer:expr)),+) => {
+		$(
+			impl_hasher!($name, $hasher, $initializer);
+		)+
+	};
+	($name:ident, $hasher:ty, $initializer:expr) => {
+		static $name: Lazy<Mutex<$hasher>> = Lazy::new(|| Mutex::new($initializer));
+	};
+}
+
+impl_hasher!(
+	(BLAKE3, Blake3, Blake3::new()),
+	(MD5, Md5, Md5::new()),
+	(SHA1, Sha1, Sha1::new()),
+	(SHA224, Sha224, Sha224::new()),
+	(SHA256, Sha256, Sha256::new()),
+	(SHA384, Sha384, Sha384::new()),
+	(SHA512, Sha512, Sha512::new()),
+	(SHA512_224, Sha512_224, Sha512_224::new()),
+	(SHA512_256, Sha512_256, Sha512_256::new()),
+	(SHA3_224, Sha3_224, Sha3_224::new()),
+	(SHA3_256, Sha3_256, Sha3_256::new()),
+	(SHA3_384, Sha3_384, Sha3_384::new()),
+	(SHA3_512, Sha3_512, Sha3_512::new()),
+	(XXH32, Xxh32, Xxh32::new(0)),
+	(XXH64, Xxh64, Xxh64::new(0)),
+	(XXH3, Xxh3, Xxh3::new())
+);
 
 #[byond_fn]
 pub fn hash(algorithm: String, data: String) -> Option<String> {
@@ -27,25 +59,6 @@ pub fn hash(algorithm: String, data: String) -> Option<String> {
 pub fn hash_file(algorithm: String, file: PathBuf) -> Option<String> {
 	let data = std::fs::read(file).ok()?;
 	hash_data(algorithm, data)
-}
-
-thread_local! {
-	static BLAKE3: RefCell<Blake3> = RefCell::new(Blake3::new());
-	static MD5: RefCell<Md5> = RefCell::new(Md5::new());
-	static SHA1: RefCell<Sha1> = RefCell::new(Sha1::new());
-	static SHA224: RefCell<Sha224> = RefCell::new(Sha224::new());
-	static SHA256: RefCell<Sha256> = RefCell::new(Sha256::new());
-	static SHA384: RefCell<Sha384> = RefCell::new(Sha384::new());
-	static SHA512: RefCell<Sha512> = RefCell::new(Sha512::new());
-	static SHA512_224: RefCell<Sha512_224> = RefCell::new(Sha512_224::new());
-	static SHA512_256: RefCell<Sha512_256> = RefCell::new(Sha512_256::new());
-	static SHA3_224: RefCell<Sha3_224> = RefCell::new(Sha3_224::new());
-	static SHA3_256: RefCell<Sha3_256> = RefCell::new(Sha3_256::new());
-	static SHA3_384: RefCell<Sha3_384> = RefCell::new(Sha3_384::new());
-	static SHA3_512: RefCell<Sha3_512> = RefCell::new(Sha3_512::new());
-	static XXH32: RefCell<Xxh32> = RefCell::new(Xxh32::new(0));
-	static XXH64: RefCell<Xxh64> = RefCell::new(Xxh64::new(0));
-	static XXH3: RefCell<Xxh3> = RefCell::new(Xxh3::new());
 }
 
 fn hash_data(algorithm: impl AsRef<str>, data: impl AsRef<[u8]>) -> Option<String> {
@@ -65,24 +78,27 @@ fn hash_data(algorithm: impl AsRef<str>, data: impl AsRef<[u8]>) -> Option<Strin
 		"sha3" | "sha3_256" => Some(digest_hash(&SHA3_256, data)),
 		"sha3_384" => Some(digest_hash(&SHA3_384, data)),
 		"sha3_512" => Some(digest_hash(&SHA3_512, data)),
-		"xxh32" => XXH32.with_borrow_mut(|xxh| {
+		"xxh32" => {
+			let mut xxh = XXH32.lock();
 			xxh.reset(0);
 			xxh.update(data);
 			let hash = xxh.digest();
 			Some(faster_hex::hex_string(&hash.to_le_bytes()))
-		}),
-		"xxh64" => XXH64.with_borrow_mut(|xxh| {
+		}
+		"xxh64" => {
+			let mut xxh = XXH64.lock();
 			xxh.reset(0);
 			xxh.update(data);
 			let hash = xxh.digest();
 			Some(faster_hex::hex_string(&hash.to_le_bytes()))
-		}),
-		"xxh3" => XXH3.with_borrow_mut(|xxh| {
+		}
+		"xxh3" => {
+			let mut xxh = XXH3.lock();
 			xxh.reset();
 			xxh.update(data);
 			let hash = xxh.digest();
 			Some(faster_hex::hex_string(&hash.to_le_bytes()))
-		}),
+		}
 		"crc32" => Some(faster_hex::hex_string(&crc32fast::hash(data).to_le_bytes())),
 		"crc32c" => Some(faster_hex::hex_string(&crc32c::crc32c(data).to_le_bytes())),
 		_ => None,
@@ -90,16 +106,15 @@ fn hash_data(algorithm: impl AsRef<str>, data: impl AsRef<[u8]>) -> Option<Strin
 }
 
 pub(crate) fn digest_hash<Hasher, Bytes>(
-	local_hasher: &'static LocalKey<RefCell<Hasher>>,
+	lazy_hasher: &'static Lazy<Mutex<Hasher>>,
 	input: Bytes,
 ) -> String
 where
 	Hasher: Update + FixedOutputReset,
 	Bytes: AsRef<[u8]>,
 {
-	local_hasher.with_borrow_mut(|hasher| {
-		hasher.update(input.as_ref());
-		let hash = hasher.finalize_fixed_reset();
-		faster_hex::hex_string(&hash)
-	})
+	let mut hasher = lazy_hasher.lock();
+	hasher.update(input.as_ref());
+	let hash = hasher.finalize_fixed_reset();
+	faster_hex::hex_string(&hash)
 }
