@@ -6,7 +6,6 @@ use rand::{
 	distributions::{Distribution, WeightedIndex},
 	Rng,
 };
-use std::collections::HashMap;
 
 #[byond_fn]
 pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Option<ByondValue>> {
@@ -31,22 +30,32 @@ pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Opt
 #[byond_fn]
 pub fn instanced_pick_weighted(
 	src: ByondSlotKey,
-	options: HashMap<ByondValue, f32, ahash::RandomState>,
-) -> Option<ByondValue> {
-	if options.is_empty() {
-		return None;
+	options: ByondValue,
+) -> ByondResult<Option<ByondValue>> {
+	if !options.is_list() || options.length::<usize>()? < 1 {
+		return Ok(None);
 	}
-	let (values, weights): (Vec<_>, Vec<_>) = options
-		.into_iter()
-		.filter(|(_, weight)| weight.is_normal() && weight.is_sign_positive())
-		.unzip();
-	match values.len() {
-		0 => return None,
-		1 => return values.into_iter().next(),
+	let options = options.read_assoc_list()?;
+	let weights = options
+		.iter()
+		.map(|[_, weight]| weight.get_number())
+		.filter_map(|weight| weight.ok())
+		.filter(|weight| weight.is_normal() && weight.is_sign_positive())
+		.collect::<Vec<f32>>();
+	match weights.len() {
+		0 => return Ok(None),
+		1 => return Ok(options.get(1).and_then(|entry| entry.get(1)).cloned()),
 		_ => {}
 	}
+	let dist = match WeightedIndex::new(weights) {
+		Ok(dist) => dist,
+		Err(_) => return Ok(None),
+	};
 	let mut instances = INSTANCES.lock();
-	let rng = instances.get_mut(src)?;
-	let dist = WeightedIndex::new(weights).ok()?;
-	values.into_iter().nth(dist.sample(&mut *rng))
+	let rng = match instances.get_mut(src) {
+		Some(rng) => rng,
+		None => return Ok(None),
+	};
+	let idx = dist.sample(rng);
+	Ok(options.get(idx).and_then(|entry| entry.get(2)).cloned())
 }
