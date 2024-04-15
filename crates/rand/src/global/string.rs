@@ -18,17 +18,19 @@ pub fn replace_chars_prob(
 	input: String,
 	replacement: String,
 	prob: f32,
+	skip_whitespace: Option<bool>,
 	secure: Option<bool>,
 ) -> String {
 	if !prob.is_normal() || !prob.is_sign_positive() {
 		return input;
 	}
+	let skip_whitespace = skip_whitespace.unwrap_or(false);
 	let mut rng = global(secure);
 	let distro =
 		Bernoulli::new((prob as f64 / 100.0).clamp(0.0, 1.0)).expect("invalid probability, wtf???");
 	let mut output = String::with_capacity(input.len() * replacement.len()); // Allocate for worst case scenario.
 	input.chars().for_each(|c| {
-		if distro.sample(&mut rng) {
+		if (!skip_whitespace || !c.is_whitespace()) && distro.sample(&mut rng) {
 			output.push_str(&replacement);
 		} else {
 			output.push(c);
