@@ -14,6 +14,4 @@ pub mod string;
 pub mod toml;
 pub mod uuid;
 
-pub fn cleanup() {
-	//acreplace::free_instances();
-}
+pub fn cleanup() {}
