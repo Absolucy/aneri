@@ -20,7 +20,7 @@ pub fn replace_chars_prob(
 	prob: f32,
 	secure: Option<bool>,
 ) -> String {
-	if prob <= 0.0 {
+	if !prob.is_normal() || !prob.is_sign_positive() {
 		return input;
 	}
 	let mut rng = global(secure);

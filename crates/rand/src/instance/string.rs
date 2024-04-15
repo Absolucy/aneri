@@ -22,7 +22,7 @@ pub fn instnaced_replace_chars_prob(
 	replacement: String,
 	prob: f32,
 ) -> Option<String> {
-	if prob <= 0.0 {
+	if !prob.is_normal() || !prob.is_sign_positive() {
 		return Some(input);
 	}
 	INSTANCES.lock().get_mut(src).map(|rng| {
