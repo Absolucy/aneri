@@ -24,3 +24,11 @@ pub fn normalized_damerau_levenshtein(a: String, b: String) -> f32 {
 pub fn hamming(a: String, b: String) -> Option<usize> {
 	strsim::hamming(&a, &b).ok()
 }
+
+#[byond_fn]
+pub fn deunicode(string: String, placeholder: Option<String>) -> String {
+	match placeholder {
+		Some(placeholder) => deunicode::deunicode_with_tofu(&string, &placeholder),
+		None => deunicode::deunicode(&string),
+	}
+}
