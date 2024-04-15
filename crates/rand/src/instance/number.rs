@@ -3,10 +3,7 @@ use super::INSTANCES;
 use crate::shared;
 use aneri_core::ByondSlotKey;
 use rand::{
-	distributions::{
-		uniform::{SampleRange, SampleUniform},
-		Distribution, Standard,
-	},
+	distributions::{Distribution, Standard},
 	Rng,
 };
 

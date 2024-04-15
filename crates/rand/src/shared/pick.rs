@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MPL-2.0
-use crate::RngDispatcher;
 use meowtonin::{ByondResult, ByondValue};
 use rand::{
 	distributions::{Distribution, WeightedIndex},

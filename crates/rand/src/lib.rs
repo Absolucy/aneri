@@ -13,8 +13,6 @@ pub mod global;
 pub mod instance;
 pub mod shared;
 
-pub(crate) use instance::dispatcher::RngDispatcher;
-
 pub fn cleanup() {
 	global::reseed_global_rng();
 	instance::free_instances();
