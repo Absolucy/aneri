@@ -1,43 +1,26 @@
 // SPDX-License-Identifier: MPL-2.0
 use super::INSTANCES;
+use crate::shared;
 use aneri_core::ByondSlotKey;
-use rand::{
-	distributions::{Alphanumeric, Bernoulli, Distribution},
-	Rng,
-};
 
 #[byond_fn]
 pub fn instanced_random_string_alphanumeric(src: ByondSlotKey, length: usize) -> Option<String> {
-	INSTANCES.lock().get_mut(src).map(|rng| {
-		(0..=length)
-			.map(|_| rng.sample(Alphanumeric) as char)
-			.collect()
-	})
+	INSTANCES
+		.lock()
+		.get_mut(src)
+		.map(|rng| shared::random_string_alphanumeric(rng, length))
 }
 
 #[byond_fn]
-pub fn instnaced_replace_chars_prob(
+pub fn instanced_replace_chars_prob(
 	src: ByondSlotKey,
 	input: String,
 	replacement: String,
 	prob: f32,
 	skip_whitespace: Option<bool>,
 ) -> Option<String> {
-	if !prob.is_normal() || !prob.is_sign_positive() {
-		return Some(input);
-	}
-	let skip_whitespace = skip_whitespace.unwrap_or(false);
-	INSTANCES.lock().get_mut(src).map(|rng| {
-		let distro = Bernoulli::new((prob as f64 / 100.0).clamp(0.0, 1.0))
-			.expect("invalid probability, wtf???");
-		let mut output = String::with_capacity(input.len() * replacement.len()); // Allocate for worst case scenario.
-		input.chars().for_each(|c| {
-			if (!skip_whitespace || !c.is_whitespace()) && distro.sample(rng) {
-				output.push_str(&replacement);
-			} else {
-				output.push(c);
-			}
-		});
-		output
-	})
+	INSTANCES
+		.lock()
+		.get_mut(src)
+		.map(|rng| shared::replace_chars_prob(rng, input, replacement, prob, skip_whitespace))
 }

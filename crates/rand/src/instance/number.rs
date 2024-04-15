@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use super::INSTANCES;
+use crate::shared;
 use aneri_core::ByondSlotKey;
 use rand::{
 	distributions::{
@@ -15,18 +16,6 @@ where
 {
 	INSTANCES.lock().get_mut(src).map(|rng| rng.gen())
 }
-
-fn range_impl<Output, Range>(src: ByondSlotKey, range: Range) -> Option<Output>
-where
-	Output: SampleUniform,
-	Range: SampleRange<Output>,
-{
-	INSTANCES
-		.lock()
-		.get_mut(src)
-		.map(|rng| rng.gen_range(range))
-}
-
 #[byond_fn]
 pub fn instanced_random_byte(src: ByondSlotKey) -> Option<u8> {
 	rand_impl(src)
@@ -48,25 +37,17 @@ pub fn instanced_random_int_signed(src: ByondSlotKey) -> Option<i32> {
 }
 
 #[byond_fn]
-pub fn instanced_random_range_int_unsigned(
-	src: ByondSlotKey,
-	mut min: u32,
-	mut max: u32,
-) -> Option<u32> {
-	if min > max {
-		std::mem::swap(&mut min, &mut max);
-	}
-	range_impl(src, min..=max)
+pub fn instanced_random_range_int_unsigned(src: ByondSlotKey, min: u32, max: u32) -> Option<u32> {
+	INSTANCES
+		.lock()
+		.get_mut(src)
+		.map(|rng| shared::random_range_int_unsigned(rng, min, max))
 }
 
 #[byond_fn]
-pub fn instanced_random_range_int_signed(
-	src: ByondSlotKey,
-	mut min: i32,
-	mut max: i32,
-) -> Option<i32> {
-	if min > max {
-		std::mem::swap(&mut min, &mut max);
-	}
-	range_impl(src, min..=max)
+pub fn instanced_random_range_int_signed(src: ByondSlotKey, min: i32, max: i32) -> Option<i32> {
+	INSTANCES
+		.lock()
+		.get_mut(src)
+		.map(|rng| shared::random_range_int_signed(rng, min, max))
 }
