@@ -19,7 +19,7 @@ where
 		_ => {}
 	}
 	let idx = rng.gen_range::<usize, _>(1..=length);
-	options.read_list_index(&idx)
+	options.read_list_index(&idx).map(ByondValue::persist)
 }
 
 pub(crate) fn pick_weighted<Gen>(rng: &mut Gen, options: ByondValue) -> ByondResult<ByondValue>
@@ -62,5 +62,6 @@ where
 		.get(idx)
 		.and_then(|entry| entry.get(2))
 		.cloned()
+		.map(ByondValue::persist)
 		.unwrap_or_default())
 }
