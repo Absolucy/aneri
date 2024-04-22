@@ -15,11 +15,11 @@ where
 	let length = options.length::<usize>()?;
 	match length {
 		0 => return Ok(ByondValue::null()),
-		1 => return options.read_list_index(&1).map(ByondValue::persist),
+		1 => return options.read_list_index(&1),
 		_ => {}
 	}
 	let idx = rng.gen_range::<usize, _>(1..=length);
-	options.read_list_index(&idx).map(ByondValue::persist)
+	options.read_list_index(&idx)
 }
 
 pub(crate) fn pick_weighted<Gen>(rng: &mut Gen, options: ByondValue) -> ByondResult<ByondValue>
@@ -32,7 +32,7 @@ where
 	let length = options.length::<usize>()?;
 	match length {
 		0 => return Ok(ByondValue::null()),
-		1 => return options.read_list_index(&1).map(ByondValue::persist),
+		1 => return options.read_list_index(&1),
 		_ => {}
 	}
 	let options = options.read_assoc_list()?;
@@ -49,7 +49,6 @@ where
 				.get(1)
 				.and_then(|entry| entry.get(1))
 				.cloned()
-				.map(ByondValue::persist)
 				.unwrap_or_default())
 		}
 		_ => {}
@@ -63,6 +62,5 @@ where
 		.get(idx)
 		.and_then(|entry| entry.get(2))
 		.cloned()
-		.map(ByondValue::persist)
 		.unwrap_or_default())
 }
