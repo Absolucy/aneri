@@ -13,7 +13,7 @@ ahash = "0.8"
 aneri-core = { path = "../core", features = ["runtime"] }
 meowtonin = { workspace = true }
 meowtonin-serde = { workspace = true }
-mysql_async = { version = "0.33", default-features = false, features = ["minimal"] }
+mysql_async = { version = "0.34", default-features = false, features = ["minimal"] }
 scopeguard = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
