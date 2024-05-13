@@ -55,13 +55,13 @@ pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<
 		None => return Ok(ByondValue::null()),
 	};
 	let mut list = ByondValue::new_list()?;
+	let substring = byondval!("text");
+	let start = byondval!("start");
+	let end = byondval!("end");
 	if let Some(matched) = regex.find(&haystack) {
-		let substring = byondval!(const "text");
-		let start = byondval!(const "start");
-		let end = byondval!(const "end");
-		list.write_list_index(substring, matched.as_str())?;
-		list.write_list_index(start, matched.start() + 1)?;
-		list.write_list_index(end, matched.end() + 1)?;
+		list.write_list_index(&substring, matched.as_str())?;
+		list.write_list_index(&start, matched.start() + 1)?;
+		list.write_list_index(&end, matched.end() + 1)?;
 	}
 	Ok(list)
 }
@@ -74,14 +74,14 @@ pub fn instanced_regex_find_all(src: ByondSlotKey, haystack: String) -> ByondRes
 		None => return Ok(ByondValue::null()),
 	};
 	let mut list = ByondValue::new_list()?;
+	let substring = byondval!("text");
+	let start = byondval!("start");
+	let end = byondval!("end");
 	for matched in regex.find_iter(&haystack) {
 		let mut match_list = ByondValue::new_list()?;
-		let substring = byondval!(const "text");
-		let start = byondval!(const "start");
-		let end = byondval!(const "end");
-		match_list.write_list_index(substring, matched.as_str())?;
-		match_list.write_list_index(start, matched.start() + 1)?;
-		match_list.write_list_index(end, matched.end() + 1)?;
+		match_list.write_list_index(&substring, matched.as_str())?;
+		match_list.write_list_index(&start, matched.start() + 1)?;
+		match_list.write_list_index(&end, matched.end() + 1)?;
 		list.push_list(match_list)?;
 	}
 	Ok(list)
