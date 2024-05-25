@@ -2,18 +2,18 @@
 use aneri_core::ByondSlotKey;
 use meowtonin::{ByondError, ByondResult, ByondValue};
 use once_cell::sync::Lazy;
-use parking_lot::RwLock;
+use parking_lot::Mutex;
 use slotmap::SlotMap;
 use std::time::Instant;
 
 const DEFAULT_CAPACITY: usize = 16;
 
-static INSTANCES: Lazy<RwLock<SlotMap<ByondSlotKey, Instant>>> =
-	Lazy::new(|| RwLock::new(SlotMap::with_capacity_and_key(DEFAULT_CAPACITY)));
+static INSTANCES: Lazy<Mutex<SlotMap<ByondSlotKey, Instant>>> =
+	Lazy::new(|| Mutex::new(SlotMap::with_capacity_and_key(DEFAULT_CAPACITY)));
 
 pub(crate) fn free_instances() {
 	if let Some(instances) = Lazy::get(&INSTANCES) {
-		let mut instances = instances.write();
+		let mut instances = instances.lock();
 		if instances.capacity() > DEFAULT_CAPACITY {
 			// Don't use clear(), so we reclaim memory.
 			*instances = SlotMap::with_capacity_and_key(DEFAULT_CAPACITY);
@@ -26,7 +26,7 @@ pub(crate) fn free_instances() {
 
 #[byond_fn]
 pub fn instant_new(mut src: ByondValue) -> ByondResult<()> {
-	let mut instances = INSTANCES.write();
+	let mut instances = INSTANCES.lock();
 	let instant = Instant::now();
 	instances
 		.insert(instant)
@@ -36,12 +36,23 @@ pub fn instant_new(mut src: ByondValue) -> ByondResult<()> {
 
 #[byond_fn]
 pub fn instant_del(src: ByondSlotKey) -> bool {
-	INSTANCES.write().remove(src).is_some()
+	INSTANCES.lock().remove(src).is_some()
+}
+
+#[byond_fn]
+pub fn instant_reset(src: ByondSlotKey) -> bool {
+	match INSTANCES.lock().get_mut(src) {
+		Some(instant) => {
+			*instant = Instant::now();
+			true
+		}
+		None => false,
+	}
 }
 
 #[byond_fn]
 pub fn instant_microseconds(src: ByondSlotKey) -> Option<u32> {
-	let instances = INSTANCES.read();
+	let instances = INSTANCES.lock();
 	let instant = match instances.get(src) {
 		Some(instant) => instant,
 		None => return None,
@@ -50,8 +61,18 @@ pub fn instant_microseconds(src: ByondSlotKey) -> Option<u32> {
 }
 
 #[byond_fn]
+pub fn instant_nanoseconds(src: ByondSlotKey) -> Option<u32> {
+	let instances = INSTANCES.lock();
+	let instant = match instances.get(src) {
+		Some(instant) => instant,
+		None => return None,
+	};
+	Some(instant.elapsed().as_nanos() as u32)
+}
+
+#[byond_fn]
 pub fn instant_milliseconds(src: ByondSlotKey) -> Option<u32> {
-	let instances = INSTANCES.read();
+	let instances = INSTANCES.lock();
 	let instant = match instances.get(src) {
 		Some(instant) => instant,
 		None => return None,
@@ -61,7 +82,7 @@ pub fn instant_milliseconds(src: ByondSlotKey) -> Option<u32> {
 
 #[byond_fn]
 pub fn instant_seconds(src: ByondSlotKey) -> Option<f32> {
-	let instances = INSTANCES.read();
+	let instances = INSTANCES.lock();
 	let instant = match instances.get(src) {
 		Some(instant) => instant,
 		None => return None,
