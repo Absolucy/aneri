@@ -46,8 +46,8 @@ where
 		0 => return Ok(ByondValue::null()),
 		1 => {
 			return Ok(options
-				.get(1)
-				.and_then(|entry| entry.get(1))
+				.first()
+				.and_then(|entry| entry.first())
 				.cloned()
 				.unwrap_or_default())
 		}
@@ -60,7 +60,7 @@ where
 	let idx = dist.sample(rng);
 	Ok(options
 		.get(idx)
-		.and_then(|entry| entry.get(2))
+		.and_then(|entry| entry.first())
 		.cloned()
 		.unwrap_or_default())
 }
