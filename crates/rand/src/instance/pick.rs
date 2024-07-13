@@ -2,25 +2,14 @@
 use super::INSTANCES;
 use crate::shared;
 use aneri_core::ByondSlotKey;
-use meowtonin::{ByondResult, ByondValue};
+use meowtonin::ByondResult;
 
 #[byond_fn]
-pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Option<ByondValue>> {
-	INSTANCES
-		.lock()
-		.get_mut(src)
-		.map(|rng| shared::pick(rng, options))
-		.transpose()
-}
-
-#[byond_fn]
-pub fn instanced_pick_weighted(
-	src: ByondSlotKey,
-	options: ByondValue,
-) -> ByondResult<Option<ByondValue>> {
+pub fn instanced_pick_weighted(src: ByondSlotKey, options: Vec<f32>) -> ByondResult<Option<usize>> {
 	INSTANCES
 		.lock()
 		.get_mut(src)
 		.map(|rng| shared::pick_weighted(rng, options))
 		.transpose()
+		.map(|result| result.flatten())
 }
