@@ -24,7 +24,6 @@ pub(crate) fn reseed_global_rng() {
 	}
 }
 
-#[inline]
 pub(crate) fn global(secure: impl Into<Option<bool>>) -> GlobalRngDispatcher {
 	if secure.into().unwrap_or(false) {
 		GlobalRngDispatcher::Blake3(&BLAKE3)

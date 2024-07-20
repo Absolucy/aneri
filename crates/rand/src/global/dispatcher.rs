@@ -12,7 +12,6 @@ pub(crate) enum GlobalRngDispatcher {
 }
 
 impl RngCore for GlobalRngDispatcher {
-	#[inline]
 	fn next_u32(&mut self) -> u32 {
 		match *self {
 			Self::Blake3(rng) => rng.lock().next_u32(),
@@ -20,7 +19,6 @@ impl RngCore for GlobalRngDispatcher {
 		}
 	}
 
-	#[inline]
 	fn next_u64(&mut self) -> u64 {
 		match *self {
 			Self::Blake3(rng) => rng.lock().next_u64(),
@@ -28,7 +26,6 @@ impl RngCore for GlobalRngDispatcher {
 		}
 	}
 
-	#[inline]
 	fn fill_bytes(&mut self, dest: &mut [u8]) {
 		match *self {
 			Self::Blake3(rng) => rng.lock().fill_bytes(dest),
@@ -36,7 +33,6 @@ impl RngCore for GlobalRngDispatcher {
 		}
 	}
 
-	#[inline]
 	fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
 		match *self {
 			Self::Blake3(rng) => rng.lock().try_fill_bytes(dest),
