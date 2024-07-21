@@ -37,7 +37,7 @@ jobs:
               run: cargo build --release --package aneri --target "${{ matrix.os.target }}" --no-default-features --features "${{ matrix.features.features }}" --locked
               env:
                   PKG_CONFIG_ALLOW_CROSS: 1
-                  RUSTFLAGS: --remap-path-prefix C:\Users\runneradmin=C:\build --remap-path-prefix /home/runner=/build -C target-feature=+crt-static
+                  RUSTFLAGS: --remap-path-prefix C:\Users\runneradmin=C:\build --remap-path-prefix /home/runner=/build
             - name: Upload artifacts
               uses: actions/upload-artifact@v4
               with:
