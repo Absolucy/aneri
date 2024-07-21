@@ -28,9 +28,6 @@ meowtonin-serde = { workspace = true }
 const_format = "0.2"
 snmalloc-rs = { version = "0.3", optional = true, features = ["build_cc"] }
 
-[target.'cfg(windows)'.dependencies]
-vc-ltl = "5"
-
 [build-dependencies]
 bosion = "1"
 

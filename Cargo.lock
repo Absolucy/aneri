@@ -97,7 +97,6 @@ dependencies = [
  "meowtonin",
  "meowtonin-serde",
  "snmalloc-rs",
- "vc-ltl",
 ]
 
 [[package]]
@@ -3434,12 +3433,6 @@ dependencies = [
  "getrandom",
  "rand",
 ]
-
-[[package]]
-name = "vc-ltl"
-version = "5.0.9"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba39ee40cae2e458614130c23f6be28410c0e851627fac0bb00d4ec530c9b5cf"
 
 [[package]]
 name = "vcpkg"
