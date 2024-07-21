@@ -97,6 +97,7 @@ dependencies = [
  "meowtonin",
  "meowtonin-serde",
  "snmalloc-rs",
+ "vc-ltl",
 ]
 
 [[package]]
@@ -259,9 +260,9 @@ checksum = "69f7f8c3906b62b754cd5326047894316021dcfe5a194c8ea52bdd94934a3457"
 
 [[package]]
 name = "arrayref"
-version = "0.3.7"
+version = "0.3.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6b4930d2cb77ce62f89ee5d5289b4ac049559b1c45539271f5ed4fdc7db34545"
+checksum = "9d151e35f61089500b617991b791fc8bfd237ae50cd5950803758a179b41e67a"
 
 [[package]]
 name = "arrayvec"
@@ -3433,6 +3434,12 @@ dependencies = [
  "getrandom",
  "rand",
 ]
+
+[[package]]
+name = "vc-ltl"
+version = "5.0.9"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "ba39ee40cae2e458614130c23f6be28410c0e851627fac0bb00d4ec530c9b5cf"
 
 [[package]]
 name = "vcpkg"
