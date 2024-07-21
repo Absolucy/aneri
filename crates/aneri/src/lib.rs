@@ -9,10 +9,6 @@
 #[macro_use]
 extern crate meowtonin;
 
-#[cfg(feature = "snmalloc")]
-#[global_allocator]
-static ALLOC: snmalloc_rs::SnMalloc = snmalloc_rs::SnMalloc;
-
 pub mod info;
 
 #[cfg(feature = "crypto")]

@@ -26,7 +26,6 @@ aneri-util = { path = "../util", optional = true }
 meowtonin = { workspace = true }
 meowtonin-serde = { workspace = true }
 const_format = "0.2"
-snmalloc-rs = { version = "0.3", optional = true, features = ["build_cc"] }
 
 [build-dependencies]
 bosion = "1"
@@ -47,5 +46,4 @@ sql = ["aneri-sql"]
 time = ["aneri-time"]
 util = ["aneri-util"]
 # misc features
-snmalloc = ["snmalloc-rs"]
 rel-debugging = ["meowtonin/rel-debugging"]
