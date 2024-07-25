@@ -16,4 +16,3 @@ crossbeam-channel = "0.5"
 parking_lot = { workspace = true }
 scopeguard = "1"
 thread-priority = "1"
-once_cell = { workspace = true }

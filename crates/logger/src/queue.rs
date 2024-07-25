@@ -3,11 +3,13 @@
 use crate::message::LogMessage;
 use ahash::AHashMap;
 use crossbeam_channel::Sender;
-use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use std::{
 	path::{Path, PathBuf},
-	sync::atomic::{AtomicUsize, Ordering},
+	sync::{
+		atomic::{AtomicUsize, Ordering},
+		LazyLock,
+	},
 	time::{Duration, Instant},
 };
 
@@ -22,21 +24,19 @@ pub(crate) type LogQueues = AHashMap<PathBuf, MessageQueue>;
 const DEFAULT_CAPACITY: usize = 16;
 const SHUTDOWN_TIMEOUT: Duration = Duration::from_secs(10);
 
-static MESSAGE_QUEUE: Lazy<Mutex<LogQueues>> =
-	Lazy::new(|| Mutex::new(AHashMap::with_capacity(DEFAULT_CAPACITY)));
+static MESSAGE_QUEUE: LazyLock<Mutex<LogQueues>> =
+	LazyLock::new(|| Mutex::new(AHashMap::with_capacity(DEFAULT_CAPACITY)));
 
 /// Clear the log message queue for a given path.
 /// Any existing log messages will still be written to the log file.
 pub fn clear_log_queue() {
-	if let Some(queue) = Lazy::get(&MESSAGE_QUEUE) {
-		let mut queue = queue.lock();
-		if queue.capacity() > DEFAULT_CAPACITY {
-			// Don't use clear(), so we reclaim memory.
-			*queue = AHashMap::with_capacity(DEFAULT_CAPACITY);
-		} else {
-			// If we're at the default capacity, it's a waste of time to reallocate.
-			queue.clear();
-		}
+	let mut queue = MESSAGE_QUEUE.lock();
+	if queue.capacity() > DEFAULT_CAPACITY {
+		// Don't use clear(), so we reclaim memory.
+		*queue = AHashMap::with_capacity(DEFAULT_CAPACITY);
+	} else {
+		// If we're at the default capacity, it's a waste of time to reallocate.
+		queue.clear();
 	}
 	let start = Instant::now();
 	while THREAD_COUNT.load(Ordering::SeqCst) > 0 {

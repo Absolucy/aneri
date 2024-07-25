@@ -1,26 +1,24 @@
 // SPDX-License-Identifier: MPL-2.0
 use aneri_core::ByondSlotKey;
 use meowtonin::{ByondError, ByondResult, ByondValue, ToByond};
-use once_cell::sync::Lazy;
 use parking_lot::RwLock;
 use regex::Regex;
 use slotmap::SlotMap;
+use std::sync::LazyLock;
 
 const DEFAULT_CAPACITY: usize = 16;
 
-static INSTANCES: Lazy<RwLock<SlotMap<ByondSlotKey, Regex>>> =
-	Lazy::new(|| RwLock::new(SlotMap::with_capacity_and_key(DEFAULT_CAPACITY)));
+static INSTANCES: LazyLock<RwLock<SlotMap<ByondSlotKey, Regex>>> =
+	LazyLock::new(|| RwLock::new(SlotMap::with_capacity_and_key(DEFAULT_CAPACITY)));
 
 pub(crate) fn free_instances() {
-	if let Some(instances) = Lazy::get(&INSTANCES) {
-		let mut instances = instances.write();
-		if instances.capacity() > DEFAULT_CAPACITY {
-			// Don't use clear(), so we reclaim memory.
-			*instances = SlotMap::with_capacity_and_key(DEFAULT_CAPACITY);
-		} else {
-			// If we're at the default capacity, it's a waste of time to reallocate.
-			instances.clear();
-		}
+	let mut instances = INSTANCES.write();
+	if instances.capacity() > DEFAULT_CAPACITY {
+		// Don't use clear(), so we reclaim memory.
+		*instances = SlotMap::with_capacity_and_key(DEFAULT_CAPACITY);
+	} else {
+		// If we're at the default capacity, it's a waste of time to reallocate.
+		instances.clear();
 	}
 }
 

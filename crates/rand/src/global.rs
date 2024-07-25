@@ -6,22 +6,18 @@ pub mod prob;
 pub mod string;
 
 use self::dispatcher::GlobalRngDispatcher;
-use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use rand::SeedableRng;
 use rand_blake3::Rng as Blake3Rng;
 use rand_wyrand::WyRand;
+use std::sync::LazyLock;
 
-static WYRAND: Lazy<Mutex<WyRand>> = Lazy::new(|| Mutex::new(WyRand::from_entropy()));
-static BLAKE3: Lazy<Mutex<Blake3Rng>> = Lazy::new(|| Mutex::new(Blake3Rng::from_entropy()));
+static WYRAND: LazyLock<Mutex<WyRand>> = LazyLock::new(|| Mutex::new(WyRand::from_entropy()));
+static BLAKE3: LazyLock<Mutex<Blake3Rng>> = LazyLock::new(|| Mutex::new(Blake3Rng::from_entropy()));
 
 pub(crate) fn reseed_global_rng() {
-	if let Some(wyrand) = Lazy::get(&WYRAND) {
-		*wyrand.lock() = WyRand::from_entropy();
-	}
-	if let Some(blake3) = Lazy::get(&BLAKE3) {
-		*blake3.lock() = Blake3Rng::from_entropy();
-	}
+	*WYRAND.lock() = WyRand::from_entropy();
+	*BLAKE3.lock() = Blake3Rng::from_entropy();
 }
 
 pub(crate) fn global(secure: impl Into<Option<bool>>) -> GlobalRngDispatcher {

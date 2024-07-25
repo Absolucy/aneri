@@ -13,7 +13,6 @@ cuid2 = "0.1"
 deunicode = "1"
 meowtonin = { workspace = true }
 meowtonin-serde = { workspace = true }
-once_cell = { workspace = true }
 serde_json = "1"
 strsim = "0.11"
 toml = "0.8"

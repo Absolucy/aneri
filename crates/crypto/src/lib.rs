@@ -12,12 +12,11 @@ extern crate meowtonin;
 use ::digest::{FixedOutputReset, Update};
 use blake3::Hasher as Blake3;
 use md5::{Digest, Md5};
-use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use sha1::Sha1;
 use sha2::{Sha224, Sha256, Sha384, Sha512, Sha512_224, Sha512_256};
 use sha3::{Sha3_224, Sha3_256, Sha3_384, Sha3_512};
-use std::path::PathBuf;
+use std::{path::PathBuf, sync::LazyLock};
 use xxhash_rust::{xxh3::Xxh3, xxh32::Xxh32, xxh64::Xxh64};
 
 macro_rules! impl_hasher {
@@ -27,7 +26,7 @@ macro_rules! impl_hasher {
 		)+
 	};
 	($name:ident, $hasher:ty, $initializer:expr) => {
-		static $name: Lazy<Mutex<$hasher>> = Lazy::new(|| Mutex::new($initializer));
+		static $name: LazyLock<Mutex<$hasher>> = LazyLock::new(|| Mutex::new($initializer));
 	};
 }
 
@@ -106,7 +105,7 @@ fn hash_data(algorithm: impl AsRef<str>, data: impl AsRef<[u8]>) -> Option<Strin
 }
 
 pub(crate) fn digest_hash<Hasher, Bytes>(
-	lazy_hasher: &'static Lazy<Mutex<Hasher>>,
+	lazy_hasher: &'static LazyLock<Mutex<Hasher>>,
 	input: Bytes,
 ) -> String
 where

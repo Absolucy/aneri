@@ -2,22 +2,19 @@
 use ahash::RandomState;
 use lru::LruCache;
 use meowtonin::{ByondError, ByondResult, ByondValue, ToByond};
-use once_cell::sync::Lazy;
 use parking_lot::Mutex;
 use regex::Regex;
-use std::num::NonZeroUsize;
+use std::{num::NonZeroUsize, sync::LazyLock};
 
 // SAFETY: This is a constant value where we always know it's non-zero.
 // If you change this to 0, then that is explicitly a skill issue.
 const CACHE_SIZE: NonZeroUsize = unsafe { NonZeroUsize::new_unchecked(32) };
 
-static REGEX_CACHE: Lazy<Mutex<LruCache<String, Regex, RandomState>>> =
-	Lazy::new(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, RandomState::default())));
+static REGEX_CACHE: LazyLock<Mutex<LruCache<String, Regex, RandomState>>> =
+	LazyLock::new(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, RandomState::default())));
 
 pub fn clear_cache() {
-	if let Some(cache) = Lazy::get(&REGEX_CACHE) {
-		cache.lock().clear();
-	}
+	REGEX_CACHE.lock().clear();
 }
 
 #[byond_fn]

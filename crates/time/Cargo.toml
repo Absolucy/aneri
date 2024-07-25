@@ -11,6 +11,5 @@ publish.workspace = true
 [dependencies]
 meowtonin = { workspace = true }
 slotmap = { workspace = true }
-once_cell = { workspace = true }
 aneri-core = { path = "../core", features = ["runtime"] }
 parking_lot = { workspace = true }
