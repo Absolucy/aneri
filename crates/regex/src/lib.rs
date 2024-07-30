@@ -16,3 +16,8 @@ pub fn cleanup() {
 	global::clear_cache();
 	instance::free_instances();
 }
+
+#[byond_fn]
+pub fn regex_escape(pattern: String) -> String {
+	regex::escape(&pattern)
+}
