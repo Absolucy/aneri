@@ -40,14 +40,13 @@ pub fn sort_by_number_var(
 ) -> Vec<ByondValue> {
 	let original_len = list.len();
 	glidesort::sort_in_vec_by(&mut list, |a, b| {
-		let a = a.read_var::<_, f32>(&var);
-		let b = b.read_var::<_, f32>(&var);
-		match (a, b) {
-			(Ok(a), Ok(b)) => a.total_cmp(&b),
-			(Ok(_), Err(_)) => Ordering::Greater,
-			(Err(_), Ok(_)) => Ordering::Less,
-			_ => Ordering::Equal,
-		}
+		let a = a.read_var::<_, f32>(&var).unwrap_or_else(|err| {
+			panic!("Failed to read var '{var}' in sort_by_number_var: {err}")
+		});
+		let b = b.read_var::<_, f32>(&var).unwrap_or_else(|err| {
+			panic!("Failed to read var '{var}' in sort_by_number_var: {err}")
+		});
+		a.total_cmp(&b)
 	});
 	list.truncate(original_len);
 	list
@@ -69,6 +68,32 @@ pub fn sort_by_string(
 		} else {
 			a.cmp(b)
 		}
+	});
+	list.truncate(original_len);
+	list
+}
+
+#[byond_fn]
+pub fn sort_by_string_var(
+	mut list: Vec<ByondValue>,
+	var: String,
+	_ascending: Option<bool>,
+	ignore_case: Option<bool>,
+) -> Vec<ByondValue> {
+	let ignore_case = ignore_case.unwrap_or(false);
+	let original_len = list.len();
+	glidesort::sort_in_vec_by(&mut list, |a, b| {
+		let mut a = a.read_var::<_, String>(&var).unwrap_or_else(|err| {
+			panic!("Failed to read var '{var}' in sort_by_string_var: {err}")
+		});
+		let mut b = b.read_var::<_, String>(&var).unwrap_or_else(|err| {
+			panic!("Failed to read var '{var}' in sort_by_string_var: {err}")
+		});
+		if ignore_case {
+			a = a.to_lowercase();
+			b = b.to_lowercase();
+		}
+		a.cmp(&b)
 	});
 	list.truncate(original_len);
 	list
