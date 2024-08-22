@@ -21,7 +21,7 @@ pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<Byond
 }
 
 #[byond_fn]
-pub fn sort_by_number(list: Vec<ByondValue>, _ascending: Option<bool>) -> Vec<f32> {
+pub fn sort_by_number(list: Vec<ByondValue>, descending: Option<bool>) -> Vec<f32> {
 	let mut list = list
 		.into_iter()
 		.flat_map(|value| value.get_number().ok())
@@ -29,6 +29,9 @@ pub fn sort_by_number(list: Vec<ByondValue>, _ascending: Option<bool>) -> Vec<f3
 	let original_len = list.len();
 	glidesort::sort_in_vec_by(&mut list, |a, b| a.total_cmp(b));
 	list.truncate(original_len);
+	if descending.unwrap_or(false) {
+		list.reverse();
+	}
 	list
 }
 
@@ -36,7 +39,7 @@ pub fn sort_by_number(list: Vec<ByondValue>, _ascending: Option<bool>) -> Vec<f3
 pub fn sort_by_number_var(
 	mut list: Vec<ByondValue>,
 	var: String,
-	_ascending: Option<bool>,
+	descending: Option<bool>,
 ) -> Vec<ByondValue> {
 	let original_len = list.len();
 	glidesort::sort_in_vec_by(&mut list, |a, b| {
@@ -49,13 +52,16 @@ pub fn sort_by_number_var(
 		a.total_cmp(&b)
 	});
 	list.truncate(original_len);
+	if descending.unwrap_or(false) {
+		list.reverse();
+	}
 	list
 }
 
 #[byond_fn]
 pub fn sort_by_string(
 	mut list: Vec<String>,
-	_ascending: Option<bool>,
+	descending: Option<bool>,
 	ignore_case: Option<bool>,
 ) -> Vec<String> {
 	let ignore_case = ignore_case.unwrap_or(false);
@@ -70,6 +76,9 @@ pub fn sort_by_string(
 		}
 	});
 	list.truncate(original_len);
+	if descending.unwrap_or(false) {
+		list.reverse();
+	}
 	list
 }
 
@@ -77,7 +86,7 @@ pub fn sort_by_string(
 pub fn sort_by_string_var(
 	mut list: Vec<ByondValue>,
 	var: String,
-	_ascending: Option<bool>,
+	descending: Option<bool>,
 	ignore_case: Option<bool>,
 ) -> Vec<ByondValue> {
 	let ignore_case = ignore_case.unwrap_or(false);
@@ -96,5 +105,8 @@ pub fn sort_by_string_var(
 		a.cmp(&b)
 	});
 	list.truncate(original_len);
+	if descending.unwrap_or(false) {
+		list.reverse()
+	}
 	list
 }
