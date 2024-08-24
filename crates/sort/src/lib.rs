@@ -27,11 +27,16 @@ pub fn sort_by_number(list: Vec<ByondValue>, descending: Option<bool>) -> Vec<f3
 		.flat_map(|value| value.get_number().ok())
 		.collect::<Vec<f32>>();
 	let original_len = list.len();
-	glidesort::sort_in_vec_by(&mut list, |a, b| a.total_cmp(b));
+	let descending = descending.unwrap_or(false);
+	glidesort::sort_in_vec_by(&mut list, |a, b| {
+		let mut a = a;
+		let mut b = b;
+		if descending {
+			std::mem::swap(&mut a, &mut b);
+		}
+		a.total_cmp(b)
+	});
 	list.truncate(original_len);
-	if descending.unwrap_or(false) {
-		list.reverse();
-	}
 	list
 }
 
@@ -42,7 +47,13 @@ pub fn sort_by_number_var(
 	descending: Option<bool>,
 ) -> Vec<ByondValue> {
 	let original_len = list.len();
+	let descending = descending.unwrap_or(false);
 	glidesort::sort_in_vec_by(&mut list, |a, b| {
+		let mut a = a;
+		let mut b = b;
+		if descending {
+			std::mem::swap(&mut a, &mut b);
+		}
 		let a = a.read_var::<_, f32>(&var).unwrap_or_else(|err| {
 			panic!("Failed to read var '{var}' in sort_by_number_var: {err}")
 		});
@@ -52,9 +63,6 @@ pub fn sort_by_number_var(
 		a.total_cmp(&b)
 	});
 	list.truncate(original_len);
-	if descending.unwrap_or(false) {
-		list.reverse();
-	}
 	list
 }
 
@@ -66,7 +74,13 @@ pub fn sort_by_string(
 ) -> Vec<String> {
 	let ignore_case = ignore_case.unwrap_or(false);
 	let original_len = list.len();
+	let descending = descending.unwrap_or(false);
 	glidesort::sort_in_vec_by(&mut list, |a, b| {
+		let mut a = a;
+		let mut b = b;
+		if descending {
+			std::mem::swap(&mut a, &mut b);
+		}
 		if ignore_case {
 			let a = a.to_lowercase();
 			let b = b.to_lowercase();
@@ -76,9 +90,6 @@ pub fn sort_by_string(
 		}
 	});
 	list.truncate(original_len);
-	if descending.unwrap_or(false) {
-		list.reverse();
-	}
 	list
 }
 
@@ -91,7 +102,13 @@ pub fn sort_by_string_var(
 ) -> Vec<ByondValue> {
 	let ignore_case = ignore_case.unwrap_or(false);
 	let original_len = list.len();
+	let descending = descending.unwrap_or(false);
 	glidesort::sort_in_vec_by(&mut list, |a, b| {
+		let mut a = a;
+		let mut b = b;
+		if descending {
+			std::mem::swap(&mut a, &mut b);
+		}
 		let mut a = a.read_var::<_, String>(&var).unwrap_or_else(|err| {
 			panic!("Failed to read var '{var}' in sort_by_string_var: {err}")
 		});
@@ -105,8 +122,5 @@ pub fn sort_by_string_var(
 		a.cmp(&b)
 	});
 	list.truncate(original_len);
-	if descending.unwrap_or(false) {
-		list.reverse()
-	}
 	list
 }
