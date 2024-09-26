@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
+use crate::shared;
 use ahash::RandomState;
 use lru::LruCache;
-use meowtonin::{ByondError, ByondResult, ByondValue, ToByond};
+use meowtonin::{ByondError, ByondResult, ByondValue};
 use parking_lot::Mutex;
 use regex::Regex;
 use std::{num::NonZeroUsize, sync::LazyLock};
@@ -32,16 +33,7 @@ pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
-	let mut list = ByondValue::new_list()?;
-	let substring = byondval!("text");
-	let start = byondval!("start");
-	let end = byondval!("end");
-	if let Some(matched) = regex.find(&haystack) {
-		list.write_list_index(&substring, matched.as_str())?;
-		list.write_list_index(&start, matched.start() + 1)?;
-		list.write_list_index(&end, matched.end() + 1)?;
-	}
-	Ok(list)
+	shared::regex_find(regex, &haystack)
 }
 
 #[byond_fn]
@@ -50,18 +42,7 @@ pub fn regex_find_all(regex: String, haystack: String) -> ByondResult<ByondValue
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
-	let mut list = ByondValue::new_list()?;
-	let substring = byondval!("text");
-	let start = byondval!("start");
-	let end = byondval!("end");
-	for matched in regex.find_iter(&haystack) {
-		let mut match_list = ByondValue::new_list()?;
-		match_list.write_list_index(&substring, matched.as_str())?;
-		match_list.write_list_index(&start, matched.start() + 1)?;
-		match_list.write_list_index(&end, matched.end() + 1)?;
-		list.push_list(match_list)?;
-	}
-	Ok(list)
+	shared::regex_find_all(regex, &haystack)
 }
 
 #[byond_fn]
@@ -70,11 +51,7 @@ pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
-	let mut list = ByondValue::new_list()?;
-	for matched in regex.split(&haystack) {
-		list.push_list(matched.to_byond()?)?;
-	}
-	Ok(list)
+	shared::regex_split(regex, &haystack)
 }
 
 #[byond_fn]
@@ -83,11 +60,7 @@ pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResul
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
-	let mut list = ByondValue::new_list()?;
-	for matched in regex.splitn(&haystack, limit) {
-		list.push_list(matched.to_byond()?)?;
-	}
-	Ok(list)
+	shared::regex_splitn(regex, &haystack, limit)
 }
 
 #[byond_fn]
@@ -96,7 +69,7 @@ pub fn regex_replace(regex: String, haystack: String, with: String) -> ByondResu
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
-	regex.replace(&haystack, with).into_owned().to_byond()
+	shared::regex_replace(regex, &haystack, &with)
 }
 
 #[byond_fn]
@@ -105,5 +78,5 @@ pub fn regex_replace_all(regex: String, haystack: String, with: String) -> Byond
 	let regex = cache
 		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
-	regex.replace_all(&haystack, with).into_owned().to_byond()
+	shared::regex_replace_all(regex, &haystack, &with)
 }

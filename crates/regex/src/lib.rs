@@ -11,6 +11,7 @@ extern crate meowtonin;
 
 pub mod global;
 pub mod instance;
+pub mod shared;
 
 pub fn cleanup() {
 	global::clear_cache();
