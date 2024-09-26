@@ -35,22 +35,20 @@ where
 		1 => return options.read_list_index(&1),
 		_ => {}
 	}
-	let options = options.read_assoc_list()?;
-	let weights = options
-		.iter()
-		.map(|[_, weight]| weight.get_number())
-		.filter_map(|weight| weight.ok())
-		.filter(|weight| weight.is_normal() && weight.is_sign_positive())
-		.collect::<Vec<f32>>();
+	let (options, weights): (Vec<ByondValue>, Vec<f32>) = options
+		.read_assoc_list()?
+		.into_iter()
+		.filter_map(|[value, weight]| {
+			weight
+				.get_number()
+				.ok()
+				.filter(|&weight| weight.is_normal() && weight.is_sign_positive())
+				.map(|weight| (value, weight))
+		})
+		.unzip();
 	match weights.len() {
 		0 => return Ok(ByondValue::null()),
-		1 => {
-			return Ok(options
-				.first()
-				.and_then(|entry| entry.first())
-				.cloned()
-				.unwrap_or_default())
-		}
+		1 => return Ok(options.into_iter().next().unwrap_or_default()),
 		_ => {}
 	}
 	let dist = match WeightedIndex::new(weights) {
@@ -58,9 +56,5 @@ where
 		Err(_) => return Ok(ByondValue::null()),
 	};
 	let idx = dist.sample(rng);
-	Ok(options
-		.get(idx)
-		.and_then(|entry| entry.first())
-		.cloned()
-		.unwrap_or_default())
+	Ok(options.into_iter().nth(idx).unwrap_or_default())
 }
