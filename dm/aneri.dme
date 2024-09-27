@@ -16,10 +16,14 @@
 // BEGIN_INCLUDE
 #include "__spaceman_dmm.dm"
 #include "_aneri.dm"
+#include "dmi.dm"
+#include "encode.dm"
 #include "file.dm"
 #include "logger.dm"
 #include "sort.dm"
 #include "time.dm"
 #include "util.dm"
+#include "rand\global.dm"
+#include "rand\instanced.dm"
 // END_INCLUDE
 
