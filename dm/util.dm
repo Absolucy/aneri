@@ -1,16 +1,26 @@
-#define aneri_json_is_valid(text) ANERI_CALL("json_is_valid", text)
+#define aneri_json_is_valid(json)		(ANERI_CALL("json_is_valid", json))
+#define aneri_toml_is_valid(toml)		(ANERI_CALL("toml_is_valid", toml))
+#define aneri_toml_file_is_valid(file)	(ANERI_CALL("toml_file_is_valid", "[file]"))
 
-/proc/aneri_hex_encode(input, upper = 0) return ANERI_CALL("hex_encode", input, upper)
-#define aneri_hex_decode(input) ANERI_CALL("hex_decode", input)
+#define aneri_levenshtein(a, b)						(ANERI_CALL("levenshtein", a, b))
+#define aneri_damerau_levenshtein(a, b)				(ANERI_CALL("damerau_levenshtein", a, b))
+#define aneri_normalized_levenshtein(a, b)			(ANERI_CALL("normalized_levenshtein", a, b))
+#define aneri_normalized_damerau_levenshtein(a, b)	(ANERI_CALL("normalized_damerau_levenshtein", a, b))
+#define aneri_hamming(a, b)							(ANERI_CALL("hamming", a, b))
 
+/proc/aneri_deunicode(string, placeholder)
+	return ANERI_CALL("deunicode", string, placeholder)
 
-#define aneri_url_encode(input) ANERI_CALL("url_encode", input)
-#define aneri_url_decode(input) ANERI_CALL("url_decode", input)
+/proc/aneri_toml_decode(toml) as /list
+	RETURN_TYPE(/list)
+	return ANERI_CALL("toml_decode", toml)
 
-#define aneri_base64_encode(input)		ANERI_CALL("base64_encode", input)
-#define aneri_base64_decode(input)		ANERI_CALL("base64_decode", input)
-#define aneri_base64url_encode(input)	ANERI_CALL("base64url_encode", input)
-#define aneri_base64url_decode(input)	ANERI_CALL("base64url_decode", input)
+/proc/aneri_toml_decode_file(file) as /list
+	RETURN_TYPE(/list)
+	return ANERI_CALL("toml_decode_file", "[file]")
 
-/proc/aneri_uuid()				return ANERI_CALL("uuid")
-/proc/aneri_unix_timestamp()	return ANERI_CALL("unix_timestamp")
+/proc/aneri_uuid()
+	return ANERI_CALL("uuid")
+
+/proc/aneri_cuid2(length = null)
+	return ANERI_CALL("cuid2", length)
