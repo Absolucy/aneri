@@ -11,8 +11,9 @@ publish.workspace = true
 [dependencies]
 ahash = "0.8"
 aneri-core = { path = "../core" }
-meowtonin = { workspace = true }
 lru = "0.12"
+meowtonin = { workspace = true }
 parking_lot = { workspace = true }
 regex = "1"
+serde = { version = "1", features = ["derive"] }
 slotmap = { workspace = true }

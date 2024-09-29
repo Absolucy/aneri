@@ -57,16 +57,6 @@ pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<
 }
 
 #[byond_fn]
-pub fn instanced_regex_find_all(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
-	let instances = INSTANCES.read();
-	let regex = match instances.get(src) {
-		Some(regex) => regex,
-		None => return Ok(ByondValue::null()),
-	};
-	shared::regex_find_all(regex, &haystack)
-}
-
-#[byond_fn]
 pub fn instanced_regex_split(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
 	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {

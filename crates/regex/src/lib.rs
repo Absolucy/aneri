@@ -9,6 +9,7 @@
 #[macro_use]
 extern crate meowtonin;
 
+pub mod capture;
 pub mod global;
 pub mod instance;
 pub mod shared;

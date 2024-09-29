@@ -37,15 +37,6 @@ pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 }
 
 #[byond_fn]
-pub fn regex_find_all(regex: String, haystack: String) -> ByondResult<ByondValue> {
-	let mut cache = REGEX_CACHE.lock();
-	let regex = cache
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
-		.map_err(ByondError::boxed)?;
-	shared::regex_find_all(regex, &haystack)
-}
-
-#[byond_fn]
 pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache

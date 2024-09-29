@@ -25,5 +25,8 @@
 #include "util.dm"
 #include "rand\global.dm"
 #include "rand\instanced.dm"
+#include "regex\_regex.dm"
+#include "regex\global.dm"
+#include "regex\instanced.dm"
 // END_INCLUDE
 
