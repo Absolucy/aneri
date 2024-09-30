@@ -12,6 +12,7 @@ publish.workspace = true
 crate-type = ["cdylib"]
 
 [dependencies]
+aneri-audio = { path = "../audio", optional = true }
 aneri-crypto = { path = "../crypto", optional = true }
 aneri-dmi = { path = "../dmi", optional = true }
 aneri-encode = { path = "../encode", optional = true }
@@ -34,7 +35,8 @@ bosion = "1"
 [features]
 default = ["all"]
 # sub-crates
-all = ["crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "sort", "time", "util"]
+all = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "sort", "sql", "time", "util"]
+audio = ["aneri-audio"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
 encode = ["aneri-encode"]

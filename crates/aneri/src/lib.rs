@@ -11,6 +11,8 @@ extern crate meowtonin;
 
 pub mod info;
 
+#[cfg(feature = "audio")]
+pub use aneri_audio;
 #[cfg(feature = "crypto")]
 pub use aneri_crypto;
 #[cfg(feature = "dmi")]
