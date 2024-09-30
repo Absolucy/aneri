@@ -10,10 +10,10 @@ publish.workspace = true
 
 [dependencies]
 ahash = "0.8"
-aneri-core = { path = "../core", features = ["runtime"] }
+aneri-core = { path = "../core" }
 meowtonin = { workspace = true }
 meowtonin-serde = { workspace = true }
-mysql_async = { version = "0.34", default-features = false, features = ["minimal"] }
+mysql = { git = "https://github.com/ZeWaka/rust-mysql-simple.git", tag = "v25.0.1", default-features = false, optional = true }
 scopeguard = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -22,6 +22,6 @@ crossbeam-channel = "0.5"
 static_init = "1"
 
 [features]
-default = ["native-tls"]
-native-tls = ["mysql_async/default"]
-rustls = ["mysql_async/default-rustls"]
+default = ["rustls"]
+rustls = ["mysql/default-rustls"]
+native-tls = ["mysql/default"]

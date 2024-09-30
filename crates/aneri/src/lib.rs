@@ -19,6 +19,8 @@ pub use aneri_dmi;
 pub use aneri_encode;
 #[cfg(feature = "file")]
 pub use aneri_file;
+#[cfg(feature = "http")]
+pub use aneri_http;
 #[cfg(feature = "logger")]
 pub use aneri_logger;
 #[cfg(feature = "rand")]

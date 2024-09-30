@@ -22,4 +22,8 @@
 	..()
 
 // placeholder
+/datum/Del()
+	Destroy()
+	return ..()
+
 /datum/proc/Destroy()

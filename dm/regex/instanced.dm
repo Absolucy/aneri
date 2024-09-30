@@ -9,8 +9,7 @@
 
 /datum/regex/Destroy()
 	if(!ANERI_CALL("regex_del", src))
-		//stack_trace("attempted to delete nonexistent rng instance")
-		;
+		CRASH("attempted to delete nonexistent rng instance")
 	return ..()
 
 /datum/regex/proc/is_match(haystack)

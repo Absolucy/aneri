@@ -16,6 +16,7 @@ aneri-crypto = { path = "../crypto", optional = true }
 aneri-dmi = { path = "../dmi", optional = true }
 aneri-encode = { path = "../encode", optional = true }
 aneri-file = { path = "../file", optional = true }
+aneri-http = { path = "../http", optional = true }
 aneri-logger = { path = "../logger", optional = true }
 aneri-rand = { path = "../rand", optional = true }
 aneri-regex = { path = "../regex", optional = true }
@@ -33,11 +34,12 @@ bosion = "1"
 [features]
 default = ["all"]
 # sub-crates
-all = ["crypto", "dmi", "encode", "file", "logger", "rand", "regex", "sort", "time", "util"]
+all = ["crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "sort", "time", "util"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
 encode = ["aneri-encode"]
 file = ["aneri-file"]
+http = ["aneri-http"]
 logger = ["aneri-logger"]
 rand = ["aneri-rand"]
 regex = ["aneri-regex"]

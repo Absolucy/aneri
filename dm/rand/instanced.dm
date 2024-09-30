@@ -11,8 +11,7 @@
 
 /datum/rng/Destroy()
 	if(!ANERI_CALL("rng_del", src))
-		//stack_trace("attempted to delete nonexistent rng instance")
-		;
+		CRASH("attempted to delete nonexistent rng instance")
 	return ..()
 
 /datum/rng/proc/byte() as num

@@ -7,4 +7,4 @@
 	return ANERI_CALL("regex_splitn", regex, haystack, limit)
 
 /proc/aneri_regex_find(regex, haystack) as /list
-	return ANERI_CALL("regex_replace_find", regex, haystack)
+	return ANERI_CALL("regex_find", regex, haystack)
