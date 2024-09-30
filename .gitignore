@@ -235,4 +235,6 @@ $RECYCLE.BIN/
 *.lk
 *.dll
 *.so
+*.dwp
+dm/*.log
 .vs

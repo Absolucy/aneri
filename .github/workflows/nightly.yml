@@ -46,3 +46,4 @@ jobs:
                       target/${{ matrix.os.target }}/release/aneri.dll
                       target/${{ matrix.os.target }}/release/aneri.pdb
                       target/${{ matrix.os.target }}/release/libaneri.so
+                      target/${{ matrix.os.target }}/release/libaneri.so.dwp
