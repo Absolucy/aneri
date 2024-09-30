@@ -237,4 +237,8 @@ $RECYCLE.BIN/
 *.so
 *.dwp
 dm/*.log
+dm/test.dm
 .vs
+*.ogg
+*.wav
+*.mp3

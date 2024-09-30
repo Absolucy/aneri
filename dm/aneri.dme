@@ -21,6 +21,7 @@
 #include "file.dm"
 #include "logger.dm"
 #include "sort.dm"
+#include "test.dm"
 #include "time.dm"
 #include "util.dm"
 #include "rand\global.dm"
