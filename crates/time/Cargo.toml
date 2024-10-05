@@ -13,3 +13,4 @@ meowtonin = { workspace = true }
 slotmap = { workspace = true }
 aneri-core = { path = "../core", features = ["runtime"] }
 parking_lot = { workspace = true }
+chrono = "0.4"
