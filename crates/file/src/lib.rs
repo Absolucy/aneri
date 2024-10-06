@@ -37,7 +37,6 @@ pub fn file_write(path: PathBuf, data: String) -> bool {
 		}
 		let mut file = File::create(path).ok().map(BufWriter::new)?;
 		file.write_all(data.as_bytes()).ok()?;
-		file.flush().ok()?;
 		file.into_inner().ok()?.sync_all().ok()?;
 		Some(())
 	};
@@ -57,7 +56,6 @@ pub fn file_append(path: PathBuf, data: String) -> bool {
 			.ok()
 			.map(BufWriter::new)?;
 		file.write_all(data.as_bytes()).ok()?;
-		file.flush().ok()?;
 		file.into_inner().ok()?.sync_all().ok()?;
 		Some(())
 	};
