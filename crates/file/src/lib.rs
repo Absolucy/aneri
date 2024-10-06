@@ -68,15 +68,12 @@ pub fn file_append(path: PathBuf, data: String) -> bool {
 pub fn file_get_line_count(path: PathBuf) -> Option<usize> {
 	let mut file = File::open(path).ok().map(BufReader::new)?;
 	let mut lines = 0_usize;
-	let mut temp_string = String::new();
-	loop {
-		match file.read_line(&mut temp_string) {
-			Ok(0) => break,
-			Ok(_) => (),
-			Err(_) => return None,
+	let mut buffer = [0; 8192];
+	while let Ok(bytes_read) = file.read(&mut buffer) {
+		if bytes_read == 0 {
+			break;
 		}
-		lines += 1;
-		temp_string.clear();
+		lines += buffer[..bytes_read].iter().filter(|&&b| b == b'\n').count();
 	}
 	Some(lines)
 }
