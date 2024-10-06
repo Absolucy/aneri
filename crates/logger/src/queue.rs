@@ -1,19 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
-
-use crate::message::LogMessage;
+use crate::{counter::THREAD_COUNTER, message::LogMessage};
 use ahash::AHashMap;
 use crossbeam_channel::Sender;
 use parking_lot::Mutex;
 use std::{
 	path::{Path, PathBuf},
-	sync::{
-		atomic::{AtomicUsize, Ordering},
-		LazyLock,
-	},
-	time::{Duration, Instant},
+	sync::LazyLock,
+	time::Duration,
 };
-
-pub(crate) static THREAD_COUNT: AtomicUsize = AtomicUsize::new(0);
 
 /// A log message sender
 /// A None value indicates the end of the queue.
@@ -38,13 +32,10 @@ pub fn clear_log_queue() {
 		// If we're at the default capacity, it's a waste of time to reallocate.
 		queue.clear();
 	}
-	let start = Instant::now();
-	while THREAD_COUNT.load(Ordering::SeqCst) > 0 {
-		if start.elapsed() > SHUTDOWN_TIMEOUT {
-			panic!("failed to shut down logger threads in time");
-		}
-		std::thread::yield_now();
+	if !THREAD_COUNTER.read().wait_for_zero(SHUTDOWN_TIMEOUT) {
+		panic!("failed to shut down logger threads in time");
 	}
+	crate::counter::reset_thread_counter();
 }
 
 /// Returns the log queue for a given path, creating it if it doesn't exist.

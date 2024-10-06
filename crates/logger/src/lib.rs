@@ -10,6 +10,7 @@
 #[macro_use]
 extern crate meowtonin;
 
+pub mod counter;
 pub mod message;
 pub mod queue;
 pub mod writer;
