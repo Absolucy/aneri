@@ -180,7 +180,6 @@ dependencies = [
  "crossbeam-channel",
  "meowtonin",
  "parking_lot",
- "scopeguard",
  "thread-priority",
  "time",
 ]

@@ -8,20 +8,18 @@ use std::{
 pub(crate) static THREAD_COUNTER: LazyLock<RwLock<Arc<ThreadCounter>>> =
 	LazyLock::new(RwLock::default);
 
-#[cfg_attr(target_pointer_width = "32", repr(align(64)))]
-#[cfg_attr(target_pointer_width = "64", repr(align(128)))]
 pub(crate) struct ThreadCounter {
 	count: Mutex<usize>,
 	condvar: Condvar,
 }
 
 impl ThreadCounter {
-	pub fn increment(&self) {
+	fn increment(&self) {
 		let mut count = self.count.lock();
 		*count += 1;
 	}
 
-	pub fn decrement(&self) {
+	fn decrement(&self) {
 		let mut count = self.count.lock();
 		*count -= 1;
 		if *count == 0 {
@@ -53,6 +51,22 @@ impl Default for ThreadCounter {
 			condvar: Condvar::new(),
 		}
 	}
+}
+
+pub(crate) struct Ticket {
+	counter: Arc<ThreadCounter>,
+}
+
+impl Drop for Ticket {
+	fn drop(&mut self) {
+		self.counter.decrement();
+	}
+}
+
+pub(crate) fn take_thread_ticket() -> Ticket {
+	let counter = THREAD_COUNTER.read().clone();
+	counter.increment();
+	Ticket { counter }
 }
 
 pub(crate) fn reset_thread_counter() {

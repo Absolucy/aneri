@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use crate::{counter::THREAD_COUNTER, message::LogMessage};
+use crate::message::LogMessage;
 use crossbeam_channel::Receiver;
 use std::{
 	fs::OpenOptions,
@@ -9,11 +9,7 @@ use std::{
 use thread_priority::{ThreadBuilderExt, ThreadPriority};
 
 fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
-	let counter = THREAD_COUNTER.read().clone();
-	counter.increment();
-	scopeguard::defer! {
-		counter.decrement();
-	}
+	crate::counter::take_thread_ticket();
 	let mut file = OpenOptions::new()
 		.append(true)
 		.create(true)

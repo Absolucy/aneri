@@ -3,8 +3,6 @@ use rand::{RngCore, SeedableRng};
 use rand_blake3::Rng as Blake3Rand;
 use rand_wyrand::WyRand;
 
-#[cfg_attr(target_pointer_width = "32", repr(align(64)))]
-#[cfg_attr(target_pointer_width = "64", repr(align(128)))]
 pub(crate) enum RngDispatcher {
 	Blake3(Blake3Rand),
 	WyRand(WyRand),

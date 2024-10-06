@@ -3,8 +3,7 @@ use time::OffsetDateTime;
 
 /// A log message and a timestamp of when it was logged.
 #[derive(Debug, Clone, PartialEq, Eq)]
-#[cfg_attr(target_pointer_width = "32", repr(align(64)))]
-#[cfg_attr(target_pointer_width = "64", repr(align(128)))]
+
 pub(crate) struct LogMessage {
 	/// The time the message was logged.
 	pub timestamp: OffsetDateTime,

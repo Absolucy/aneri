@@ -4,8 +4,6 @@ use rand::RngCore;
 use rand_blake3::Rng as Blake3Rng;
 use rand_wyrand::WyRand;
 
-#[cfg_attr(target_pointer_width = "32", repr(align(64)))]
-#[cfg_attr(target_pointer_width = "64", repr(align(128)))]
 pub(crate) enum GlobalRngDispatcher {
 	Blake3(&'static Mutex<Blake3Rng>),
 	WyRand(&'static Mutex<WyRand>),
