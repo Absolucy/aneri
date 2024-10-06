@@ -15,9 +15,8 @@ pub(crate) struct LogMessage {
 
 impl LogMessage {
 	/// Creates a new log message at the current in time.
-	pub fn new(message: impl Into<String>, format: bool) -> Self {
+	pub fn new(message: String, format: bool) -> Self {
 		let timestamp = OffsetDateTime::now_utc();
-		let message = message.into();
 		Self {
 			timestamp,
 			message,
