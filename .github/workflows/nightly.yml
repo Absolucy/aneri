@@ -1,7 +1,5 @@
-name: Build Nightlies
-on:
-    - push
-    - workflow_dispatch
+name: Build Binaries
+on: [push, workflow_dispatch]
 jobs:
     build:
         name: Build Releases
@@ -21,6 +19,9 @@ jobs:
                       features: all
                     - name: release-debug
                       features: all,rel-debugging
+        concurrency:
+            group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os.name }}-${{ matrix.features.name }}
+            cancel-in-progress: true
         steps:
             - uses: actions/checkout@v2
             - name: Setup Rust toolchain
