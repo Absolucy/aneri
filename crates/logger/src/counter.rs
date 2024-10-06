@@ -8,6 +8,8 @@ use std::{
 pub(crate) static THREAD_COUNTER: LazyLock<RwLock<Arc<ThreadCounter>>> =
 	LazyLock::new(RwLock::default);
 
+#[cfg_attr(target_pointer_width = "32", repr(align(64)))]
+#[cfg_attr(target_pointer_width = "64", repr(align(128)))]
 pub(crate) struct ThreadCounter {
 	count: Mutex<usize>,
 	condvar: Condvar,
