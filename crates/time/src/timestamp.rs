@@ -1,9 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
-use chrono::Local;
-use std::{
-	fmt::Write,
-	time::{SystemTime, UNIX_EPOCH},
-};
+use std::time::{SystemTime, UNIX_EPOCH};
+use time::OffsetDateTime;
 
 #[byond_fn]
 pub fn unix_timestamp() -> String {
@@ -17,14 +14,11 @@ pub fn unix_timestamp() -> String {
 }
 
 #[byond_fn]
-pub fn human_readable_timestamp(millis_precision: usize) -> String {
-	let now = Local::now();
-	let mut result = now.format("%Y-%m-%d %H:%M:%S").to_string();
-
-	if millis_precision > 0 {
-		let millis = now.timestamp_subsec_millis();
-		let _ = write!(result, ".{:0width$}", millis, width = millis_precision);
-	}
-
-	result
+pub fn human_readable_timestamp() -> String {
+	let formatter = time::macros::format_description!(
+		"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+	);
+	OffsetDateTime::now_utc()
+		.format(&formatter)
+		.unwrap_or_else(|_| unreachable!("invalid formatter?"))
 }

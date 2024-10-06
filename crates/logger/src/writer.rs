@@ -1,5 +1,4 @@
 // SPDX-License-Identifier: MPL-2.0
-
 use crate::{counter::THREAD_COUNTER, message::LogMessage};
 use crossbeam_channel::Receiver;
 use std::{
@@ -25,7 +24,17 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 		if log.format {
 			let mut lines = log.message.lines();
 			if let Some(first) = lines.next() {
-				let _ = writeln!(file, "[{}] {}", log.timestamp.format("%F %T%.3f"), first);
+				let formatter = time::macros::format_description!(
+					"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+				);
+				let _ = writeln!(
+					file,
+					"[{}] {}",
+					log.timestamp
+						.format(&formatter)
+						.unwrap_or_else(|_| unreachable!("invalid formatter somehow??")),
+					first
+				);
 				for line in lines {
 					let _ = writeln!(file, " - {}", line);
 				}

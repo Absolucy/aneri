@@ -9,8 +9,8 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
-meowtonin = { workspace = true }
-slotmap = { workspace = true }
 aneri-core = { path = "../core", features = ["runtime"] }
+meowtonin = { workspace = true }
 parking_lot = { workspace = true }
-chrono = "0.4"
+slotmap = { workspace = true }
+time = { version = "0.3", features = ["formatting", "macros"] }

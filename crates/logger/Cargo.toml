@@ -10,9 +10,9 @@ publish.workspace = true
 
 [dependencies]
 ahash = "0.8"
-meowtonin = { workspace = true }
-chrono = "0.4"
 crossbeam-channel = "0.5"
+meowtonin = { workspace = true }
 parking_lot = { workspace = true }
 scopeguard = "1"
 thread-priority = "1"
+time = { version = "0.3", features = ["formatting", "macros"] }
