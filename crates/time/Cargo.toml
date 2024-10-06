@@ -9,7 +9,7 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
-aneri-core = { path = "../core", features = ["runtime"] }
+aneri-core = { path = "../core" }
 meowtonin = { workspace = true }
 parking_lot = { workspace = true }
 slotmap = { workspace = true }
