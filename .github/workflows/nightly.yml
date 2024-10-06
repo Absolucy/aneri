@@ -5,7 +5,6 @@ jobs:
         name: Build Releases
         runs-on: ${{ matrix.os.runner }}
         strategy:
-            fail-fast: false
             matrix:
                 os:
                     - name: linux
