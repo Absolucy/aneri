@@ -1,74 +1,14 @@
 // SPDX-License-Identifier: MPL-2.0
-use parking_lot::{Condvar, Mutex, RwLock};
-use std::{
-	sync::{Arc, LazyLock},
-	time::{Duration, Instant},
-};
+use parking_lot::RwLock;
+use std::sync::LazyLock;
+use thread_counter::{ThreadCounter, Ticket};
 
-pub(crate) static THREAD_COUNTER: LazyLock<RwLock<Arc<ThreadCounter>>> =
-	LazyLock::new(RwLock::default);
+pub static THREAD_COUNTER: LazyLock<RwLock<ThreadCounter>> = LazyLock::new(RwLock::default);
 
-pub(crate) struct ThreadCounter {
-	count: Mutex<usize>,
-	condvar: Condvar,
+pub fn take_thread_ticket() -> Ticket {
+	THREAD_COUNTER.read().ticket()
 }
 
-impl ThreadCounter {
-	fn increment(&self) {
-		let mut count = self.count.lock();
-		*count += 1;
-	}
-
-	fn decrement(&self) {
-		let mut count = self.count.lock();
-		*count -= 1;
-		if *count == 0 {
-			self.condvar.notify_all();
-		}
-	}
-
-	pub fn wait_for_zero(&self, timeout: Duration) -> bool {
-		let start = Instant::now();
-		let mut count = self.count.lock();
-
-		while *count > 0 {
-			let remaining = match timeout.checked_sub(start.elapsed()) {
-				Some(remaining) => remaining,
-				None => break,
-			};
-			if self.condvar.wait_for(&mut count, remaining).timed_out() {
-				return false;
-			}
-		}
-		true
-	}
-}
-
-impl Default for ThreadCounter {
-	fn default() -> Self {
-		ThreadCounter {
-			count: Mutex::new(0),
-			condvar: Condvar::new(),
-		}
-	}
-}
-
-pub(crate) struct Ticket {
-	counter: Arc<ThreadCounter>,
-}
-
-impl Drop for Ticket {
-	fn drop(&mut self) {
-		self.counter.decrement();
-	}
-}
-
-pub(crate) fn take_thread_ticket() -> Ticket {
-	let counter = THREAD_COUNTER.read().clone();
-	counter.increment();
-	Ticket { counter }
-}
-
-pub(crate) fn reset_thread_counter() {
-	*THREAD_COUNTER.write() = Arc::default();
+pub fn reset_thread_counter() {
+	*THREAD_COUNTER.write() = ThreadCounter::default();
 }

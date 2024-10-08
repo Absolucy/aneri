@@ -32,10 +32,10 @@ pub fn clear_log_queue() {
 		// If we're at the default capacity, it's a waste of time to reallocate.
 		queue.clear();
 	}
-	if !THREAD_COUNTER.read().wait_for_zero(SHUTDOWN_TIMEOUT) {
+	if !THREAD_COUNTER.read().wait(SHUTDOWN_TIMEOUT) {
+		crate::counter::reset_thread_counter();
 		panic!("failed to shut down logger threads in time");
 	}
-	crate::counter::reset_thread_counter();
 }
 
 /// Returns the log queue for a given path, creating it if it doesn't exist.

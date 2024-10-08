@@ -13,5 +13,6 @@ ahash = "0.8"
 crossbeam-channel = "0.5"
 meowtonin = { workspace = true }
 parking_lot = { workspace = true }
+thread-counter = "0.1"
 thread-priority = "1"
 time = { version = "0.3", features = ["formatting", "macros"] }
