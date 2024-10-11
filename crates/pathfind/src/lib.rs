@@ -1,7 +1,7 @@
+use ahash::AHashMap;
 use bitflags::bitflags;
 use ordered_float::OrderedFloat;
 use pathfinding::prelude::*;
-use std::collections::HashMap;
 
 bitflags! {
 	#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -30,7 +30,7 @@ pub struct Tile {
 }
 
 pub struct GameMap {
-	tiles: HashMap<Position, Tile>,
+	tiles: AHashMap<Position, Tile>,
 	width: i32,
 	height: i32,
 }
@@ -43,7 +43,7 @@ pub struct GameState {
 impl GameMap {
 	pub fn new(width: i32, height: i32) -> Self {
 		GameMap {
-			tiles: HashMap::new(),
+			tiles: AHashMap::with_capacity((width.max(0) as usize) * (height.max(0) as usize)),
 			width,
 			height,
 		}

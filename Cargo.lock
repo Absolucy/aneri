@@ -189,6 +189,7 @@ dependencies = [
 name = "aneri-pathfind"
 version = "0.1.0"
 dependencies = [
+ "ahash 0.8.11",
  "bitflags 2.6.0",
  "meowtonin",
  "ordered-float",

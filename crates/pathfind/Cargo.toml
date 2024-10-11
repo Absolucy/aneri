@@ -9,6 +9,7 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
+ahash = "0.8"
 meowtonin = { workspace = true }
 pathfinding = "4"
 bitflags = "2"
