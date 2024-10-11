@@ -19,8 +19,7 @@ use symphonia::core::{
 };
 
 #[byond_fn]
-pub fn audio_length(path: PathBuf, round_to: Option<u32>) -> Option<u32> {
-	let round_to = round_to.unwrap_or(5);
+pub fn audio_length(path: PathBuf) -> Option<u32> {
 	// Open the file
 	let file = File::open(path).ok()?;
 
@@ -50,11 +49,5 @@ pub fn audio_length(path: PathBuf, round_to: Option<u32>) -> Option<u32> {
 	})?;
 
 	// Convert to deciseconds
-	let deciseconds = (duration.as_secs_f64() * 10.0).ceil() as u32;
-
-	// Round to the specified number of deciseconds
-	match round_to {
-		0 => Some(deciseconds),
-		_ => Some(((deciseconds + round_to - 1) / round_to) * round_to),
-	}
+	Some((duration.as_secs_f64() * 10.0).ceil() as u32)
 }
