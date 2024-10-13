@@ -10,7 +10,7 @@
 #[macro_use]
 extern crate meowtonin;
 
-use std::{fs::File, path::PathBuf, time::Duration};
+use std::{ffi::OsStr, fs::File, path::PathBuf, time::Duration};
 use symphonia::core::{
 	formats::FormatOptions,
 	io::{MediaSourceStream, MediaSourceStreamOptions},
@@ -20,14 +20,17 @@ use symphonia::core::{
 
 #[byond_fn]
 pub fn audio_length(path: PathBuf) -> Option<u32> {
+	// If the path has an extension, include it as a hint.
+	let mut hint = Hint::new();
+	if let Some(extension) = path.extension().and_then(OsStr::to_str) {
+		hint.with_extension(extension);
+	}
+
 	// Open the file
 	let file = File::open(path).ok()?;
 
 	// Create a media source stream
 	let mss = MediaSourceStream::new(Box::new(file), MediaSourceStreamOptions::default());
-
-	// Create a hint to help with format detection
-	let hint = Hint::new();
 
 	// Use default options for format and metadata
 	let format_opts = FormatOptions::default();
