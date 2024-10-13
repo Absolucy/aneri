@@ -33,3 +33,10 @@
 	src.start = start
 	src.end = end
 	src.captures = captures
+
+/// Finds a specific capture group by name.
+/datum/regex_match/proc/find_capture(group) as /datum/regex_capture_group
+	RETURN_TYPE(/datum/regex_capture_group)
+	for(var/datum/regex_capture_group/capture as anything in captures)
+		if(capture.name == group)
+			return group
