@@ -1,5 +1,22 @@
 name: Build Binaries
-on: [push, workflow_dispatch]
+on:
+    push:
+        paths-ignore:
+            - 'dm/**'
+            - '.editorconfig'
+            - '.gitattributes'
+            - '.gitignore'
+            - '.rustfmt.toml'
+            - 'deny.toml'
+    pull_request:
+        paths-ignore:
+            - 'dm/**'
+            - '.editorconfig'
+            - '.gitattributes'
+            - '.gitignore'
+            - '.rustfmt.toml'
+            - 'deny.toml'
+    workflow_dispatch:
 jobs:
     build:
         name: Build Releases
