@@ -6,6 +6,12 @@
 	clippy::perf,
 	clippy::style
 )]
+pub mod direction;
+pub mod map;
+pub mod position;
+pub mod tile;
+
+/*
 use ahash::AHashMap;
 use bitflags::bitflags;
 use ordered_float::OrderedFloat;
@@ -183,4 +189,5 @@ pub fn main() {
 		println!("No path found");
 	}
 }
+*/
 */
