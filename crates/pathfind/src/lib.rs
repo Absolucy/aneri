@@ -1,3 +1,11 @@
+// SPDX-License-Identifier: MPL-2.0
+#![warn(
+	clippy::correctness,
+	clippy::suspicious,
+	clippy::complexity,
+	clippy::perf,
+	clippy::style
+)]
 use ahash::AHashMap;
 use bitflags::bitflags;
 use ordered_float::OrderedFloat;
