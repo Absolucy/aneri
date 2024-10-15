@@ -50,10 +50,14 @@ jobs:
                   sudo dpkg --add-architecture i386
                   sudo apt-get update
                   sudo apt-get install libgcc-s1:i386 g++-multilib zlib1g-dev:i386 libssl-dev:i386
+            - name: Setup sccache
+              uses: mozilla-actions/sccache-action@v0.0.6
             - name: Build
               run: cargo build --release --package aneri --target "${{ matrix.os.target }}" --no-default-features --features "${{ matrix.features.features }}" --locked
               env:
                   PKG_CONFIG_ALLOW_CROSS: 1
+                  SCCACHE_GHA_ENABLED: "true"
+                  RUSTC_WRAPPER: "sccache"
             - name: Upload artifacts
               uses: actions/upload-artifact@v4
               with:
