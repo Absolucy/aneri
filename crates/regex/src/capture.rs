@@ -5,15 +5,15 @@ use regex::Regex;
 #[derive(Debug)]
 /// Represents data for a single capture group in a regex match.
 pub(crate) struct CaptureData {
-    /// The name of the capture group, if it has one.
-    /// `None` for unnamed capture groups.
-    name: Option<String>,
-    /// The starting index of the capture in the original string.
-    start: usize,
-    /// The ending index of the capture in the original string.
-    end: usize,
-    /// The actual string value of the captured text.
-    value: String,
+	/// The name of the capture group, if it has one.
+	/// `None` for unnamed capture groups.
+	name: Option<String>,
+	/// The starting index of the capture in the original string.
+	start: usize,
+	/// The ending index of the capture in the original string.
+	end: usize,
+	/// The actual string value of the captured text.
+	value: String,
 }
 
 impl ToByond for CaptureData {
@@ -28,15 +28,15 @@ impl ToByond for CaptureData {
 
 #[derive(Debug)]
 pub(crate) struct MatchData {
-    /// The full string that matched the entire regex pattern.
-    rmatch: String,
-    /// The starting index of the entire match in the original string.
-    start: usize,
-    /// The ending index of the entire match in the original string.
-    end: usize,
-    /// A list containing data for each capture group in the match.
-    /// This includes both named and unnamed captures.
-    captures: Vec<CaptureData>,
+	/// The full string that matched the entire regex pattern.
+	rmatch: String,
+	/// The starting index of the entire match in the original string.
+	start: usize,
+	/// The ending index of the entire match in the original string.
+	end: usize,
+	/// A list containing data for each capture group in the match.
+	/// This includes both named and unnamed captures.
+	captures: Vec<CaptureData>,
 }
 
 impl ToByond for MatchData {

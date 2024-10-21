@@ -10,4 +10,3 @@ publish.workspace = true
 
 [dependencies]
 meowtonin = { workspace = true }
-glidesort = "0.1"
