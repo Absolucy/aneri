@@ -26,7 +26,6 @@ aneri-sql = { path = "../sql", optional = true }
 aneri-time = { path = "../time", optional = true }
 aneri-util = { path = "../util", optional = true }
 meowtonin = { workspace = true }
-meowtonin-serde = { workspace = true }
 const_format = "0.2"
 
 [build-dependencies]
