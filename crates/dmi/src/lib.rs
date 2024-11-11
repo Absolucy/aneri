@@ -27,10 +27,10 @@ pub fn dmi_resize_png(
 }
 
 #[byond_fn]
-pub fn dmi_read_states(path: PathBuf) -> ByondResult<Vec<String>> {
+pub fn dmi_read_states(path: PathBuf) -> Option<Vec<String>> {
 	let icon = File::open(path)
 		.map(BufReader::new)
-		.map_err(ByondError::boxed)
-		.and_then(|reader| Dmi::load(reader).map_err(ByondError::boxed))?;
-	Ok(icon.states.into_iter().map(|state| state.name).collect())
+		.ok()
+		.and_then(|reader| Dmi::load(reader).ok())?;
+	Some(icon.states.into_iter().map(|state| state.name).collect())
 }
