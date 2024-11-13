@@ -9,7 +9,7 @@ license.workspace = true
 publish.workspace = true
 
 [dependencies]
-ahash = "0.8"
+ahash = { workspace = true }
 aneri-core = { path = "../core" }
 meowtonin = { workspace = true }
 meowtonin-serde = { workspace = true }
