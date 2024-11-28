@@ -9,6 +9,11 @@ use time::OffsetDateTime;
  * average, while the usual format!() approach takes nearly 200ns on
  * average - both excluding the SystemTime::now().duration_since(UNIX_EPOCH)
  * stuff, mind you.
+ *
+ * all this for a microscopic improvement over the much easier
+ * `format!("{:.6}", duration.as_secs_f64())`
+ * but this is a very hot proc, due to logging stuff, so if it counts
+ * anywhere, it'll be here, i guess?
  */
 #[byond_fn]
 pub fn unix_timestamp() -> String {
