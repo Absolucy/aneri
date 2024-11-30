@@ -5,9 +5,36 @@ extern crate meowtonin;
 use meowtonin::{ByondResult, ByondValue};
 use std::cmp::Ordering;
 
+fn reassemble_list(list: Vec<[ByondValue; 2]>) -> ByondResult<ByondValue> {
+	let mut sorted_list = ByondValue::new_list()?;
+	for [key, value] in list {
+		sorted_list.write_list_index(key, value)?;
+	}
+	Ok(sorted_list)
+}
+
+fn assoc_a_b<'a, 'b>(
+	[a_key, a_val]: &'a [ByondValue; 2],
+	[b_key, b_val]: &'b [ByondValue; 2],
+	associative: bool,
+) -> (&'a ByondValue, &'b ByondValue) {
+	if associative {
+		(a_val, b_val)
+	} else {
+		(a_key, b_key)
+	}
+}
+
 #[byond_fn]
-pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<ByondValue> {
+pub fn sort_with_proc(
+	list: ByondValue,
+	proc_name: String,
+	associative: Option<bool>,
+) -> ByondResult<ByondValue> {
+	let associative = associative.unwrap_or(false);
+	let mut list = list.read_assoc_list()?;
 	list.sort_by(|a, b| {
+		let (a, b) = assoc_a_b(a, b, associative);
 		match meowtonin::call_global::<_, _, _, Option<isize>>(&proc_name, [a, b])
 			.expect("sort proc failed")
 		{
@@ -15,7 +42,7 @@ pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<Byond
 			None => Ordering::Equal,
 		}
 	});
-	list
+	reassemble_list(list)
 }
 
 #[byond_fn]
