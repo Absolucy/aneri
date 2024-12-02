@@ -57,7 +57,7 @@ pub fn sort_by_number(
 		.iter()
 		.map(|pair| {
 			let value = if associative { &pair[1] } else { &pair[0] };
-			(pair.clone(), value.get_number().unwrap_or(0.0))
+			(pair.clone(), value.get_number().unwrap_or_default())
 		})
 		.collect();
 
@@ -91,7 +91,10 @@ pub fn sort_by_number_var(
 		.iter()
 		.map(|pair| -> ByondResult<_> {
 			let value = if associative { &pair[1] } else { &pair[0] };
-			Ok((pair.clone(), value.read_var::<_, f32>(&var).unwrap_or(0.0)))
+			Ok((
+				pair.clone(),
+				value.read_var::<_, f32>(&var).unwrap_or_default(),
+			))
 		})
 		.collect::<ByondResult<_>>()?;
 
