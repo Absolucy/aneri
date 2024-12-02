@@ -2,7 +2,7 @@
 use crate::shared;
 use ahash::RandomState;
 use lru::LruCache;
-use meowtonin::{ByondError, ByondResult, ByondValue};
+use meowtonin::{byond_fn, ByondError, ByondResult, ByondValue};
 use parking_lot::Mutex;
 use regex::Regex;
 use std::{num::NonZeroUsize, sync::LazyLock};

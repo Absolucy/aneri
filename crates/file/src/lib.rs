@@ -6,9 +6,8 @@
 	clippy::perf,
 	clippy::style
 )]
-#[macro_use]
-extern crate meowtonin;
 
+use meowtonin::byond_fn;
 use std::{
 	fs::{File, OpenOptions},
 	io::{BufRead, BufReader, BufWriter, Read, Write},

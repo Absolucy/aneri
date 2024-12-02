@@ -7,14 +7,12 @@
 	clippy::style
 )]
 
-#[macro_use]
-extern crate meowtonin;
-
 pub(crate) mod counter;
 pub mod message;
 pub mod queue;
 pub mod writer;
 
+use meowtonin::byond_fn;
 use std::path::PathBuf;
 
 /// Logs a message to the specified path.

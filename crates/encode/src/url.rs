@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
+use meowtonin::byond_fn;
+
 #[byond_fn]
 pub fn url_encode(data: String) -> String {
 	form_urlencoded::byte_serialize(data.as_bytes()).collect()

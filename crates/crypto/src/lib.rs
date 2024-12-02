@@ -6,12 +6,11 @@
 	clippy::perf,
 	clippy::style
 )]
-#[macro_use]
-extern crate meowtonin;
 
 use ::digest::{FixedOutputReset, Update};
 use blake3::Hasher as Blake3;
 use md5::{Digest, Md5};
+use meowtonin::byond_fn;
 use parking_lot::Mutex;
 use sha1::Sha1;
 use sha2::{Sha224, Sha256, Sha384, Sha512, Sha512_224, Sha512_256};

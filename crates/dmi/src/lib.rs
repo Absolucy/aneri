@@ -1,10 +1,15 @@
 // SPDX-License-Identifier: MPL-2.0
-#[macro_use]
-extern crate meowtonin;
+#![warn(
+	clippy::correctness,
+	clippy::suspicious,
+	clippy::complexity,
+	clippy::perf,
+	clippy::style
+)]
 
 use dmi::icon::Icon as Dmi;
 use image::imageops::FilterType;
-use meowtonin::{ByondError, ByondResult};
+use meowtonin::{byond_fn, ByondError, ByondResult};
 use std::{fs::File, io::BufReader, path::PathBuf};
 
 #[byond_fn]

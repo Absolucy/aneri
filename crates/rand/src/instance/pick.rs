@@ -2,7 +2,7 @@
 use super::INSTANCES;
 use crate::shared;
 use aneri_core::ByondSlotKey;
-use meowtonin::{ByondResult, ByondValue};
+use meowtonin::{byond_fn, ByondResult, ByondValue};
 
 #[byond_fn]
 pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Option<ByondValue>> {

@@ -6,13 +6,13 @@
 	clippy::perf,
 	clippy::style
 )]
-#[macro_use]
-extern crate meowtonin;
 
 pub mod capture;
 pub mod global;
 pub mod instance;
 pub mod shared;
+
+use meowtonin::byond_fn;
 
 pub fn cleanup() {
 	global::clear_cache();

@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 use super::global;
 use crate::shared;
+use meowtonin::byond_fn;
 
 #[byond_fn]
 pub fn random_string_alphanumeric(length: usize, secure: Option<bool>) -> String {

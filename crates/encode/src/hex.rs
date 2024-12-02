@@ -1,4 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
+use meowtonin::byond_fn;
+
 #[byond_fn]
 pub fn hex_encode(input: String, upper: Option<bool>) -> String {
 	let input = input.as_bytes();

@@ -7,9 +7,7 @@
 	clippy::style
 )]
 
-#[macro_use]
-extern crate meowtonin;
-
+use meowtonin::byond_fn;
 use std::{ffi::OsStr, fs::File, path::PathBuf, time::Duration};
 use symphonia::core::{
 	formats::FormatOptions,

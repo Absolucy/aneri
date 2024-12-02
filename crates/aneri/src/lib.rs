@@ -6,8 +6,6 @@
 	clippy::perf,
 	clippy::style
 )]
-#[macro_use]
-extern crate meowtonin;
 
 pub mod info;
 
@@ -37,6 +35,8 @@ pub use aneri_sql;
 pub use aneri_time;
 #[cfg(feature = "util")]
 pub use aneri_util;
+
+use meowtonin::byond_fn;
 
 /// Cleans up any resources used by Aneri.
 /// This should be run on initialization and shutdown.

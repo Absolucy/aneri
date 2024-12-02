@@ -6,8 +6,6 @@
 	clippy::perf,
 	clippy::style
 )]
-#[macro_use]
-extern crate meowtonin;
 
 pub mod global;
 pub mod instance;

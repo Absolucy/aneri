@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use const_format::formatcp as const_format;
+use meowtonin::byond_fn;
 
 #[byond_fn]
 pub fn aneri_version() -> &'static str {

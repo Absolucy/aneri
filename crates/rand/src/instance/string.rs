@@ -2,6 +2,7 @@
 use super::INSTANCES;
 use crate::shared;
 use aneri_core::ByondSlotKey;
+use meowtonin::byond_fn;
 
 #[byond_fn]
 pub fn instanced_random_string_alphanumeric(src: ByondSlotKey, length: usize) -> Option<String> {

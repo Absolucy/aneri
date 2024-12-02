@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MPL-2.0
-#[macro_use]
-extern crate meowtonin;
+#![warn(
+	clippy::correctness,
+	clippy::suspicious,
+	clippy::complexity,
+	clippy::perf,
+	clippy::style
+)]
 
 pub mod base64;
 pub mod hex;

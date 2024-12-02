@@ -1,5 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use data_encoding::{BASE64, BASE64URL};
+use meowtonin::byond_fn;
 
 #[byond_fn]
 pub fn base64_encode(data: String) -> String {

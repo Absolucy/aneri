@@ -2,6 +2,7 @@
 use super::INSTANCES;
 use crate::shared;
 use aneri_core::ByondSlotKey;
+use meowtonin::byond_fn;
 
 #[byond_fn]
 pub fn instanced_prob(src: ByondSlotKey, probability: f64) -> Option<bool> {

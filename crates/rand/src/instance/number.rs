@@ -2,6 +2,7 @@
 use super::INSTANCES;
 use crate::shared;
 use aneri_core::ByondSlotKey;
+use meowtonin::byond_fn;
 use rand::{
 	distributions::{Distribution, Standard},
 	Rng,

@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+use meowtonin::byond_fn;
 use uuid::Uuid;
 
 #[byond_fn]

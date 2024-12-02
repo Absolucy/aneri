@@ -7,7 +7,7 @@ pub mod string;
 
 use aneri_core::ByondSlotKey;
 use dispatcher::RngDispatcher;
-use meowtonin::{ByondResult, ByondValue};
+use meowtonin::{byond_fn, ByondResult, ByondValue};
 use parking_lot::Mutex;
 use slotmap::SlotMap;
 use std::sync::LazyLock;
