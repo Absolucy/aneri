@@ -9,36 +9,9 @@
 use meowtonin::{byond_fn, ByondResult, ByondValue};
 use std::cmp::Ordering;
 
-fn reassemble_list(list: Vec<[ByondValue; 2]>) -> ByondResult<ByondValue> {
-	let mut sorted_list = ByondValue::new_list()?;
-	for [key, value] in list {
-		sorted_list.write_list_index(key, value)?;
-	}
-	Ok(sorted_list)
-}
-
-fn assoc_a_b<'a, 'b>(
-	[a_key, a_val]: &'a [ByondValue; 2],
-	[b_key, b_val]: &'b [ByondValue; 2],
-	associative: bool,
-) -> (&'a ByondValue, &'b ByondValue) {
-	if associative {
-		(a_val, b_val)
-	} else {
-		(a_key, b_key)
-	}
-}
-
 #[byond_fn]
-pub fn sort_with_proc(
-	list: ByondValue,
-	proc_name: String,
-	associative: Option<bool>,
-) -> ByondResult<ByondValue> {
-	let associative = associative.unwrap_or(false);
-	let mut list = list.read_assoc_list()?;
+pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<ByondValue> {
 	list.sort_by(|a, b| {
-		let (a, b) = assoc_a_b(a, b, associative);
 		match meowtonin::call_global::<_, _, _, Option<isize>>(&proc_name, [a, b])
 			.expect("sort proc failed")
 		{
@@ -46,67 +19,42 @@ pub fn sort_with_proc(
 			None => Ordering::Equal,
 		}
 	});
-	reassemble_list(list)
+	list
 }
 
 #[byond_fn]
-pub fn sort_by_number(
-	list: ByondValue,
-	descending: Option<bool>,
-	associative: Option<bool>,
-) -> ByondResult<ByondValue> {
+pub fn sort_by_number(list: Vec<ByondValue>, descending: Option<bool>) -> Vec<f32> {
+	let mut list = list
+		.into_iter()
+		.flat_map(|value| value.get_number().ok())
+		.collect::<Vec<f32>>();
 	let descending = descending.unwrap_or(false);
-	let associative = associative.unwrap_or(false);
-	let list = list.read_assoc_list()?;
-
-	// Pre-convert to tuples of (original_pair, number)
-	let mut converted: Vec<_> = list
-		.iter()
-		.map(|pair| {
-			let value = if associative { &pair[1] } else { &pair[0] };
-			(pair.clone(), value.get_number().unwrap_or_default())
-		})
-		.collect();
-
-	// Sort using pre-converted values
-	converted.sort_by(|&(_, a), &(_, b)| {
+	list.sort_by(|a, b| {
 		let mut a = a;
 		let mut b = b;
 		if descending {
 			std::mem::swap(&mut a, &mut b);
 		}
-		a.total_cmp(&b)
+		a.total_cmp(b)
 	});
-
-	// Rebuild list from sorted pairs
-	reassemble_list(converted.into_iter().map(|(pair, _)| pair).collect())
+	list
 }
 
 #[byond_fn]
 pub fn sort_by_number_var(
-	list: ByondValue,
+	list: Vec<ByondValue>,
 	var: String,
 	descending: Option<bool>,
-	associative: Option<bool>,
-) -> ByondResult<ByondValue> {
+) -> ByondResult<Vec<ByondValue>> {
 	let descending = descending.unwrap_or(false);
-	let associative = associative.unwrap_or(false);
-	let list = list.read_assoc_list()?;
-
-	// Pre-convert to tuples of (original_pair, number)
-	let mut converted: Vec<_> = list
-		.iter()
-		.map(|pair| -> ByondResult<_> {
-			let value = if associative { &pair[1] } else { &pair[0] };
-			Ok((
-				pair.clone(),
-				value.read_var::<_, f32>(&var).unwrap_or_default(),
-			))
+	let mut list = list
+		.into_iter()
+		.map(|value| -> ByondResult<(ByondValue, f32)> {
+			let num = value.read_var::<_, f32>(&var)?;
+			Ok((value, num))
 		})
-		.collect::<ByondResult<_>>()?;
-
-	// Sort using pre-converted values
-	converted.sort_by(|&(_, a), &(_, b)| {
+		.collect::<ByondResult<Vec<(ByondValue, f32)>>>()?;
+	list.sort_by(|&(_, a), &(_, b)| {
 		let mut a = a;
 		let mut b = b;
 		if descending {
@@ -114,78 +62,54 @@ pub fn sort_by_number_var(
 		}
 		a.total_cmp(&b)
 	});
-
-	// Rebuild list from sorted pairs
-	reassemble_list(converted.into_iter().map(|(pair, _)| pair).collect())
+	Ok(list.into_iter().map(|(value, _)| value).collect())
 }
 
 #[byond_fn]
 pub fn sort_by_string(
-	list: ByondValue,
+	mut list: Vec<String>,
 	descending: Option<bool>,
 	ignore_case: Option<bool>,
-	associative: Option<bool>,
-) -> ByondResult<ByondValue> {
+) -> Vec<String> {
 	let ignore_case = ignore_case.unwrap_or(false);
 	let descending = descending.unwrap_or(false);
-	let associative = associative.unwrap_or(false);
-	let list = list.read_assoc_list()?;
-
-	// Pre-convert to tuples of (original_pair, string)
-	let mut converted: Vec<_> = list
-		.iter()
-		.map(|pair| {
-			let value = if associative { &pair[1] } else { &pair[0] };
-			let mut string = value.get_string().unwrap_or_default();
-			if ignore_case {
-				string = string.to_lowercase();
-			}
-			(pair.clone(), string)
-		})
-		.collect();
-
-	// Sort using pre-converted values
-	converted.sort_by(|(_, a), (_, b)| {
+	list.sort_by(|a, b| {
 		let mut a = a;
 		let mut b = b;
 		if descending {
 			std::mem::swap(&mut a, &mut b);
 		}
-		a.cmp(b)
+		if ignore_case {
+			let a = a.to_lowercase();
+			let b = b.to_lowercase();
+			a.cmp(&b)
+		} else {
+			a.cmp(b)
+		}
 	});
-
-	// Rebuild list from sorted pairs
-	reassemble_list(converted.into_iter().map(|(pair, _)| pair).collect())
+	list
 }
 
 #[byond_fn]
 pub fn sort_by_string_var(
-	list: ByondValue,
+	list: Vec<ByondValue>,
 	var: String,
 	descending: Option<bool>,
 	ignore_case: Option<bool>,
-	associative: Option<bool>,
-) -> ByondResult<ByondValue> {
+) -> ByondResult<Vec<ByondValue>> {
 	let ignore_case = ignore_case.unwrap_or(false);
 	let descending = descending.unwrap_or(false);
-	let associative = associative.unwrap_or(false);
-	let list = list.read_assoc_list()?;
-
-	// Pre-convert to tuples of (original_pair, string)
-	let mut converted: Vec<_> = list
-		.iter()
-		.map(|pair| -> ByondResult<_> {
-			let value = if associative { &pair[1] } else { &pair[0] };
-			let mut string = value.read_var::<_, String>(&var).unwrap_or_default();
+	let mut list = list
+		.into_iter()
+		.map(|value| -> ByondResult<(ByondValue, String)> {
+			let mut string = value.read_var::<_, String>(&var)?;
 			if ignore_case {
 				string = string.to_lowercase();
 			}
-			Ok((pair.clone(), string))
+			Ok((value, string))
 		})
-		.collect::<ByondResult<_>>()?;
-
-	// Sort using pre-converted values
-	converted.sort_by(|(_, a), (_, b)| {
+		.collect::<ByondResult<Vec<(ByondValue, String)>>>()?;
+	list.sort_by(|(_, a), (_, b)| {
 		let mut a = a;
 		let mut b = b;
 		if descending {
@@ -193,7 +117,5 @@ pub fn sort_by_string_var(
 		}
 		a.cmp(b)
 	});
-
-	// Rebuild list from sorted pairs
-	reassemble_list(converted.into_iter().map(|(pair, _)| pair).collect())
+	Ok(list.into_iter().map(|(value, _)| value).collect())
 }
