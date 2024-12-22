@@ -10,3 +10,6 @@ publish.workspace = true
 
 [dependencies]
 meowtonin = { workspace = true }
+
+[lints]
+workspace = true

@@ -12,3 +12,6 @@ version.workspace = true
 meowtonin = { workspace = true }
 dmi = "0.3"
 image = { version = "0.25", default-features = false, features = ["png"] }
+
+[lints]
+workspace = true

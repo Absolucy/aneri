@@ -50,3 +50,6 @@ time = ["aneri-time"]
 util = ["aneri-util"]
 # misc features
 rel-debugging = ["meowtonin/rel-debugging"]
+
+[lints]
+workspace = true

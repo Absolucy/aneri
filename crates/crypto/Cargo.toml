@@ -39,3 +39,6 @@ features = ["asm"]
 [target.'cfg(target_os = "linux")'.dependencies.sha3]
 version = "0.10"
 features = ["asm"]
+
+[lints]
+workspace = true

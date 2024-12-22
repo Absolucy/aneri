@@ -1,11 +1,4 @@
 // SPDX-License-Identifier: MPL-2.0
-#![warn(
-	clippy::correctness,
-	clippy::suspicious,
-	clippy::complexity,
-	clippy::perf,
-	clippy::style
-)]
 
 use dmi::icon::Icon as Dmi;
 use image::imageops::FilterType;

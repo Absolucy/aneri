@@ -16,3 +16,6 @@ ureq = { version = "3.0.0-rc1", default-features = false, features = ["gzip", "b
 default = ["rustls"]
 rustls = ["ureq/rustls"]
 native-tls = ["ureq/native-tls"]
+
+[lints]
+workspace = true
