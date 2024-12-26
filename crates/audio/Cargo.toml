@@ -10,4 +10,4 @@ publish.workspace = true
 
 [dependencies]
 meowtonin = { workspace = true }
-symphonia = { version = "0.5", default-features = false, features = ["mp3", "vorbis", "ogg", "wav"] }
+symphonia = { version = "0.5", default-features = false, features = ["all-codecs"] }
