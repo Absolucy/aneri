@@ -34,20 +34,21 @@ bosion = "1"
 [features]
 default = ["all"]
 # sub-crates
-all = ["audio", "crypto", "dmi", "encode", "file", "logger", "rand", "regex", "sort", "time", "util"]
+all = ["audio", "crypto", "dmi", "encode", "file", "logger", "rand", "regex", "time", "util"]
 audio = ["aneri-audio"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
 encode = ["aneri-encode"]
 file = ["aneri-file"]
-http = ["aneri-http"]
 logger = ["aneri-logger"]
 rand = ["aneri-rand"]
 regex = ["aneri-regex"]
-sort = ["aneri-sort"]
-sql = ["aneri-sql"]
 time = ["aneri-time"]
 util = ["aneri-util"]
+# modules that aren't ready or working yet
+http = ["aneri-http"]
+sort = ["aneri-sort"]
+sql = ["aneri-sql"]
 # misc features
 rel-debugging = ["meowtonin/rel-debugging"]
 
