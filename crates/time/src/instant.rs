@@ -50,39 +50,27 @@ pub fn instant_reset(src: ByondSlotKey) -> bool {
 #[byond_fn]
 pub fn instant_microseconds(src: ByondSlotKey) -> Option<u32> {
 	let instances = INSTANCES.lock();
-	let instant = match instances.get(src) {
-		Some(instant) => instant,
-		None => return None,
-	};
+	let instant = instances.get(src)?;
 	Some(instant.elapsed().as_micros() as u32)
 }
 
 #[byond_fn]
 pub fn instant_nanoseconds(src: ByondSlotKey) -> Option<u32> {
 	let instances = INSTANCES.lock();
-	let instant = match instances.get(src) {
-		Some(instant) => instant,
-		None => return None,
-	};
+	let instant = instances.get(src)?;
 	Some(instant.elapsed().as_nanos() as u32)
 }
 
 #[byond_fn]
 pub fn instant_milliseconds(src: ByondSlotKey) -> Option<u32> {
 	let instances = INSTANCES.lock();
-	let instant = match instances.get(src) {
-		Some(instant) => instant,
-		None => return None,
-	};
+	let instant = instances.get(src)?;
 	Some(instant.elapsed().as_millis() as u32)
 }
 
 #[byond_fn]
 pub fn instant_seconds(src: ByondSlotKey) -> Option<f32> {
 	let instances = INSTANCES.lock();
-	let instant = match instances.get(src) {
-		Some(instant) => instant,
-		None => return None,
-	};
+	let instant = instances.get(src)?;
 	Some(instant.elapsed().as_secs_f32())
 }
