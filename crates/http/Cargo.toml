@@ -8,6 +8,9 @@ repository.workspace = true
 license.workspace = true
 publish.workspace = true
 
+[lints]
+workspace = true
+
 [dependencies]
 meowtonin = { workspace = true }
 ureq = { version = "3.0.0-rc1", default-features = false, features = ["gzip", "brotli"] }
@@ -16,6 +19,3 @@ ureq = { version = "3.0.0-rc1", default-features = false, features = ["gzip", "b
 default = ["rustls"]
 rustls = ["ureq/rustls"]
 native-tls = ["ureq/native-tls"]
-
-[lints]
-workspace = true

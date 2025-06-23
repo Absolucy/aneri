@@ -11,6 +11,9 @@ publish.workspace = true
 [lib]
 crate-type = ["cdylib"]
 
+[lints]
+workspace = true
+
 [dependencies]
 aneri-audio = { path = "../audio", optional = true }
 aneri-crypto = { path = "../crypto", optional = true }
@@ -53,6 +56,3 @@ sort = ["aneri-sort"]
 sql = ["aneri-sql"]
 # misc features
 rel-debugging = ["meowtonin/rel-debugging"]
-
-[lints]
-workspace = true

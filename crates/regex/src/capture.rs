@@ -65,18 +65,18 @@ pub(crate) fn regex_capture(regex: &Regex, input: &str) -> Vec<MatchData> {
 					let name = regex
 						.capture_names()
 						.nth(idx)
-						.and_then(|n| n.map(|s| s.to_string()));
+						.and_then(|n| n.map(|s| s.to_owned()));
 					Some((name, capture))
 				})
 				.map(|(name, capture)| CaptureData {
 					name,
 					start: capture.start() + 1,
 					end: capture.end() + 1,
-					value: capture.as_str().to_string(),
+					value: capture.as_str().to_owned(),
 				})
 				.collect::<Vec<CaptureData>>();
 			MatchData {
-				rmatch: full_match.as_str().to_string(),
+				rmatch: full_match.as_str().to_owned(),
 				start: full_match.start() + 1,
 				end: full_match.end() + 1,
 				captures,

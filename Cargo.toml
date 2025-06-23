@@ -32,7 +32,6 @@ create_dir = "warn"
 default_trait_access = "warn"
 inefficient_to_string = "warn"
 redundant_type_annotations = "warn"
-self_named_module_files = "warn"
 str_to_string = "warn"
 string_to_string = "warn"
 

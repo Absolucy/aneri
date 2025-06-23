@@ -8,6 +8,9 @@ repository.workspace = true
 license.workspace = true
 publish.workspace = true
 
+[lints]
+workspace = true
+
 [dependencies]
 meowtonin = { workspace = true }
 parking_lot = { workspace = true, optional = true }
@@ -16,6 +19,3 @@ tokio = { version = "1", features = ["full"], optional = true }
 
 [features]
 runtime = ["tokio", "parking_lot"]
-
-[lints]
-workspace = true
