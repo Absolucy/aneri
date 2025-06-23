@@ -13,8 +13,8 @@ version = "0.1.0"
 
 [workspace.dependencies]
 ahash = "0.8"
-meowtonin = { path = "C:/Users/Lucy/Code/BYOND/meowtonin/crates/core" }
-meowtonin-serde = { path = "C:/Users/Lucy/Code/BYOND/meowtonin/crates/serde" }
+meowtonin = { git = "https://github.com/Absolucy/meowtonin", branch = "516" }
+meowtonin-serde = { git = "https://github.com/Absolucy/meowtonin", branch = "516" }
 faster-hex = "0.10"
 parking_lot = "0.12"
 slotmap = "1"

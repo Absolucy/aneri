@@ -2205,6 +2205,7 @@ dependencies = [
 [[package]]
 name = "meowtonin"
 version = "0.2.0"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
 dependencies = [
  "ahash 0.8.12",
  "aho-corasick",
@@ -2231,6 +2232,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-byondapi-sys"
 version = "0.2.0"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -2240,6 +2242,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-impl"
 version = "0.2.0"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2249,6 +2252,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-serde"
 version = "0.2.0"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
 dependencies = [
  "meowtonin",
  "serde",
