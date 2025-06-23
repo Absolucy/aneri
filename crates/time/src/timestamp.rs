@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 use meowtonin::byond_fn;
 use std::time::{SystemTime, UNIX_EPOCH};
-use time::OffsetDateTime;
+use time::{format_description::BorrowedFormatItem, OffsetDateTime};
 
 /**
  * so this weird shit is in fact quite a bit faster than the usual format!()
@@ -55,10 +55,10 @@ pub fn unix_timestamp() -> String {
 
 #[byond_fn]
 pub fn human_readable_timestamp() -> String {
-	let formatter = time::macros::format_description!(
+	static FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
 		"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
 	);
 	OffsetDateTime::now_utc()
-		.format(&formatter)
+		.format(FORMATTER)
 		.unwrap_or_else(|_| unreachable!("invalid formatter?"))
 }

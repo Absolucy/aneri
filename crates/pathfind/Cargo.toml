@@ -13,5 +13,5 @@ ahash = { workspace = true }
 meowtonin = { workspace = true }
 pathfinding = "4"
 bitflags = "2"
-ordered-float = "4"
-grid = "0.15"
+ordered-float = "5"
+grid = "0.18"

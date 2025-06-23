@@ -51,7 +51,7 @@ pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<
 	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
-		None => return Ok(ByondValue::null()),
+		None => return Ok(ByondValue::NULL),
 	};
 	shared::regex_find(regex, &haystack)
 }
@@ -61,7 +61,7 @@ pub fn instanced_regex_split(src: ByondSlotKey, haystack: String) -> ByondResult
 	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
-		None => return Ok(ByondValue::null()),
+		None => return Ok(ByondValue::NULL),
 	};
 	shared::regex_split(regex, &haystack)
 }
@@ -75,7 +75,7 @@ pub fn instanced_regex_splitn(
 	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
-		None => return Ok(ByondValue::null()),
+		None => return Ok(ByondValue::NULL),
 	};
 	shared::regex_splitn(regex, &haystack, limit)
 }
@@ -89,7 +89,7 @@ pub fn instanced_regex_replace(
 	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
-		None => return Ok(ByondValue::null()),
+		None => return Ok(ByondValue::NULL),
 	};
 	shared::regex_replace(regex, &haystack, &with)
 }
@@ -103,7 +103,7 @@ pub fn instanced_regex_replace_all(
 	let instances = INSTANCES.read();
 	let regex = match instances.get(src) {
 		Some(regex) => regex,
-		None => return Ok(ByondValue::null()),
+		None => return Ok(ByondValue::NULL),
 	};
 	shared::regex_replace_all(regex, &haystack, &with)
 }

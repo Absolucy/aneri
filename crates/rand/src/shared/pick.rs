@@ -10,11 +10,11 @@ where
 	Gen: Rng,
 {
 	if !options.is_list() {
-		return Ok(ByondValue::null());
+		return Ok(ByondValue::NULL);
 	}
-	let length = options.length::<usize>()?;
+	let length = options.length()?;
 	match length {
-		0 => return Ok(ByondValue::null()),
+		0 => return Ok(ByondValue::NULL),
 		1 => return options.read_list_index(&1),
 		_ => {}
 	}
@@ -27,11 +27,11 @@ where
 	Gen: Rng,
 {
 	if !options.is_list() {
-		return Ok(ByondValue::null());
+		return Ok(ByondValue::NULL);
 	}
-	let length = options.length::<usize>()?;
+	let length = options.length()?;
 	match length {
-		0 => return Ok(ByondValue::null()),
+		0 => return Ok(ByondValue::NULL),
 		1 => return options.read_list_index(&1),
 		_ => {}
 	}
@@ -47,13 +47,13 @@ where
 		})
 		.unzip();
 	match weights.len() {
-		0 => return Ok(ByondValue::null()),
+		0 => return Ok(ByondValue::NULL),
 		1 => return Ok(options.into_iter().next().unwrap_or_default()),
 		_ => {}
 	}
 	let dist = match WeightedIndex::new(weights) {
 		Ok(dist) => dist,
-		Err(_) => return Ok(ByondValue::null()),
+		Err(_) => return Ok(ByondValue::NULL),
 	};
 	let idx = dist.sample(rng);
 	Ok(options.into_iter().nth(idx).unwrap_or_default())

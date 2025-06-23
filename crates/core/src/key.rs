@@ -17,7 +17,7 @@ impl ByondSlotKey {
 }
 
 impl FromByond for ByondSlotKey {
-	fn from_byond(value: &ByondValue) -> ByondResult<Self> {
+	fn from_byond(value: ByondValue) -> ByondResult<Self> {
 		let high = value.read_var::<_, f32>(Self::HIGH_VAR)?.to_bits();
 		let low = value.read_var::<_, f32>(Self::LOW_VAR)?.to_bits();
 		Ok(KeyData::from_ffi(((high as u64) << 32) | (low as u64)).into())
