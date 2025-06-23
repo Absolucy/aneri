@@ -8,7 +8,7 @@ where
 	if min > max {
 		std::mem::swap(&mut min, &mut max);
 	}
-	rng.gen_range(min..=max)
+	rng.random_range(min..=max)
 }
 
 pub(crate) fn random_range_int_signed<Gen>(rng: &mut Gen, mut min: i32, mut max: i32) -> i32
@@ -18,5 +18,5 @@ where
 	if min > max {
 		std::mem::swap(&mut min, &mut max);
 	}
-	rng.gen_range(min..=max)
+	rng.random_range(min..=max)
 }

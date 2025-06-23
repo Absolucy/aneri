@@ -6,22 +6,22 @@ use rand::Rng;
 
 #[byond_fn]
 pub fn random_byte(secure: Option<bool>) -> u8 {
-	global(secure).gen()
+	global(secure).random()
 }
 
 #[byond_fn]
 pub fn random_float(secure: Option<bool>) -> f32 {
-	global(secure).gen()
+	global(secure).random()
 }
 
 #[byond_fn]
 pub fn random_int_unsigned(secure: Option<bool>) -> u32 {
-	global(secure).gen()
+	global(secure).random()
 }
 
 #[byond_fn]
 pub fn random_int_signed(secure: Option<bool>) -> i32 {
-	global(secure).gen()
+	global(secure).random()
 }
 
 #[byond_fn]

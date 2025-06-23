@@ -6,24 +6,23 @@ pub mod prob;
 pub mod string;
 
 use self::dispatcher::GlobalRngDispatcher;
+use biski64::Biski64Rng;
 use parking_lot::Mutex;
-use rand::SeedableRng;
-use rand_blake3::Rng as Blake3Rng;
-use rand_wyrand::WyRand;
+use rand::{SeedableRng, rngs::StdRng};
 use std::sync::LazyLock;
 
-static WYRAND: LazyLock<Mutex<WyRand>> = LazyLock::new(|| Mutex::new(WyRand::from_entropy()));
-static BLAKE3: LazyLock<Mutex<Blake3Rng>> = LazyLock::new(|| Mutex::new(Blake3Rng::from_entropy()));
+static FAST: LazyLock<Mutex<Biski64Rng>> = LazyLock::new(|| Mutex::new(Biski64Rng::from_os_rng()));
+static SECURE: LazyLock<Mutex<StdRng>> = LazyLock::new(|| Mutex::new(StdRng::from_os_rng()));
 
 pub(crate) fn reseed_global_rng() {
-	*WYRAND.lock() = WyRand::from_entropy();
-	*BLAKE3.lock() = Blake3Rng::from_entropy();
+	*FAST.lock() = Biski64Rng::from_os_rng();
+	*SECURE.lock() = StdRng::from_os_rng();
 }
 
 pub(crate) fn global(secure: impl Into<Option<bool>>) -> GlobalRngDispatcher {
 	if secure.into().unwrap_or(false) {
-		GlobalRngDispatcher::Blake3(&BLAKE3)
+		GlobalRngDispatcher::Secure(&SECURE)
 	} else {
-		GlobalRngDispatcher::WyRand(&WYRAND)
+		GlobalRngDispatcher::Fast(&FAST)
 	}
 }

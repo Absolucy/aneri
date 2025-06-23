@@ -7,7 +7,7 @@ pub mod string;
 
 use aneri_core::ByondSlotKey;
 use dispatcher::RngDispatcher;
-use meowtonin::{byond_fn, ByondResult, ByondValue};
+use meowtonin::{ByondResult, ByondValue, byond_fn};
 use parking_lot::Mutex;
 use slotmap::SlotMap;
 use std::sync::LazyLock;
@@ -32,9 +32,9 @@ pub(crate) fn free_instances() {
 pub fn rng_new(mut src: ByondValue, secure: Option<bool>, seed: Option<u32>) -> ByondResult<()> {
 	let secure = secure.unwrap_or(false);
 	let rng = if secure {
-		RngDispatcher::blake3(seed)
+		RngDispatcher::secure(seed)
 	} else {
-		RngDispatcher::wyrand(seed)
+		RngDispatcher::fast(seed)
 	};
 	INSTANCES.lock().insert(rng).save(&mut src)
 }

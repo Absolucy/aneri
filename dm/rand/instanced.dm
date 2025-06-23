@@ -1,4 +1,4 @@
-/// A (non-cryptographic) PRNG instance, using WyRand.
+/// A (non-cryptographic) PRNG instance, using biski64.
 /datum/rng
 	parent_type = /datum/aneri
 	var/secure = FALSE
@@ -60,6 +60,6 @@
 /datum/rng/proc/replace_chars_prob(input, replacement, probability = 25, skip_whitespace = FALSE) as text
 	return ANERI_CALL("instnaced_replace_chars_prob", src, input, replacement, probability, skip_whitespace)
 
-/// A cryptographic PRNG instance, using BLAKE3.
+/// A cryptographic PRNG instance, using ChaCha12.
 /datum/rng/secure
 	secure = TRUE

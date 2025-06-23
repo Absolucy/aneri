@@ -4,15 +4,15 @@ use crate::shared;
 use aneri_core::ByondSlotKey;
 use meowtonin::byond_fn;
 use rand::{
-	distributions::{Distribution, Standard},
 	Rng,
+	distr::{Distribution, StandardUniform},
 };
 
 fn rand_impl<Output>(src: ByondSlotKey) -> Option<Output>
 where
-	Standard: Distribution<Output>,
+	StandardUniform: Distribution<Output>,
 {
-	INSTANCES.lock().get_mut(src).map(|rng| rng.gen())
+	INSTANCES.lock().get_mut(src).map(|rng| rng.random())
 }
 #[byond_fn]
 pub fn instanced_random_byte(src: ByondSlotKey) -> Option<u8> {

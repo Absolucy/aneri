@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 use rand::{
-	distributions::{Alphanumeric, Bernoulli, Distribution},
 	Rng,
+	distr::{Alphanumeric, Bernoulli, Distribution},
 };
 
 pub(crate) fn random_string_alphanumeric<Gen>(rng: &mut Gen, length: usize) -> String

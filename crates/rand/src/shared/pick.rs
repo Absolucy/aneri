@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 use meowtonin::{ByondResult, ByondValue};
 use rand::{
-	distributions::{Distribution, WeightedIndex},
 	Rng,
+	distr::{Distribution, weighted::WeightedIndex},
 };
 
 pub(crate) fn pick<Gen>(rng: &mut Gen, options: ByondValue) -> ByondResult<ByondValue>
@@ -18,7 +18,7 @@ where
 		1 => return options.read_list_index(&1),
 		_ => {}
 	}
-	let idx = rng.gen_range::<usize, _>(1..=length);
+	let idx = rng.random_range::<usize, _>(1..=length);
 	options.read_list_index(&idx)
 }
 

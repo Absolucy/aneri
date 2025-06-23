@@ -1,25 +1,24 @@
 // SPDX-License-Identifier: MPL-2.0
-use rand::{RngCore, SeedableRng};
-use rand_blake3::Rng as Blake3Rand;
-use rand_wyrand::WyRand;
+use biski64::Biski64Rng;
+use rand::{RngCore, SeedableRng, rngs::StdRng};
 
 pub(crate) enum RngDispatcher {
-	Blake3(Blake3Rand),
-	WyRand(WyRand),
+	Secure(Box<StdRng>),
+	Fast(Biski64Rng),
 }
 
 impl RngDispatcher {
-	pub fn blake3(seed: Option<u32>) -> Self {
+	pub fn secure(seed: Option<u32>) -> Self {
 		match seed {
-			Some(seed) => Self::Blake3(Blake3Rand::seed_from_u64(seed as u64)),
-			None => Self::Blake3(Blake3Rand::from_entropy()),
+			Some(seed) => Self::Secure(Box::new(StdRng::seed_from_u64(seed as u64))),
+			None => Self::Secure(Box::new(StdRng::from_os_rng())),
 		}
 	}
 
-	pub fn wyrand(seed: Option<u32>) -> Self {
+	pub fn fast(seed: Option<u32>) -> Self {
 		match seed {
-			Some(seed) => Self::WyRand(WyRand::seed_from_u64(seed as u64)),
-			None => Self::WyRand(WyRand::from_entropy()),
+			Some(seed) => Self::Fast(Biski64Rng::seed_from_u64(seed as u64)),
+			None => Self::Fast(Biski64Rng::from_os_rng()),
 		}
 	}
 }
@@ -27,29 +26,22 @@ impl RngDispatcher {
 impl RngCore for RngDispatcher {
 	fn next_u32(&mut self) -> u32 {
 		match self {
-			Self::Blake3(rng) => rng.next_u32(),
-			Self::WyRand(rng) => rng.next_u32(),
+			Self::Secure(rng) => rng.next_u32(),
+			Self::Fast(rng) => rng.next_u32(),
 		}
 	}
 
 	fn next_u64(&mut self) -> u64 {
 		match self {
-			Self::Blake3(rng) => rng.next_u64(),
-			Self::WyRand(rng) => rng.next_u64(),
+			Self::Secure(rng) => rng.next_u64(),
+			Self::Fast(rng) => rng.next_u64(),
 		}
 	}
 
 	fn fill_bytes(&mut self, dest: &mut [u8]) {
 		match self {
-			Self::Blake3(rng) => rng.fill_bytes(dest),
-			Self::WyRand(rng) => rng.fill_bytes(dest),
-		}
-	}
-
-	fn try_fill_bytes(&mut self, dest: &mut [u8]) -> Result<(), rand::Error> {
-		match self {
-			Self::Blake3(rng) => rng.try_fill_bytes(dest),
-			Self::WyRand(rng) => rng.try_fill_bytes(dest),
+			Self::Secure(rng) => rng.fill_bytes(dest),
+			Self::Fast(rng) => rng.fill_bytes(dest),
 		}
 	}
 }

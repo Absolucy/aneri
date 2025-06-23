@@ -11,12 +11,12 @@ where
 		return false;
 	}
 	let probability = (probability / 100.0).clamp(0.0, 1.0);
-	rng.gen_bool(probability)
+	rng.random_bool(probability)
 }
 
 pub(crate) fn prob_ratio<Gen>(rng: &mut Gen, numerator: u32, denominator: u32) -> bool
 where
 	Gen: Rng,
 {
-	rng.gen_ratio(numerator, denominator)
+	rng.random_ratio(numerator, denominator)
 }
