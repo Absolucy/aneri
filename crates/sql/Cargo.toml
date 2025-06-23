@@ -14,16 +14,16 @@ workspace = true
 [dependencies]
 ahash = { workspace = true }
 aneri-core = { path = "../core" }
+crossbeam-channel = "0.5"
 meowtonin = { workspace = true }
 meowtonin-serde = { workspace = true }
-mysql = { git = "https://github.com/ZeWaka/rust-mysql-simple.git", tag = "v25.0.1", default-features = false, optional = true }
+mysql = { git = "https://github.com/ZeWaka/rust-mysql-simple.git", tag = "v26.0.0", default-features = false, features = ["default-rust"] }
 scopeguard = "1"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 slotmap = { workspace = true }
-crossbeam-channel = "0.5"
 
 [features]
 default = ["rustls"]
-rustls = ["mysql/default-rustls"]
-native-tls = ["mysql/default"]
+rustls = ["mysql/rustls-tls"]
+native-tls = ["mysql/native-tls"]
