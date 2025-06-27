@@ -1,6 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
 
-use dmi::icon::Icon as Dmi;
 use image::imageops::FilterType;
 use meowtonin::{ByondError, ByondResult, byond_fn};
 use std::{fs::File, io::BufReader, path::PathBuf};
@@ -25,10 +24,26 @@ pub fn dmi_resize_png(
 }
 
 #[byond_fn]
-pub fn dmi_read_states(path: PathBuf) -> Option<Vec<String>> {
-	let icon = File::open(path)
+pub fn dmi_read_states(path: PathBuf) -> ByondResult<Vec<String>> {
+	let file = File::open(path)
 		.map(BufReader::new)
-		.ok()
-		.and_then(|reader| Dmi::load(reader).ok())?;
-	Some(icon.states.into_iter().map(|state| state.name).collect())
+		.map_err(ByondError::boxed)?;
+	let decoder = png::Decoder::new(file);
+	let reader = decoder.read_info().map_err(ByondError::boxed)?;
+	let info = reader.info();
+	let mut states = Vec::<String>::new();
+	for ztxt in &info.compressed_latin1_text {
+		let text = ztxt.get_text().map_err(ByondError::boxed)?;
+		text.lines()
+			.take_while(|line| !line.contains("# END DMI"))
+			.filter_map(|line| {
+				line.trim()
+					.strip_prefix("state = \"")
+					.and_then(|line| line.strip_suffix('"'))
+			})
+			.for_each(|state| {
+				states.push(state.to_owned());
+			});
+	}
+	Ok(states)
 }
