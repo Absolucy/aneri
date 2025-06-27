@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use aneri_core::ByondSlotKey;
-use meowtonin::{byond_fn, ByondError, ByondResult, ByondValue};
+use meowtonin::{ByondError, ByondResult, ByondValue, byond_fn};
 use parking_lot::Mutex;
 use slotmap::SlotMap;
 use std::{sync::LazyLock, time::Instant};

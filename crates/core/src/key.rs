@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use meowtonin::{ByondResult, ByondValue, FromByond};
-use slotmap::{new_key_type, Key, KeyData};
+use slotmap::{Key, KeyData, new_key_type};
 
 new_key_type! { pub struct ByondSlotKey; }
 

@@ -4,7 +4,7 @@ mod rgb;
 pub(crate) mod util;
 
 use self::{corner::CornerRgb, rgb::Rgb, util::round_to};
-use meowtonin::{byond_fn, ByondResult, ByondValue, FromByond};
+use meowtonin::{ByondResult, ByondValue, FromByond, byond_fn};
 
 const LIGHTING_SOFT_THRESHOLD: f32 = 0.05;
 const LIGHTING_ROUND_VALUE: f32 = 128.0;

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use meowtonin::{byond_fn, ByondError, ByondResult, ByondValue};
+use meowtonin::{ByondError, ByondResult, ByondValue, byond_fn};
 use std::path::PathBuf;
 
 #[byond_fn]

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use meowtonin::{byond_fn, ByondResult, ByondValue};
+use meowtonin::{ByondResult, ByondValue, byond_fn};
 use std::cmp::Ordering;
 
 #[byond_fn]

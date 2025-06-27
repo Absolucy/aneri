@@ -2,7 +2,7 @@
 
 use dmi::icon::Icon as Dmi;
 use image::imageops::FilterType;
-use meowtonin::{byond_fn, ByondError, ByondResult};
+use meowtonin::{ByondError, ByondResult, byond_fn};
 use std::{fs::File, io::BufReader, path::PathBuf};
 
 #[byond_fn]
