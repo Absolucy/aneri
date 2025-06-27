@@ -9,6 +9,10 @@ use std::{
 use thread_priority::{ThreadBuilderExt, ThreadPriority};
 use time::format_description::BorrowedFormatItem;
 
+static TIMESTAMP_FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
+	"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
+);
+
 fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 	crate::counter::take_thread_ticket();
 	let mut file = OpenOptions::new()
@@ -21,14 +25,11 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 		if log.format {
 			let mut lines = log.message.lines();
 			if let Some(first) = lines.next() {
-				static FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
-					"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
-				);
 				let _ = writeln!(
 					file,
 					"[{}] {}",
 					log.timestamp
-						.format(FORMATTER)
+						.format(TIMESTAMP_FORMATTER)
 						.unwrap_or_else(|_| unreachable!("invalid formatter somehow??")),
 					first
 				);
