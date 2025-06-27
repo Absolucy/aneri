@@ -7,6 +7,7 @@ use std::{
 	path::PathBuf,
 };
 use thread_priority::{ThreadBuilderExt, ThreadPriority};
+use time::format_description::BorrowedFormatItem;
 
 fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 	crate::counter::take_thread_ticket();
@@ -20,19 +21,19 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 		if log.format {
 			let mut lines = log.message.lines();
 			if let Some(first) = lines.next() {
-				let formatter = time::macros::format_description!(
+				static FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
 					"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
 				);
 				let _ = writeln!(
 					file,
 					"[{}] {}",
 					log.timestamp
-						.format(&formatter)
+						.format(FORMATTER)
 						.unwrap_or_else(|_| unreachable!("invalid formatter somehow??")),
 					first
 				);
 				for line in lines {
-					let _ = writeln!(file, " - {}", line);
+					let _ = writeln!(file, " - {line}");
 				}
 			}
 		} else {

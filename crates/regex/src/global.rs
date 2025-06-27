@@ -7,8 +7,6 @@ use parking_lot::Mutex;
 use regex::Regex;
 use std::{num::NonZeroUsize, sync::LazyLock};
 
-// SAFETY: This is a constant value where we always know it's non-zero.
-// If you change this to 0, then that is explicitly a skill issue.
 const CACHE_SIZE: NonZeroUsize = NonZeroUsize::new(32).unwrap();
 
 static REGEX_CACHE: LazyLock<Mutex<LruCache<String, Regex, RandomState>>> =
