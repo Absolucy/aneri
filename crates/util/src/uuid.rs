@@ -3,8 +3,13 @@ use meowtonin::byond_fn;
 use uuid::Uuid;
 
 #[byond_fn]
-pub fn uuid() -> String {
+pub fn uuid_v4() -> String {
 	Uuid::new_v4().to_string()
+}
+
+#[byond_fn]
+pub fn uuid_v7() -> String {
+	Uuid::now_v7().to_string()
 }
 
 #[byond_fn]
