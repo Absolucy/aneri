@@ -466,9 +466,9 @@ checksum = "40e38929add23cdf8a366df9b0e088953150724bcbe5fc330b0d8eb3b328eec8"
 
 [[package]]
 name = "bumpalo"
-version = "3.18.1"
+version = "3.19.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "793db76d6187cd04dff33004d8e6c9cc4e05cd330500379d2394209271b4aeee"
+checksum = "46c5e41b57b8bba42a04676d81cb89e9ee8e859a1a66f80a5a72e1cb76b34d43"
 
 [[package]]
 name = "bytemuck"
@@ -577,6 +577,12 @@ name = "constant_time_eq"
 version = "0.3.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c74b8349d32d297c9134b8c88677813a227df8f779daa29bfc29c183fe3dca6"
+
+[[package]]
+name = "constcat"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "136d3e02915a2cea4d74caa8681e2d44b1c3254bdbf17d11d41d587ff858832c"
 
 [[package]]
 name = "core-foundation"
@@ -1748,9 +1754,9 @@ dependencies = [
 
 [[package]]
 name = "indexmap"
-version = "2.9.0"
+version = "2.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "cea70ddb795996207ad57735b50c5982d8844f38ba9ee5f1aedcfb708a2aa11e"
+checksum = "fe4cd85333e22411419a0bcae1297d25e58c9443848b11dc6a86fefe8c78a661"
 dependencies = [
  "equivalent",
  "hashbrown 0.15.4",
@@ -1781,6 +1787,17 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d197db2f7ebf90507296df3aebaf65d69f5dce8559d8dbd82776a6cadab61bbf"
 dependencies = [
  "derive_utils",
+]
+
+[[package]]
+name = "io-uring"
+version = "0.7.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b86e202f00093dcba4275d4636b93ef9dd75d025ae560d2521b45ea28ab49013"
+dependencies = [
+ "bitflags 2.9.1",
+ "cfg-if",
+ "libc",
 ]
 
 [[package]]
@@ -1898,9 +1915,9 @@ dependencies = [
 
 [[package]]
 name = "libredox"
-version = "0.1.3"
+version = "0.1.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c0ff37bd590ca25063e35af745c343cb7a0271906fb7b37e4813e8f79f00268d"
+checksum = "1580801010e535496706ba011c15f8532df6b42297d2e471fec38ceadd8c0638"
 dependencies = [
  "bitflags 2.9.1",
  "libc",
@@ -2014,17 +2031,17 @@ dependencies = [
 [[package]]
 name = "meowtonin"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#73e8f1964057dfdb45211c662d69e926fd9822a0"
 dependencies = [
  "ahash",
  "aho-corasick",
  "backtrace",
  "bytemuck",
  "cfg-if",
+ "constcat",
  "inventory",
  "libc",
  "libloading",
- "log",
  "meowtonin-byondapi-sys",
  "meowtonin-impl",
  "nohash-hasher",
@@ -2032,7 +2049,6 @@ dependencies = [
  "parking_lot",
  "serde",
  "serde_json",
- "simplelog",
  "smol_str",
  "thiserror 2.0.12",
  "windows",
@@ -2041,7 +2057,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-byondapi-sys"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#73e8f1964057dfdb45211c662d69e926fd9822a0"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -2051,7 +2067,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-impl"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#73e8f1964057dfdb45211c662d69e926fd9822a0"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2061,7 +2077,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-serde"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#2ba96a305fc7f5e23cffa28ba6efb10d3e49c897"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#73e8f1964057dfdb45211c662d69e926fd9822a0"
 dependencies = [
  "meowtonin",
  "serde",
@@ -2293,15 +2309,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "num_threads"
-version = "0.1.7"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5c7398b9c8b70908f6371f47ed36737907c87c52af34c268fed0bf0ceb92ead9"
-dependencies = [
- "libc",
-]
-
-[[package]]
 name = "object"
 version = "0.36.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2371,9 +2378,9 @@ dependencies = [
 
 [[package]]
 name = "papaya"
-version = "0.2.1"
+version = "0.2.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6827e3fc394523c21d4464d02c0bb1c19966ea4a58a9844ad6d746214179d2bc"
+checksum = "f92dd0b07c53a0a0c764db2ace8c541dc47320dad97c2200c2a637ab9dd2328f"
 dependencies = [
  "equivalent",
  "seize",
@@ -3002,15 +3009,10 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "d66dc143e6b11c1eddc06d5c423cfc97062865baf299914ab64caa38182078fe"
 
 [[package]]
-name = "simplelog"
-version = "0.12.2"
+name = "slab"
+version = "0.4.10"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "16257adbfaef1ee58b1363bdc0664c9b8e1e30aed86049635fb5f147d065a9c0"
-dependencies = [
- "log",
- "termcolor",
- "time",
-]
+checksum = "04dc19736151f35336d325007ac991178d504a119863a2fcb3758cdb5e52c50d"
 
 [[package]]
 name = "slotmap"
@@ -3319,9 +3321,7 @@ checksum = "8a7619e19bc266e0f9c5e6686659d394bc57973859340060a69221e57dbc0c40"
 dependencies = [
  "deranged",
  "itoa",
- "libc",
  "num-conv",
- "num_threads",
  "powerfmt",
  "serde",
  "time-core",
@@ -3371,17 +3371,19 @@ checksum = "1f3ccbac311fea05f86f61904b462b55fb3df8837a366dfc601a0161d0532f20"
 
 [[package]]
 name = "tokio"
-version = "1.45.1"
+version = "1.46.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "75ef51a33ef1da925cea3e4eb122833cb377c61439ca401b770f54902b806779"
+checksum = "1140bb80481756a8cbe10541f37433b459c5aa1e727b4c020fbfebdc25bf3ec4"
 dependencies = [
  "backtrace",
  "bytes",
+ "io-uring",
  "libc",
  "mio",
  "parking_lot",
  "pin-project-lite",
  "signal-hook-registry",
+ "slab",
  "socket2",
  "tokio-macros",
  "windows-sys 0.52.0",
