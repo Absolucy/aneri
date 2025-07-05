@@ -9,6 +9,9 @@ use std::{
 use thread_priority::{ThreadBuilderExt, ThreadPriority};
 use time::format_description::BorrowedFormatItem;
 
+/// Default stack size for logger threads (1 MiB)
+pub const DEFAULT_STACK_SIZE: usize = 1024 * 1024;
+
 static TIMESTAMP_FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
 	"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
 );
@@ -56,6 +59,7 @@ pub(crate) fn spawn_log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 	// the actual server.
 	std::thread::Builder::new()
 		.name(format!("aneri logger [{}]", path.display()))
+		.stack_size(DEFAULT_STACK_SIZE)
 		.spawn_with_priority(ThreadPriority::Min, move |_| log_thread(path, rx))
 		.expect("failed to spawn logger thread");
 }
