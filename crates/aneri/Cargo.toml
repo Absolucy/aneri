@@ -36,7 +36,7 @@ const_format = "0.2"
 bosion = "1"
 
 [features]
-default = ["all"]
+default = ["audio", "crypto", "dmi", "encode", "file", "logger", "rand", "regex", "time", "util"]
 # sub-crates
 all = ["audio", "crypto", "dmi", "encode", "experiments", "file", "logger", "rand", "regex", "time", "util"]
 audio = ["aneri-audio"]
