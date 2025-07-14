@@ -13,6 +13,7 @@ workspace = true
 
 [dependencies]
 aneri-core = { path = "../core" }
+chrono = "0.4"
 meowtonin = { workspace = true }
 parking_lot = { workspace = true }
 slotmap = { workspace = true }

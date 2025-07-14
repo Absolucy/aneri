@@ -1,4 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
+use chrono::{FixedOffset, Local, Utc};
 use meowtonin::byond_fn;
 use std::time::{SystemTime, UNIX_EPOCH};
 use time::{OffsetDateTime, format_description::BorrowedFormatItem};
@@ -56,9 +57,26 @@ pub fn unix_timestamp() -> String {
 static TIMESTAMP_FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
 	"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
 );
+
 #[byond_fn]
 pub fn human_readable_timestamp() -> String {
 	OffsetDateTime::now_utc()
 		.format(TIMESTAMP_FORMATTER)
 		.unwrap_or_else(|_| unreachable!("invalid formatter?"))
+}
+
+#[byond_fn]
+pub fn format_timestamp(format: String, offset: Option<i32>) -> Option<String> {
+	match offset {
+		Some(offset) => {
+			let timezone = FixedOffset::east_opt(offset * 3600)?;
+			Some(
+				Utc::now()
+					.with_timezone(&timezone)
+					.format(&format)
+					.to_string(),
+			)
+		}
+		None => Some(Local::now().format(&format).to_string()),
+	}
 }
