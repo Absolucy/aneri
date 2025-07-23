@@ -55,4 +55,4 @@ http = ["aneri-http"]
 sort = ["aneri-sort"]
 sql = ["aneri-sql"]
 # misc features
-rel-debugging = ["meowtonin/rel-debugging"]
+ref-debugging = ["meowtonin/ref-debugging"]
