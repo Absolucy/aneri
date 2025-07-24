@@ -9,6 +9,10 @@ pub fn pick(options: ByondValue, secure: Option<bool>) -> ByondResult<ByondValue
 }
 
 #[byond_fn]
-pub fn pick_weighted(options: ByondValue, secure: Option<bool>) -> ByondResult<ByondValue> {
-	shared::pick_weighted(&mut global(secure), options)
+pub fn pick_weighted(
+	options: ByondValue,
+	weights: ByondValue,
+	secure: Option<bool>,
+) -> ByondResult<ByondValue> {
+	shared::pick_weighted(&mut global(secure), options, weights)
 }
