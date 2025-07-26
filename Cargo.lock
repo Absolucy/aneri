@@ -717,18 +717,8 @@ version = "0.20.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc7f46116c46ff9ab3eb1597a45688b6715c6e628b5c133e288e709a29bcb4ee"
 dependencies = [
- "darling_core 0.20.11",
- "darling_macro 0.20.11",
-]
-
-[[package]]
-name = "darling"
-version = "0.21.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a79c4acb1fd5fa3d9304be4c76e031c54d2e92d172a393e24b19a14fe8532fe9"
-dependencies = [
- "darling_core 0.21.0",
- "darling_macro 0.21.0",
+ "darling_core",
+ "darling_macro",
 ]
 
 [[package]]
@@ -746,37 +736,12 @@ dependencies = [
 ]
 
 [[package]]
-name = "darling_core"
-version = "0.21.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "74875de90daf30eb59609910b84d4d368103aaec4c924824c6799b28f77d6a1d"
-dependencies = [
- "fnv",
- "ident_case",
- "proc-macro2",
- "quote",
- "strsim",
- "syn",
-]
-
-[[package]]
 name = "darling_macro"
 version = "0.20.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "fc34b93ccb385b40dc71c6fceac4b2ad23662c7eeb248cf10d529b7e055b6ead"
 dependencies = [
- "darling_core 0.20.11",
- "quote",
- "syn",
-]
-
-[[package]]
-name = "darling_macro"
-version = "0.21.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e79f8e61677d5df9167cd85265f8e5f64b215cdea3fb55eebc3e622e44c7a146"
-dependencies = [
- "darling_core 0.21.0",
+ "darling_core",
  "quote",
  "syn",
 ]
@@ -2120,7 +2085,7 @@ dependencies = [
 [[package]]
 name = "meowtonin"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#290c8970deebe13a1301b404a797fcb888dfe513"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#1bd57af3fa0fe802e56b80e1e6801e87c508ac25"
 dependencies = [
  "ahash",
  "aho-corasick",
@@ -2146,7 +2111,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-byondapi-sys"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#290c8970deebe13a1301b404a797fcb888dfe513"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#1bd57af3fa0fe802e56b80e1e6801e87c508ac25"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -2156,9 +2121,8 @@ dependencies = [
 [[package]]
 name = "meowtonin-impl"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#290c8970deebe13a1301b404a797fcb888dfe513"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#1bd57af3fa0fe802e56b80e1e6801e87c508ac25"
 dependencies = [
- "darling 0.21.0",
  "proc-macro2",
  "quote",
  "syn",
@@ -2167,7 +2131,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-serde"
 version = "0.2.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=516#290c8970deebe13a1301b404a797fcb888dfe513"
+source = "git+https://github.com/Absolucy/meowtonin?branch=516#1bd57af3fa0fe802e56b80e1e6801e87c508ac25"
 dependencies = [
  "meowtonin",
  "serde",
@@ -2233,7 +2197,7 @@ version = "0.32.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "66f62cad7623a9cb6f8f64037f0c4f69c8db8e82914334a83c9788201c2c1bfa"
 dependencies = [
- "darling 0.20.11",
+ "darling",
  "heck",
  "num-bigint",
  "proc-macro-crate",
@@ -2604,9 +2568,9 @@ dependencies = [
 
 [[package]]
 name = "prettyplease"
-version = "0.2.36"
+version = "0.2.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ff24dfcda44452b9816fff4cd4227e1bb73ff5a2f1bc1105aa92fb8565ce44d2"
+checksum = "061c1221631e079b26479d25bbf2275bfe5917ae8419cd7e34f13bfc2aa7539a"
 dependencies = [
  "proc-macro2",
  "syn",

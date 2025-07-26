@@ -17,11 +17,10 @@ pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Opt
 pub fn instanced_pick_weighted(
 	src: ByondSlotKey,
 	options: ByondValue,
-	weights: ByondValue,
 ) -> ByondResult<Option<ByondValue>> {
 	INSTANCES
 		.lock()
 		.get_mut(src)
-		.map(|rng| shared::pick_weighted(rng, options, weights))
+		.map(|rng| shared::pick_weighted(rng, options))
 		.transpose()
 }
