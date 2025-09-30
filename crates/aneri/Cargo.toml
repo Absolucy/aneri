@@ -56,3 +56,4 @@ sort = ["aneri-sort"]
 sql = ["aneri-sql"]
 # misc features
 ref-debugging = ["meowtonin/ref-debugging"]
+tracy = ["meowtonin/tracy"]
