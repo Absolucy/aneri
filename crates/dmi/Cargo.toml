@@ -15,4 +15,4 @@ workspace = true
 meowtonin = { workspace = true }
 #dmi = "0.4"
 image = { version = "0.25", default-features = false, features = ["png"] }
-png = { version = "0.17" }
+png = { version = "0.18" }
