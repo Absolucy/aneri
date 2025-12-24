@@ -41,7 +41,7 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 				}
 			}
 		} else {
-			let _ = write!(file, "{}", log.message);
+			let _ = file.write_all(log.message.as_bytes());
 		}
 		let _ = file.flush();
 	}
