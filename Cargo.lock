@@ -2008,7 +2008,7 @@ dependencies = [
 [[package]]
 name = "meowtonin"
 version = "0.3.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#7f2aed3c7d912710fb6fed98797eff51be217a4d"
+source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#4052e4efe915cbc5dfeeef054ae7c1142c3feca6"
 dependencies = [
  "ahash",
  "aho-corasick",
@@ -2034,7 +2034,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-byondapi-sys"
 version = "0.3.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#7f2aed3c7d912710fb6fed98797eff51be217a4d"
+source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#4052e4efe915cbc5dfeeef054ae7c1142c3feca6"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -2044,7 +2044,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-impl"
 version = "0.3.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#7f2aed3c7d912710fb6fed98797eff51be217a4d"
+source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#4052e4efe915cbc5dfeeef054ae7c1142c3feca6"
 dependencies = [
  "darling 0.21.3",
  "proc-macro2",
@@ -2055,7 +2055,7 @@ dependencies = [
 [[package]]
 name = "meowtonin-serde"
 version = "0.3.0"
-source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#7f2aed3c7d912710fb6fed98797eff51be217a4d"
+source = "git+https://github.com/Absolucy/meowtonin?branch=oh-god-why#4052e4efe915cbc5dfeeef054ae7c1142c3feca6"
 dependencies = [
  "meowtonin",
  "serde",
