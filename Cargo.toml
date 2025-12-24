@@ -13,10 +13,10 @@ version = "0.1.0"
 
 [workspace.dependencies]
 ahash = "0.8"
-#meowtonin = { git = "https://github.com/Absolucy/meowtonin", branch = "516" }
-#meowtonin-serde = { git = "https://github.com/Absolucy/meowtonin", branch = "516" }
-meowtonin = { version = "0.2" }
-meowtonin-serde = { version = "0.2" }
+meowtonin = { git = "https://github.com/Absolucy/meowtonin", branch = "oh-god-why" }
+meowtonin-serde = { git = "https://github.com/Absolucy/meowtonin", branch = "oh-god-why" }
+# meowtonin = { version = "0.2" }
+# meowtonin-serde = { version = "0.2" }
 faster-hex = "0.10"
 parking_lot = "0.12"
 slotmap = "1"
