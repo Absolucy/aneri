@@ -10,8 +10,6 @@ pub use aneri_crypto;
 pub use aneri_dmi;
 #[cfg(feature = "encode")]
 pub use aneri_encode;
-#[cfg(feature = "experiments")]
-pub use aneri_experiments;
 #[cfg(feature = "file")]
 pub use aneri_file;
 #[cfg(feature = "http")]
