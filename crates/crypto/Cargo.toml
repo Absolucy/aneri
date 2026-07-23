@@ -13,15 +13,15 @@ workspace = true
 
 [dependencies]
 meowtonin = { workspace = true }
-blake3 = { version = "=1.8.3", features = ["traits-preview"] }           # do not update until sha3 0.11 comes out, so that digest can be updated to 0.11 too
+blake3 = { version = "=1.8.5", features = ["traits-preview"] }           # keeping this pinned bc traits-preview can cause issues(tm)
 crc32c = "0.6"
 crc32fast = "1"
-digest = "0.10"
+digest = "0.11"
 faster-hex = { workspace = true }
-md-5 = "0.10"
-sha1 = "0.10"
-sha2 = "0.10"
-sha3 = "0.10"
+md-5 = "0.11"
+sha1 = "0.11"
+sha2 = "0.11"
+sha3 = "0.12"
 xxhash-rust = { version = "0.8", features = ["xxh32", "xxh64", "xxh3"] }
 totp-rs = "5"
 parking_lot = { workspace = true }
