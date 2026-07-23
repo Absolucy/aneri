@@ -7,9 +7,7 @@ use meowtonin::{ByondResult, ByondValue, byond_fn};
 #[byond_fn]
 pub fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Option<ByondValue>> {
 	INSTANCES
-		.lock()
-		.get_mut(src)
-		.map(|rng| shared::pick(rng, options))
+		.with_mut(src, |rng| shared::pick(rng, options))
 		.transpose()
 }
 
@@ -19,8 +17,6 @@ pub fn instanced_pick_weighted(
 	options: ByondValue,
 ) -> ByondResult<Option<ByondValue>> {
 	INSTANCES
-		.lock()
-		.get_mut(src)
-		.map(|rng| shared::pick_weighted(rng, options))
+		.with_mut(src, |rng| shared::pick_weighted(rng, options))
 		.transpose()
 }

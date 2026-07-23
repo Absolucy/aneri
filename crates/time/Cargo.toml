@@ -15,6 +15,4 @@ workspace = true
 aneri-core = { path = "../core" }
 chrono = "0.4"
 meowtonin = { workspace = true }
-parking_lot = { workspace = true }
-slotmap = { workspace = true }
 time = { version = "0.3", features = ["formatting", "macros"] }

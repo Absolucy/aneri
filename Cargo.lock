@@ -186,7 +186,6 @@ dependencies = [
  "parking_lot",
  "rand 0.9.5",
  "rustc-hash",
- "slotmap",
 ]
 
 [[package]]
@@ -200,7 +199,6 @@ dependencies = [
  "regex",
  "rustc-hash",
  "serde",
- "slotmap",
 ]
 
 [[package]]
@@ -233,8 +231,6 @@ dependencies = [
  "aneri-core",
  "chrono",
  "meowtonin",
- "parking_lot",
- "slotmap",
  "time",
 ]
 

@@ -12,7 +12,7 @@ fn rand_impl<Output>(src: ByondSlotKey) -> Option<Output>
 where
 	StandardUniform: Distribution<Output>,
 {
-	INSTANCES.lock().get_mut(src).map(|rng| rng.random())
+	INSTANCES.with_mut(src, |rng| rng.random())
 }
 #[byond_fn]
 pub fn instanced_random_byte(src: ByondSlotKey) -> Option<u8> {
@@ -36,16 +36,10 @@ pub fn instanced_random_int_signed(src: ByondSlotKey) -> Option<i32> {
 
 #[byond_fn]
 pub fn instanced_random_range_int_unsigned(src: ByondSlotKey, min: u32, max: u32) -> Option<u32> {
-	INSTANCES
-		.lock()
-		.get_mut(src)
-		.map(|rng| shared::random_range_int_unsigned(rng, min, max))
+	INSTANCES.with_mut(src, |rng| shared::random_range_int_unsigned(rng, min, max))
 }
 
 #[byond_fn]
 pub fn instanced_random_range_int_signed(src: ByondSlotKey, min: i32, max: i32) -> Option<i32> {
-	INSTANCES
-		.lock()
-		.get_mut(src)
-		.map(|rng| shared::random_range_int_signed(rng, min, max))
+	INSTANCES.with_mut(src, |rng| shared::random_range_int_signed(rng, min, max))
 }

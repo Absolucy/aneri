@@ -19,4 +19,3 @@ meowtonin = { workspace = true }
 parking_lot = { workspace = true }
 regex = "1"
 serde = { version = "1", features = ["derive"] }
-slotmap = { workspace = true }
