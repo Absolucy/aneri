@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 use meowtonin::{ByondResult, ByondValue};
 use rand::{
-	Rng,
+	Rng, RngExt,
 	distr::{Distribution, weighted::WeightedIndex},
 };
 

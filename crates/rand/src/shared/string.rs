@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use rand::{
-	Rng,
+	Rng, RngExt,
 	distr::{Alphanumeric, Bernoulli, Distribution},
 };
 

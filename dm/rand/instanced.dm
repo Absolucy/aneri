@@ -1,4 +1,5 @@
-/// A (non-cryptographic) PRNG instance, using biski64.
+/// A (non-cryptographic) PRNG instance, using rand's `SmallRng`
+/// (last I checked, `SmallRng` is `Xoshiro128PlusPlus` - unless you're on 64-bit OpenDream, then it's `Xoshiro256PlusPlus`).
 /datum/rng
 	parent_type = /datum/aneri
 	var/secure = FALSE

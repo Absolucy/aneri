@@ -6,17 +6,21 @@ pub mod prob;
 pub mod string;
 
 use self::dispatcher::GlobalRngDispatcher;
-use biski64::Biski64Rng;
 use parking_lot::Mutex;
-use rand::{SeedableRng, rngs::StdRng};
+use rand::{
+	SeedableRng,
+	rngs::{SmallRng, StdRng},
+};
 use std::sync::LazyLock;
 
-static FAST: LazyLock<Mutex<Biski64Rng>> = LazyLock::new(|| Mutex::new(Biski64Rng::from_os_rng()));
-static SECURE: LazyLock<Mutex<StdRng>> = LazyLock::new(|| Mutex::new(StdRng::from_os_rng()));
+static FAST: LazyLock<Mutex<SmallRng>> =
+	LazyLock::new(|| Mutex::new(SmallRng::from_rng(&mut rand::rng())));
+static SECURE: LazyLock<Mutex<StdRng>> =
+	LazyLock::new(|| Mutex::new(StdRng::from_rng(&mut rand::rng())));
 
 pub(crate) fn reseed_global_rng() {
-	*FAST.lock() = Biski64Rng::from_os_rng();
-	*SECURE.lock() = StdRng::from_os_rng();
+	*FAST.lock() = SmallRng::from_rng(&mut rand::rng());
+	*SECURE.lock() = StdRng::from_rng(&mut rand::rng());
 }
 
 pub(crate) fn global(secure: impl Into<Option<bool>>) -> GlobalRngDispatcher {

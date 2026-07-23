@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use rand::Rng;
+use rand::{Rng, RngExt};
 
 pub(crate) fn random_range_int_unsigned<Gen>(rng: &mut Gen, mut min: u32, mut max: u32) -> u32
 where

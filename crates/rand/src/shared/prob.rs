@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MPL-2.0
-use rand::Rng;
+use rand::{Rng, RngExt};
 
 pub(crate) fn prob<Gen>(rng: &mut Gen, probability: f64) -> bool
 where

@@ -4,7 +4,7 @@ use crate::shared;
 use aneri_core::ByondSlotKey;
 use meowtonin::byond_fn;
 use rand::{
-	Rng,
+	RngExt,
 	distr::{Distribution, StandardUniform},
 };
 

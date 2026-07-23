@@ -2,7 +2,7 @@
 use super::global;
 use crate::shared;
 use meowtonin::byond_fn;
-use rand::Rng;
+use rand::RngExt;
 
 #[byond_fn]
 pub fn random_byte(secure: Option<bool>) -> u8 {
