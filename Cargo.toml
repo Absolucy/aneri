@@ -12,7 +12,7 @@ rust-version = "1.85"
 version = "0.1.0"
 
 [workspace.dependencies]
-ahash = "0.8"
+rustc-hash = "2"
 # meowtonin = { git = "https://github.com/Absolucy/meowtonin", branch = "oh-god-why" }
 # meowtonin-serde = { git = "https://github.com/Absolucy/meowtonin", branch = "oh-god-why" }
 meowtonin = { version = "0.3" }

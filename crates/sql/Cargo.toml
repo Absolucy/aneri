@@ -12,7 +12,7 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
-ahash = { workspace = true }
+rustc-hash = { workspace = true }
 aneri-core = { path = "../core" }
 crossbeam-channel = "0.5"
 meowtonin = { workspace = true }

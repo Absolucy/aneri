@@ -1,8 +1,8 @@
 // SPDX-License-Identifier: MPL-2.0
 use crate::{counter::THREAD_COUNTER, message::LogMessage};
-use ahash::AHashMap;
 use crossbeam_channel::Sender;
 use parking_lot::Mutex;
+use rustc_hash::{FxBuildHasher, FxHashMap};
 use std::{
 	path::{Path, PathBuf},
 	sync::LazyLock,
@@ -13,13 +13,17 @@ use std::{
 /// A None value indicates the end of the queue.
 pub(crate) type MessageQueue = Sender<LogMessage>;
 /// A map of log file paths to their respective queues.
-pub(crate) type LogQueues = AHashMap<PathBuf, MessageQueue>;
+pub(crate) type LogQueues = FxHashMap<PathBuf, MessageQueue>;
 
 const DEFAULT_CAPACITY: usize = 16;
 const SHUTDOWN_TIMEOUT: Duration = Duration::from_secs(10);
 
-static MESSAGE_QUEUE: LazyLock<Mutex<LogQueues>> =
-	LazyLock::new(|| Mutex::new(AHashMap::with_capacity(DEFAULT_CAPACITY)));
+static MESSAGE_QUEUE: LazyLock<Mutex<LogQueues>> = LazyLock::new(|| {
+	Mutex::new(FxHashMap::with_capacity_and_hasher(
+		DEFAULT_CAPACITY,
+		FxBuildHasher,
+	))
+});
 
 /// Clear the log message queue for a given path.
 /// Any existing log messages will still be written to the log file.
@@ -27,7 +31,7 @@ pub fn clear_log_queue() {
 	let mut queue = MESSAGE_QUEUE.lock();
 	if queue.capacity() > DEFAULT_CAPACITY {
 		// Don't use clear(), so we reclaim memory.
-		*queue = AHashMap::with_capacity(DEFAULT_CAPACITY);
+		*queue = FxHashMap::with_capacity_and_hasher(DEFAULT_CAPACITY, FxBuildHasher);
 	} else {
 		// If we're at the default capacity, it's a waste of time to reallocate.
 		queue.clear();

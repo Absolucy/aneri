@@ -167,10 +167,10 @@ dependencies = [
 name = "aneri-logger"
 version = "0.1.0"
 dependencies = [
- "ahash",
  "crossbeam-channel",
  "meowtonin",
  "parking_lot",
+ "rustc-hash",
  "thread-counter",
  "thread-priority",
  "time",
@@ -180,12 +180,12 @@ dependencies = [
 name = "aneri-rand"
 version = "0.1.0"
 dependencies = [
- "ahash",
  "aneri-core",
  "biski64",
  "meowtonin",
  "parking_lot",
  "rand 0.9.5",
+ "rustc-hash",
  "slotmap",
 ]
 
@@ -193,12 +193,12 @@ dependencies = [
 name = "aneri-regex"
 version = "0.1.0"
 dependencies = [
- "ahash",
  "aneri-core",
  "lru 0.16.4",
  "meowtonin",
  "parking_lot",
  "regex",
+ "rustc-hash",
  "serde",
  "slotmap",
 ]
@@ -214,12 +214,12 @@ dependencies = [
 name = "aneri-sql"
 version = "0.1.0"
 dependencies = [
- "ahash",
  "aneri-core",
  "crossbeam-channel",
  "meowtonin",
  "meowtonin-serde",
  "mysql",
+ "rustc-hash",
  "scopeguard",
  "serde",
  "serde_json",

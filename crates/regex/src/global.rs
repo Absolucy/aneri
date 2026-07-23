@@ -1,16 +1,16 @@
 // SPDX-License-Identifier: MPL-2.0
 use crate::shared;
-use ahash::RandomState;
 use lru::LruCache;
 use meowtonin::{ByondError, ByondResult, ByondValue, byond_fn};
 use parking_lot::Mutex;
 use regex::Regex;
+use rustc_hash::FxBuildHasher;
 use std::{num::NonZeroUsize, sync::LazyLock};
 
 const CACHE_SIZE: NonZeroUsize = NonZeroUsize::new(32).unwrap();
 
-static REGEX_CACHE: LazyLock<Mutex<LruCache<String, Regex, RandomState>>> =
-	LazyLock::new(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, RandomState::default())));
+static REGEX_CACHE: LazyLock<Mutex<LruCache<String, Regex, FxBuildHasher>>> =
+	LazyLock::new(|| Mutex::new(LruCache::with_hasher(CACHE_SIZE, FxBuildHasher)));
 
 pub fn clear_cache() {
 	REGEX_CACHE.lock().clear();
