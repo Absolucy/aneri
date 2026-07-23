@@ -59,7 +59,7 @@
 	return ANERI_CALL("instanced_random_string_alphanumeric", src, length)
 
 /datum/rng/proc/replace_chars_prob(input, replacement, probability = 25, skip_whitespace = FALSE) as text
-	return ANERI_CALL("instnaced_replace_chars_prob", src, input, replacement, probability, skip_whitespace)
+	return ANERI_CALL("instanced_replace_chars_prob", src, input, replacement, probability, skip_whitespace)
 
 /// A cryptographic PRNG instance, using ChaCha12.
 /datum/rng/secure
