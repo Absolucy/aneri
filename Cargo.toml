@@ -35,7 +35,6 @@ default_trait_access = "warn"
 inefficient_to_string = "warn"
 redundant_type_annotations = "warn"
 str_to_string = "warn"
-string_to_string = "warn"
 
 [profile.release]
 debug = "full"
