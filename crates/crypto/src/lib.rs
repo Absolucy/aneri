@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
+pub mod totp;
+
 use ::digest::{FixedOutputReset, Update};
 use blake3::Hasher as Blake3;
 use md5::{Digest, Md5};

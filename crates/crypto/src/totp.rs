@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 pub mod check;
-pub mod gen;
+pub mod generate;
 
 use totp_rs::{Algorithm, Secret, TOTP};
 
