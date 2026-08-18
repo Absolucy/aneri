@@ -21,8 +21,7 @@ use time::{OffsetDateTime, format_description::BorrowedFormatItem};
 pub fn unix_timestamp() -> String {
 	let duration = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
 	let secs = duration.as_secs();
-	let frac = duration.as_secs_f64().fract();
-	let mut micros = (frac * 1_000_000.0).round() as u32;
+	let mut micros = duration.subsec_micros();
 
 	let mut buffer = [b'0'; 17];
 	let mut pos = if secs == 0 {
