@@ -51,7 +51,8 @@ impl<T> ByondSlotMap<T> {
 			// don't use clear(), so we reclaim memory
 			*instances = SlotMap::with_capacity_and_key(DEFAULT_CAPACITY);
 		} else {
-			// if we're at the default capacity, it's a waste of time to reallocate
+			// if we're at the default capacity, it's a waste of time to
+			// reallocate
 			instances.clear();
 		}
 	}

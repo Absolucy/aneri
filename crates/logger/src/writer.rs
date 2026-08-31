@@ -55,8 +55,8 @@ fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
 /// This thread will stop whenever the sender is dropped, after synchronizing
 /// the opened log file.
 pub(crate) fn spawn_log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
-	// Spawned with min priority in order to avoid potential performance impact to
-	// the actual server.
+	// Spawned with min priority in order to avoid potential performance impact
+	// to the actual server.
 	std::thread::Builder::new()
 		.name(format!("aneri logger [{}]", path.display()))
 		.stack_size(DEFAULT_STACK_SIZE)
