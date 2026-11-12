@@ -17,7 +17,7 @@ static TIMESTAMP_FORMATTER: &[BorrowedFormatItem] = time::macros::format_descrip
 );
 
 fn log_thread(path: PathBuf, rx: Receiver<LogMessage>) {
-	crate::counter::take_thread_ticket();
+	let _ticket = crate::counter::take_thread_ticket();
 	let mut file = OpenOptions::new()
 		.append(true)
 		.create(true)

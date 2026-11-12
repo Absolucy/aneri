@@ -5,6 +5,7 @@ use thread_counter::{ThreadCounter, Ticket};
 
 pub static THREAD_COUNTER: LazyLock<RwLock<ThreadCounter>> = LazyLock::new(RwLock::default);
 
+#[must_use]
 pub fn take_thread_ticket() -> Ticket {
 	THREAD_COUNTER.read().ticket()
 }
