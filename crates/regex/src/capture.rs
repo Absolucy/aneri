@@ -4,19 +4,19 @@ use regex::Regex;
 
 #[derive(Debug)]
 /// Represents data for a single capture group in a regex match.
-pub(crate) struct CaptureData {
+pub(crate) struct CaptureData<'a> {
 	/// The name of the capture group, if it has one.
 	/// `None` for unnamed capture groups.
-	name: Option<String>,
+	name: Option<&'a str>,
 	/// The starting index of the capture in the original string.
 	start: usize,
 	/// The ending index of the capture in the original string.
 	end: usize,
 	/// The actual string value of the captured text.
-	value: String,
+	value: &'a str,
 }
 
-impl ToByond for CaptureData {
+impl ToByond for CaptureData<'_> {
 	fn to_byond(&self) -> ByondResult<ByondValue> {
 		let name = self.name.to_byond()?;
 		let start = self.start.to_byond()?;
@@ -27,19 +27,19 @@ impl ToByond for CaptureData {
 }
 
 #[derive(Debug)]
-pub(crate) struct MatchData {
+pub(crate) struct MatchData<'a> {
 	/// The full string that matched the entire regex pattern.
-	rmatch: String,
+	rmatch: &'a str,
 	/// The starting index of the entire match in the original string.
 	start: usize,
 	/// The ending index of the entire match in the original string.
 	end: usize,
 	/// A list containing data for each capture group in the match.
 	/// This includes both named and unnamed captures.
-	captures: Vec<CaptureData>,
+	captures: Vec<CaptureData<'a>>,
 }
 
-impl ToByond for MatchData {
+impl ToByond for MatchData<'_> {
 	fn to_byond(&self) -> ByondResult<ByondValue> {
 		let rmatch = self.rmatch.to_byond()?;
 		let start = self.start.to_byond()?;
@@ -49,7 +49,8 @@ impl ToByond for MatchData {
 	}
 }
 
-pub(crate) fn regex_capture(regex: &Regex, input: &str) -> Vec<MatchData> {
+pub(crate) fn regex_capture<'a>(regex: &'a Regex, input: &'a str) -> Vec<MatchData<'a>> {
+	let names = regex.capture_names().collect::<Vec<Option<&str>>>();
 	regex
 		.captures_iter(input)
 		.filter_map(|captures| -> Option<_> {
@@ -62,21 +63,17 @@ pub(crate) fn regex_capture(regex: &Regex, input: &str) -> Vec<MatchData> {
 				.enumerate()
 				.flat_map(|(idx, capture)| {
 					let capture = capture?;
-					let name = regex
-						.capture_names()
-						.nth(idx)
-						.and_then(|n| n.map(|s| s.to_owned()));
-					Some((name, capture))
+					Some((names[idx], capture))
 				})
 				.map(|(name, capture)| CaptureData {
 					name,
 					start: capture.start() + 1,
 					end: capture.end() + 1,
-					value: capture.as_str().to_owned(),
+					value: capture.as_str(),
 				})
 				.collect::<Vec<CaptureData>>();
 			MatchData {
-				rmatch: full_match.as_str().to_owned(),
+				rmatch: full_match.as_str(),
 				start: full_match.start() + 1,
 				end: full_match.end() + 1,
 				captures,

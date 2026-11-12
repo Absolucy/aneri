@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MPL-2.0
 use meowtonin::{ByondResult, ByondValue, byond_fn};
-use std::cmp::Ordering;
+use std::cmp::{Ordering, Reverse};
 
 #[byond_fn]
 pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<ByondValue> {
@@ -66,20 +66,12 @@ pub fn sort_by_string(
 ) -> Vec<String> {
 	let ignore_case = ignore_case.unwrap_or(false);
 	let descending = descending.unwrap_or(false);
-	list.sort_by(|a, b| {
-		let mut a = a;
-		let mut b = b;
-		if descending {
-			std::mem::swap(&mut a, &mut b);
-		}
-		if ignore_case {
-			let a = a.to_lowercase();
-			let b = b.to_lowercase();
-			a.cmp(&b)
-		} else {
-			a.cmp(b)
-		}
-	});
+	match (ignore_case, descending) {
+		(true, true) => list.sort_by_cached_key(|string| Reverse(string.to_lowercase())),
+		(true, false) => list.sort_by_cached_key(|string| string.to_lowercase()),
+		(false, true) => list.sort_by(|a, b| b.cmp(a)),
+		(false, false) => list.sort(),
+	}
 	list
 }
 

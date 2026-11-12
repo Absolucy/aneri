@@ -29,7 +29,7 @@ where
 	let skip_whitespace = skip_whitespace.unwrap_or(false);
 	let distro =
 		Bernoulli::new((prob as f64 / 100.0).clamp(0.0, 1.0)).expect("invalid probability, wtf???");
-	let mut output = String::with_capacity(input.len() * replacement.len()); // Allocate for worst case scenario.
+	let mut output = String::with_capacity(input.len());
 	input.chars().for_each(|c| {
 		if (!skip_whitespace || !c.is_whitespace()) && distro.sample(rng) {
 			output.push_str(&replacement);

@@ -20,7 +20,7 @@ pub fn clear_cache() {
 pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 	REGEX_CACHE
 		.lock()
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
 		.map(|regex| regex.is_match(&haystack))
 		.map_err(ByondError::boxed)
 }
@@ -29,7 +29,7 @@ pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
 	shared::regex_find(regex, &haystack)
 }
@@ -38,7 +38,7 @@ pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
 	shared::regex_split(regex, &haystack)
 }
@@ -47,7 +47,7 @@ pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
 	shared::regex_splitn(regex, &haystack, limit)
 }
@@ -56,7 +56,7 @@ pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResul
 pub fn regex_replace(regex: String, haystack: String, with: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
 	shared::regex_replace(regex, &haystack, &with)
 }
@@ -65,7 +65,7 @@ pub fn regex_replace(regex: String, haystack: String, with: String) -> ByondResu
 pub fn regex_replace_all(regex: String, haystack: String, with: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
-		.try_get_or_insert(regex.clone(), || Regex::new(&regex))
+		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
 		.map_err(ByondError::boxed)?;
 	shared::regex_replace_all(regex, &haystack, &with)
 }

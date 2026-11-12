@@ -10,7 +10,7 @@ use parking_lot::Mutex;
 use sha1::Sha1;
 use sha2::{Sha224, Sha256, Sha384, Sha512, Sha512_224, Sha512_256};
 use sha3::{Sha3_224, Sha3_256, Sha3_384, Sha3_512};
-use std::{path::PathBuf, sync::LazyLock};
+use std::{fs::File, io::Read, path::PathBuf, sync::LazyLock};
 use xxhash_rust::{xxh3::Xxh3, xxh32::Xxh32, xxh64::Xxh64};
 
 macro_rules! impl_hasher {
@@ -43,71 +43,102 @@ impl_hasher!(
 	(XXH3, Xxh3, Xxh3::new())
 );
 
+const FILE_CHUNK_SIZE: usize = 64 * 1024;
+
 #[byond_fn]
 pub fn hash(algorithm: String, data: String) -> Option<String> {
-	hash_data(algorithm, data)
+	hash_data(&algorithm, Input::Bytes(data.as_bytes()))
 }
 
 #[byond_fn]
 pub fn hash_file(algorithm: String, file: PathBuf) -> Option<String> {
-	let data = std::fs::read(file).ok()?;
-	hash_data(algorithm, data)
+	let file = File::open(file).ok()?;
+	hash_data(&algorithm, Input::File(file))
 }
 
-fn hash_data(algorithm: impl AsRef<str>, data: impl AsRef<[u8]>) -> Option<String> {
-	let algorithm = algorithm.as_ref();
-	let data = data.as_ref();
+enum Input<'a> {
+	Bytes(&'a [u8]),
+	File(File),
+}
+
+impl Input<'_> {
+	fn feed(self, mut update: impl FnMut(&[u8])) -> Option<()> {
+		match self {
+			Self::Bytes(bytes) => update(bytes),
+			Self::File(mut file) => {
+				let mut chunk = vec![0_u8; FILE_CHUNK_SIZE];
+				loop {
+					let bytes_read = file.read(&mut chunk).ok()?;
+					if bytes_read == 0 {
+						break;
+					}
+					update(&chunk[..bytes_read]);
+				}
+			}
+		}
+		Some(())
+	}
+}
+
+fn hash_data(algorithm: &str, input: Input) -> Option<String> {
 	match algorithm {
-		"blake3" => Some(digest_hash(&BLAKE3, data)),
-		"md5" => Some(digest_hash(&MD5, data)),
-		"sha1" => Some(digest_hash(&SHA1, data)),
-		"sha224" => Some(digest_hash(&SHA224, data)),
-		"sha2" | "sha256" => Some(digest_hash(&SHA256, data)),
-		"sha384" => Some(digest_hash(&SHA384, data)),
-		"sha512" => Some(digest_hash(&SHA512, data)),
-		"sha512_224" => Some(digest_hash(&SHA512_224, data)),
-		"sha512_256" => Some(digest_hash(&SHA512_256, data)),
-		"sha3_224" => Some(digest_hash(&SHA3_224, data)),
-		"sha3" | "sha3_256" => Some(digest_hash(&SHA3_256, data)),
-		"sha3_384" => Some(digest_hash(&SHA3_384, data)),
-		"sha3_512" => Some(digest_hash(&SHA3_512, data)),
+		"blake3" => digest_hash(&BLAKE3, input),
+		"md5" => digest_hash(&MD5, input),
+		"sha1" => digest_hash(&SHA1, input),
+		"sha224" => digest_hash(&SHA224, input),
+		"sha2" | "sha256" => digest_hash(&SHA256, input),
+		"sha384" => digest_hash(&SHA384, input),
+		"sha512" => digest_hash(&SHA512, input),
+		"sha512_224" => digest_hash(&SHA512_224, input),
+		"sha512_256" => digest_hash(&SHA512_256, input),
+		"sha3_224" => digest_hash(&SHA3_224, input),
+		"sha3" | "sha3_256" => digest_hash(&SHA3_256, input),
+		"sha3_384" => digest_hash(&SHA3_384, input),
+		"sha3_512" => digest_hash(&SHA3_512, input),
 		"xxh32" => {
 			let mut xxh = XXH32.lock();
 			xxh.reset(0);
-			xxh.update(data);
+			input.feed(|chunk| xxh.update(chunk))?;
 			let hash = xxh.digest();
 			Some(faster_hex::hex_string(&hash.to_le_bytes()))
 		}
 		"xxh64" => {
 			let mut xxh = XXH64.lock();
 			xxh.reset(0);
-			xxh.update(data);
+			input.feed(|chunk| xxh.update(chunk))?;
 			let hash = xxh.digest();
 			Some(faster_hex::hex_string(&hash.to_le_bytes()))
 		}
 		"xxh3" => {
 			let mut xxh = XXH3.lock();
 			xxh.reset();
-			xxh.update(data);
+			input.feed(|chunk| xxh.update(chunk))?;
 			let hash = xxh.digest();
 			Some(faster_hex::hex_string(&hash.to_le_bytes()))
 		}
-		"crc32" => Some(faster_hex::hex_string(&crc32fast::hash(data).to_le_bytes())),
-		"crc32c" => Some(faster_hex::hex_string(&crc32c::crc32c(data).to_le_bytes())),
+		"crc32" => {
+			let mut crc = crc32fast::Hasher::new();
+			input.feed(|chunk| crc.update(chunk))?;
+			Some(faster_hex::hex_string(&crc.finalize().to_le_bytes()))
+		}
+		"crc32c" => {
+			let mut crc = 0_u32;
+			input.feed(|chunk| crc = crc32c::crc32c_append(crc, chunk))?;
+			Some(faster_hex::hex_string(&crc.to_le_bytes()))
+		}
 		_ => None,
 	}
 }
 
-pub(crate) fn digest_hash<Hasher, Bytes>(
+pub(crate) fn digest_hash<Hasher>(
 	lazy_hasher: &'static LazyLock<Mutex<Hasher>>,
-	input: Bytes,
-) -> String
+	input: Input,
+) -> Option<String>
 where
 	Hasher: Update + FixedOutputReset,
-	Bytes: AsRef<[u8]>,
 {
 	let mut hasher = lazy_hasher.lock();
-	hasher.update(input.as_ref());
+	let fed = input.feed(|chunk| hasher.update(chunk));
 	let hash = hasher.finalize_fixed_reset();
-	faster_hex::hex_string(&hash)
+	fed.map(|()| faster_hex::hex_string(&hash))
 }

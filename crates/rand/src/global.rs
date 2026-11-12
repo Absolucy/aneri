@@ -25,8 +25,8 @@ pub(crate) fn reseed_global_rng() {
 
 pub(crate) fn global(secure: impl Into<Option<bool>>) -> GlobalRngDispatcher {
 	if secure.into().unwrap_or(false) {
-		GlobalRngDispatcher::Secure(&SECURE)
+		GlobalRngDispatcher::Secure(SECURE.lock())
 	} else {
-		GlobalRngDispatcher::Fast(&FAST)
+		GlobalRngDispatcher::Fast(FAST.lock())
 	}
 }

@@ -44,14 +44,19 @@ pub fn clear_log_queue() {
 
 /// Returns the log queue for a given path, creating it if it doesn't exist.
 pub(crate) fn get_queue(path: &Path) -> MessageQueue {
-	MESSAGE_QUEUE
-		.lock()
-		.entry(path.to_path_buf())
-		.or_insert_with(|| initialize_queue(path))
-		.clone()
+	let mut queues = MESSAGE_QUEUE.lock();
+	if let Some(queue) = queues.get(path) {
+		return queue.clone();
+	}
+	let queue = initialize_queue(path);
+	queues.insert(path.to_path_buf(), queue.clone());
+	queue
 }
 
 fn initialize_queue(path: &Path) -> MessageQueue {
+	if let Some(parent) = path.parent().filter(|path| !path.is_dir()) {
+		std::fs::create_dir_all(parent).expect("failed to create log directory");
+	}
 	let (tx, rx) = crossbeam_channel::unbounded::<LogMessage>();
 	crate::writer::spawn_log_thread(path.to_path_buf(), rx);
 	tx

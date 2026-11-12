@@ -29,7 +29,7 @@ pub fn file_write(path: PathBuf, data: String) -> bool {
 		}
 		let mut file = File::create(path).ok().map(BufWriter::new)?;
 		file.write_all(data.as_bytes()).ok()?;
-		file.into_inner().ok()?.sync_all().ok()?;
+		file.flush().ok()?;
 		Some(())
 	};
 	file_write_impl().is_some()
@@ -48,7 +48,7 @@ pub fn file_append(path: PathBuf, data: String) -> bool {
 			.ok()
 			.map(BufWriter::new)?;
 		file.write_all(data.as_bytes()).ok()?;
-		file.into_inner().ok()?.sync_all().ok()?;
+		file.flush().ok()?;
 		Some(())
 	};
 	file_append_impl().is_some()
@@ -70,8 +70,23 @@ pub fn file_get_line_count(path: PathBuf) -> Option<usize> {
 
 #[byond_fn]
 pub fn file_seek_line(path: PathBuf, line: usize) -> Option<String> {
-	let file = File::open(path).ok().map(BufReader::new)?;
-	file.lines().nth(line).and_then(|inner| inner.ok())
+	let mut file = File::open(path).ok().map(BufReader::new)?;
+	for _ in 0..line {
+		if file.skip_until(b'\n').ok()? == 0 {
+			return None;
+		}
+	}
+	let mut text = String::new();
+	if file.read_line(&mut text).ok()? == 0 {
+		return None;
+	}
+	if text.ends_with('\n') {
+		text.pop();
+		if text.ends_with('\r') {
+			text.pop();
+		}
+	}
+	Some(text)
 }
 
 #[byond_fn]
