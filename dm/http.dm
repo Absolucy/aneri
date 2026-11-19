@@ -39,14 +39,14 @@
 	response = null
 	callback_target = target
 	src.callback = callback
-	id = ANERI_CALL("http_send", method, url, headers, body, body_file, output_file, timeout)
+	id = ANERI_CALL(http_send, method, url, headers, body, body_file, output_file, timeout)
 	__aneri_http_requests[id] = src
 	return src
 
 /// Starts the request in the background and never reports back: no callback, no response, can't be cancelled.
 /// Cheaper than send() with no callback, since the result never crosses back into DM.
 /datum/http_request/proc/send_and_forget()
-	ANERI_CALL("http_send_and_forget", method, url, headers, body, body_file, output_file, timeout)
+	ANERI_CALL(http_send_and_forget, method, url, headers, body, body_file, output_file, timeout)
 
 /// Sleeps until the request finishes, then returns the response.
 /datum/http_request/proc/wait() as /datum/http_response
@@ -58,7 +58,7 @@
 /datum/http_request/proc/send_blocking() as /datum/http_response
 	if(id)
 		CRASH("http request to [url] is already in flight")
-	var/list/result = ANERI_CALL("http_send_blocking", method, url, headers, body, body_file, output_file, timeout)
+	var/list/result = ANERI_CALL(http_send_blocking, method, url, headers, body, body_file, output_file, timeout)
 	response = new /datum/http_response(result[1], result[2], result[3], result[4])
 	return response
 
@@ -67,7 +67,7 @@
 	if(!id)
 		return FALSE
 	__aneri_http_requests -= id
-	ANERI_CALL("http_cancel", id)
+	ANERI_CALL(http_cancel, id)
 	id = null
 	callback_target = null
 	callback = null

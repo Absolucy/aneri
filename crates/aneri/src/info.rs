@@ -2,7 +2,7 @@
 use const_format::formatcp as const_format;
 use meowtonin::byond_fn;
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_aneri_version")]
 pub fn aneri_version() -> &'static str {
 	const_format!(
 		"{name} v{version} ({git_hash})",
@@ -12,7 +12,7 @@ pub fn aneri_version() -> &'static str {
 	)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_aneri_features")]
 pub fn aneri_features() -> &'static str {
 	env!("BOSION_CRATE_FEATURES")
 }

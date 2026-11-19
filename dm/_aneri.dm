@@ -7,9 +7,15 @@
 		return __aneri = "aneri"
 
 #define ANERI (__aneri || __detect_aneri())
-#define ANERI_CALL(name, args...) call_ext(ANERI, "byond:" + name)(args)
+#define ANERI_CALL(name, args...) call_ext(__aneri_##name ||= load_ext(ANERI, "byond:" + #name))(args)
 
-/proc/aneri_cleanup()	return ANERI_CALL("cleanup")
+/proc/aneri_cleanup()	return call_ext(ANERI, "byond:cleanup")()
+
+/proc/aneri_version()	return call_ext(ANERI, "byond:aneri_version")()
+
+/proc/aneri_features()	return call_ext(ANERI, "byond:aneri_features")()
+
+/proc/aneri_set_panic_output_folder(path)	return call_ext(ANERI, "byond:set_panic_output_folder")(path)
 
 /datum/aneri
 	VAR_FINAL/__aneri_key_low

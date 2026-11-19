@@ -55,7 +55,10 @@ pub fn cleanup() {
 #[test]
 fn generate_dm_bindings() {
 	let dm = meowtonin::bindings::generate_dm("aneri")
-		.replace("\nvar/static/", "\n/* This comment bypasses grep checks */ var/static/")
+		.replace(
+			"\nvar/static/",
+			"\n/* This comment bypasses grep checks */ var/static/",
+		)
 		.lines()
 		.map(|line| {
 			let Some(rest) = line.strip_prefix("#define ") else {
@@ -72,7 +75,7 @@ fn generate_dm_bindings() {
 	std::fs::write(path, dm).expect("failed to write dm/_bindings.dm");
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_set_panic_output_folder")]
 pub fn set_panic_output_folder(path: String) {
 	meowtonin::panic::set_panic_output_folder(path);
 }

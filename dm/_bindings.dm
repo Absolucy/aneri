@@ -5,10 +5,6 @@
 #define ANERI (world.system_type == MS_WINDOWS ? "aneri" : "libaneri")
 #endif
 
-/// Rust: `fn aneri_features() -> &'static str`
-#define aneri_features(...) call_ext(__aneri_aneri_features ||= load_ext(ANERI, "byond:aneri_features"))()
-/* This comment bypasses grep checks */ var/static/__aneri_aneri_features
-
 /// Arguments:
 /// * secure - (optional)
 ///
@@ -53,6 +49,14 @@
 /// Rust: `fn random_int_unsigned(secure: Option<bool>) -> u32`
 #define aneri_rand_uint(secure...) call_ext(__aneri_random_int_unsigned ||= load_ext(ANERI, "byond:random_int_unsigned"))(secure)
 /* This comment bypasses grep checks */ var/static/__aneri_random_int_unsigned
+
+/// Rust: `fn aneri_features() -> &'static str`
+#define aneri_raw_aneri_features(...) call_ext(__aneri_aneri_features ||= load_ext(ANERI, "byond:aneri_features"))()
+/* This comment bypasses grep checks */ var/static/__aneri_aneri_features
+
+/// Rust: `fn aneri_version() -> &'static str`
+#define aneri_raw_aneri_version(...) call_ext(__aneri_aneri_version ||= load_ext(ANERI, "byond:aneri_version"))()
+/* This comment bypasses grep checks */ var/static/__aneri_aneri_version
 
 /// Cleans up any resources used by Aneri.
 /// This should be run on initialization and shutdown.
@@ -310,6 +314,10 @@
 #define aneri_raw_rng_new(src, secure...) call_ext(__aneri_rng_new ||= load_ext(ANERI, "byond:rng_new"))(src, secure)
 /* This comment bypasses grep checks */ var/static/__aneri_rng_new
 
+/// Rust: `fn set_panic_output_folder(path: String)`
+#define aneri_raw_set_panic_output_folder(path) call_ext(__aneri_set_panic_output_folder ||= load_ext(ANERI, "byond:set_panic_output_folder"))(path)
+/* This comment bypasses grep checks */ var/static/__aneri_set_panic_output_folder
+
 /// Rust: `fn toml_decode_file(path: PathBuf) -> ByondResult<ByondValue>`
 #define aneri_raw_toml_decode_file(path) call_ext(__aneri_toml_decode_file ||= load_ext(ANERI, "byond:toml_decode_file"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_toml_decode_file
@@ -317,10 +325,6 @@
 /// Rust: `fn toml_file_is_valid(path: PathBuf) -> bool`
 #define aneri_raw_toml_file_is_valid(path) call_ext(__aneri_toml_file_is_valid ||= load_ext(ANERI, "byond:toml_file_is_valid"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_toml_file_is_valid
-
-/// Rust: `fn aneri_version() -> &'static str`
-#define aneri_version(...) call_ext(__aneri_aneri_version ||= load_ext(ANERI, "byond:aneri_version"))()
-/* This comment bypasses grep checks */ var/static/__aneri_aneri_version
 
 /// Rust: `fn audio_length(path: PathBuf) -> Option<f32>`
 #define aneri_audio_length(path) call_ext(__aneri_audio_length ||= load_ext(ANERI, "byond:audio_length"))(path)
@@ -507,10 +511,6 @@
 /// Rust: `fn rmdir(path: PathBuf) -> bool`
 #define aneri_rmdir(path) call_ext(__aneri_rmdir ||= load_ext(ANERI, "byond:rmdir"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_rmdir
-
-/// Rust: `fn set_panic_output_folder(path: String)`
-#define aneri_set_panic_output_folder(path) call_ext(__aneri_set_panic_output_folder ||= load_ext(ANERI, "byond:set_panic_output_folder"))(path)
-/* This comment bypasses grep checks */ var/static/__aneri_set_panic_output_folder
 
 /// Rust: `fn toml_decode(toml: String) -> ByondResult<ByondValue>`
 #define aneri_toml_decode(toml) call_ext(__aneri_toml_decode ||= load_ext(ANERI, "byond:toml_decode"))(toml)

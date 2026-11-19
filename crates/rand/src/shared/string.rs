@@ -8,7 +8,7 @@ pub(crate) fn random_string_alphanumeric<Gen>(rng: &mut Gen, length: usize) -> S
 where
 	Gen: Rng,
 {
-	(0..=length)
+	(0..length)
 		.map(|_| rng.sample(Alphanumeric) as char)
 		.collect()
 }

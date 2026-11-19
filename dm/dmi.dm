@@ -6,7 +6,7 @@
 
 /proc/aneri_dmi_read_states(path) as /list
 	RETURN_TYPE(/list)
-	return ANERI_CALL("dmi_read_states", path)
+	return ANERI_CALL(dmi_read_states, path)
 
 #define TMP_UPSCALE_PATH "tmp/resize_icon.png"
 
