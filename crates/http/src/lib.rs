@@ -15,16 +15,26 @@ pub fn cleanup() {
 }
 
 /// Starts an HTTP request in the background and returns its id.
-/// When it finishes, `/proc/__aneri_http_finish` is called with the id and the
-/// result.
+/// At most 64 run at once, the rest wait their turn.
+/// When it finishes, `/proc/__aneri_http_finish` is called with the id and the result.
 #[byond_fn(name = "aneri_raw_http_send")]
 pub fn http_send(
+	/// `GET`, `POST`, and so on, in any case.
 	method: String,
 	url: String,
+	/// Assoc list of header name to value.
+	/// Values must be text.
 	headers: Option<Vec<(String, String)>>,
+	/// Text to send as the request body.
 	body: Option<String>,
+	/// Path of a file to upload as the body.
+	/// Used instead of `body` if both are set.
 	body_file: Option<PathBuf>,
+	/// Path to save the response body to, for binary or large (over 16 MiB) responses.
+	/// The returned body is null when this is set.
 	output_file: Option<PathBuf>,
+	/// Seconds the whole request may take, body included.
+	/// Null waits forever.
 	timeout: Option<f32>,
 ) -> String {
 	let request = Request {
@@ -47,16 +57,26 @@ pub fn http_send(
 	.to_string()
 }
 
-/// Starts an HTTP request in the background and never reports back. The
-/// result, including any error, is thrown away.
+/// Starts an HTTP request in the background and never reports back.
+/// The result, including any error, is thrown away.
 #[byond_fn(name = "aneri_raw_http_send_and_forget")]
 pub fn http_send_and_forget(
+	/// `GET`, `POST`, and so on, in any case.
 	method: String,
 	url: String,
+	/// Assoc list of header name to value.
+	/// Values must be text.
 	headers: Option<Vec<(String, String)>>,
+	/// Text to send as the request body.
 	body: Option<String>,
+	/// Path of a file to upload as the body.
+	/// Used instead of `body` if both are set.
 	body_file: Option<PathBuf>,
+	/// Path to save the response body to, for binary or large (over 16 MiB) responses.
+	/// The returned body is null when this is set.
 	output_file: Option<PathBuf>,
+	/// Seconds the whole request may take, body included.
+	/// Null waits forever.
 	timeout: Option<f32>,
 ) {
 	let request = Request {
@@ -77,16 +97,26 @@ pub fn http_send_and_forget(
 	});
 }
 
-/// Runs an HTTP request and waits for it, freezing the server until it is
-/// done. Returns `list(status_code, headers, body, error)`.
+/// Runs an HTTP request and waits for it, freezing the server until it is done.
+/// Returns `list(status_code, headers, body, error)`.
 #[byond_fn(name = "aneri_raw_http_send_blocking")]
 pub fn http_send_blocking(
+	/// `GET`, `POST`, and so on, in any case.
 	method: String,
 	url: String,
+	/// Assoc list of header name to value.
+	/// Values must be text.
 	headers: Option<Vec<(String, String)>>,
+	/// Text to send as the request body.
 	body: Option<String>,
+	/// Path of a file to upload as the body.
+	/// Used instead of `body` if both are set.
 	body_file: Option<PathBuf>,
+	/// Path to save the response body to, for binary or large (over 16 MiB) responses.
+	/// The returned body is null when this is set.
 	output_file: Option<PathBuf>,
+	/// Seconds the whole request may take, body included.
+	/// Null waits forever.
 	timeout: Option<f32>,
 ) -> ByondResult<[ByondValue; 4]> {
 	let request = Request {
@@ -101,8 +131,9 @@ pub fn http_send_blocking(
 	outcome_values(runtime::handle().block_on(request::run(request)))
 }
 
-/// Cancels a request started with `aneri_raw_http_send`. Its finish proc will
-/// not be called. Returns false if the request already finished.
+/// Cancels a request started with `aneri_raw_http_send`.
+/// Its finish proc will not be called.
+/// Returns false if the request already finished.
 #[byond_fn(name = "aneri_raw_http_cancel")]
 pub fn http_cancel(id: String) -> bool {
 	id.parse().is_ok_and(job::cancel)

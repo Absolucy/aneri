@@ -4,7 +4,7 @@ use meowtonin::byond_fn;
 use std::time::{SystemTime, UNIX_EPOCH};
 use time::{OffsetDateTime, format_description::BorrowedFormatItem};
 
-/**
+/*
  * so this weird shit is in fact quite a bit faster than the usual format!()
  * approach. i benchmarked it on my Ryzen 9 5900X (i686-pc-windows-msvc
  * target, to better represent actual use) this function took around 80ns on
@@ -17,6 +17,8 @@ use time::{OffsetDateTime, format_description::BorrowedFormatItem};
  * but this is a very hot proc, due to logging stuff, so if it counts
  * anywhere, it'll be here, i guess?
  */
+/// Seconds since 1970 in UTC, with microseconds, like `1763500000.123456`.
+/// It's text because a DM number can't hold that many digits.
 #[byond_fn]
 pub fn unix_timestamp() -> String {
 	let duration = SystemTime::now().duration_since(UNIX_EPOCH).unwrap();
@@ -57,6 +59,8 @@ static TIMESTAMP_FORMATTER: &[BorrowedFormatItem] = time::macros::format_descrip
 	"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
 );
 
+/// The current UTC time, like `2026-11-19 14:03:27.512`.
+/// Same format as the timestamps in `aneri_log_write`.
 #[byond_fn]
 pub fn human_readable_timestamp() -> String {
 	OffsetDateTime::now_utc()
@@ -64,8 +68,18 @@ pub fn human_readable_timestamp() -> String {
 		.unwrap_or_else(|_| unreachable!("invalid formatter?"))
 }
 
+/// The current time, formatted with a strftime-style string,
+/// like `%Y-%m-%d %H:%M`.
+/// Returns null if `offset` is out of range.
+/// Runtimes on an unknown `%` code.
 #[byond_fn]
-pub fn format_timestamp(format: String, offset: Option<i32>) -> Option<String> {
+pub fn format_timestamp(
+	/// The codes are listed in the `chrono` crate's `strftime` docs.
+	format: String,
+	/// Hours from UTC, like -5.
+	/// Null uses the server's own time zone.
+	offset: Option<i32>,
+) -> Option<String> {
 	match offset {
 		Some(offset) => {
 			let timezone = FixedOffset::east_opt(offset * 3600)?;

@@ -1,3 +1,5 @@
+/// A stopwatch that starts when created.
+/// Once it's deleted, reset() returns FALSE and the other procs return null.
 /datum/instant
 	parent_type = /datum/aneri
 
@@ -9,17 +11,25 @@
 	ANERI_CALL(instant_del, src)
 	return ..()
 
+/// Restarts the stopwatch from 0.
 /datum/instant/proc/reset()
 	return ANERI_CALL(instant_reset, src)
 
+/// Microseconds since the stopwatch started or was reset.
+/// Wraps back to 0 after about 71 minutes.
 /datum/instant/proc/microseconds()
 	return ANERI_CALL(instant_microseconds, src)
 
+/// Nanoseconds since the stopwatch started or was reset.
+/// Wraps back to 0 after about 4.3 seconds.
 /datum/instant/proc/nanoseconds()
 	return ANERI_CALL(instant_nanoseconds, src)
 
+/// Milliseconds since the stopwatch started or was reset.
+/// Wraps back to 0 after about 49 days.
 /datum/instant/proc/milliseconds()
 	return ANERI_CALL(instant_milliseconds, src)
 
+/// Seconds since the stopwatch started or was reset, with a fraction.
 /datum/instant/proc/seconds()
 	return ANERI_CALL(instant_seconds, src)

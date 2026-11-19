@@ -4,13 +4,15 @@
 #define ANERI_RESIZE_LANCZOS3	"lanczos3"
 #define ANERI_RESIZE_TRIANGLE	"triangle"
 
+/// Lists the icon state names in a .dmi file without loading the icon.
+/// Runtimes if the file can't be read or isn't a PNG.
 /proc/aneri_dmi_read_states(path) as /list
 	RETURN_TYPE(/list)
 	return ANERI_CALL(dmi_read_states, path)
 
 #define TMP_UPSCALE_PATH "tmp/resize_icon.png"
 
-/// Upscales an icon using aneri.
+/// Resizes every frame of an icon to `width` by `height`, keeping its states.
 /// You really shouldn't use this TOO often, as it has to copy the icon to a temporary png file,
 /// resize it, fcopy_rsc the resized png, and then create a new /icon from said png.
 /// Cache the output where possible.

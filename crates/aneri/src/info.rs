@@ -2,6 +2,7 @@
 use const_format::formatcp as const_format;
 use meowtonin::byond_fn;
 
+/// The library's name, version and git commit, like `aneri v1.2.3 (abc1234)`.
 #[byond_fn(name = "aneri_raw_aneri_version")]
 pub fn aneri_version() -> &'static str {
 	const_format!(
@@ -12,6 +13,7 @@ pub fn aneri_version() -> &'static str {
 	)
 }
 
+/// The Cargo features this build was compiled with, comma-separated.
 #[byond_fn(name = "aneri_raw_aneri_features")]
 pub fn aneri_features() -> &'static str {
 	env!("BOSION_CRATE_FEATURES")

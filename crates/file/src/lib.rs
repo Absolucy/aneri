@@ -7,11 +7,15 @@ use std::{
 	path::PathBuf,
 };
 
+/// Whether a file or folder exists at `path`.
 #[byond_fn]
 pub fn file_exists(path: PathBuf) -> bool {
 	path.exists()
 }
 
+/// Reads a whole text file.
+/// Every `\r` is removed, so Windows line endings come back as `\n`.
+/// Returns null if the file can't be read or isn't valid UTF-8.
 #[byond_fn]
 pub fn file_read(path: PathBuf) -> Option<String> {
 	let metadata = std::fs::metadata(&path).ok()?;
@@ -21,6 +25,9 @@ pub fn file_read(path: PathBuf) -> Option<String> {
 	Some(buf.replace('\r', ""))
 }
 
+/// Writes text to a file, replacing what was there.
+/// Creates missing parent folders.
+/// Returns false on failure.
 #[byond_fn]
 pub fn file_write(path: PathBuf, data: String) -> bool {
 	let file_write_impl = || -> Option<()> {
@@ -35,6 +42,9 @@ pub fn file_write(path: PathBuf, data: String) -> bool {
 	file_write_impl().is_some()
 }
 
+/// Adds text to the end of a file, creating it and any missing parent folders.
+/// No newline is added.
+/// Returns false on failure.
 #[byond_fn]
 pub fn file_append(path: PathBuf, data: String) -> bool {
 	let file_append_impl = || -> Option<()> {
@@ -54,6 +64,9 @@ pub fn file_append(path: PathBuf, data: String) -> bool {
 	file_append_impl().is_some()
 }
 
+/// Counts the `\n` characters in a file,
+/// so a last line with no newline after it isn't counted.
+/// Returns null if the file can't be opened.
 #[byond_fn]
 pub fn file_get_line_count(path: PathBuf) -> Option<usize> {
 	let mut file = File::open(path).ok().map(BufReader::new)?;
@@ -68,8 +81,16 @@ pub fn file_get_line_count(path: PathBuf) -> Option<usize> {
 	Some(lines)
 }
 
+/// Reads one line of a file, without its line ending.
+/// It reads from the start of the file every call,
+/// so use `aneri_file_read` to go through a whole file.
+/// Returns null if the file can't be read or is too short.
 #[byond_fn]
-pub fn file_seek_line(path: PathBuf, line: usize) -> Option<String> {
+pub fn file_seek_line(
+	path: PathBuf,
+	/// Which line, counting from 0.
+	line: usize,
+) -> Option<String> {
 	let mut file = File::open(path).ok().map(BufReader::new)?;
 	for _ in 0..line {
 		if file.skip_until(b'\n').ok()? == 0 {
@@ -89,16 +110,22 @@ pub fn file_seek_line(path: PathBuf, line: usize) -> Option<String> {
 	Some(text)
 }
 
+/// Deletes a file.
+/// Returns false on failure, including when it didn't exist.
 #[byond_fn]
 pub fn file_delete(path: PathBuf) -> bool {
 	std::fs::remove_file(path).is_ok()
 }
 
+/// Creates a folder and any missing parents.
+/// Returns true if the folder exists afterwards, even if it already did.
 #[byond_fn]
 pub fn mkdir(path: PathBuf) -> bool {
 	path.is_dir() || std::fs::create_dir_all(path).is_ok()
 }
 
+/// Deletes a folder and everything inside it.
+/// Returns false on failure.
 #[byond_fn]
 pub fn rmdir(path: PathBuf) -> bool {
 	std::fs::remove_dir_all(path).is_ok()

@@ -12,17 +12,16 @@ pub fn cleanup() {
 	instance::free_instances();
 }
 
-/// Escapes all regular expression meta characters in `pattern`.
-/// The string returned may be safely used as a literal in a regular expression.
+/// Escapes every special regex character in `pattern`.
+/// The result matches `pattern` as plain text.
 #[byond_fn]
 pub fn regex_escape(pattern: String) -> String {
 	regex::escape(&pattern)
 }
 
-/// Helper function to escape and combine a list of patterns to match.
-/// This is just so we only have to do one call_ext instead of doing it in a
-/// loop.
-/// The return value will use `|` as a separator.
+/// Escapes each string in `patterns` and joins them with `|`.
+/// The result matches any one of them as plain text.
+/// One call instead of calling `aneri_regex_escape` in a loop.
 #[byond_fn]
 pub fn regex_combine_list(patterns: Vec<String>) -> String {
 	patterns

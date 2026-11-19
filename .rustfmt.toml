@@ -15,4 +15,3 @@ imports_indent = "Block"
 imports_granularity = "Crate"
 overflow_delimited_expr = true
 reorder_impl_items = true
-wrap_comments = true

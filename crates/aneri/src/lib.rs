@@ -31,8 +31,9 @@ pub use aneri_util;
 
 use meowtonin::byond_fn;
 
-/// Cleans up any resources used by Aneri.
-/// This should be run on initialization and shutdown.
+/// Deletes every Rust-side object, cancels background work,
+/// and closes log files.
+/// `/world/New()` and `/world/Del()` already call this.
 #[byond_fn(name = "aneri_raw_cleanup")]
 pub fn cleanup() {
 	#[cfg(feature = "logger")]
@@ -79,6 +80,8 @@ fn generate_dm_bindings() {
 	std::fs::write(path, dm).expect("failed to write dm/_bindings.dm");
 }
 
+/// Sets the folder where panic reports are written, creating it if needed.
+/// If that fails, reports go to the current folder.
 #[byond_fn(name = "aneri_raw_set_panic_output_folder")]
 pub fn set_panic_output_folder(path: String) {
 	meowtonin::panic::set_panic_output_folder(path);

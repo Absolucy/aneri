@@ -73,8 +73,8 @@ impl Target {
 	}
 }
 
-/// Creates the pool behind a `/datum/sql_pool`. Connections open on first
-/// use.
+/// Creates the pool behind a `/datum/sql_pool` and stores its key on `src`.
+/// Connections open on first use.
 #[byond_fn(name = "aneri_raw_sql_pool_new")]
 pub fn sql_pool_new(
 	mut src: ByondValue,
@@ -82,11 +82,18 @@ pub fn sql_pool_new(
 	port: u16,
 	user: Option<String>,
 	password: Option<String>,
+	/// The database to `USE`, or null for none.
 	database: Option<String>,
+	/// Connections kept open even when idle.
 	min_connections: usize,
+	/// Most connections open at once.
+	/// Queries past that wait for a free one.
 	max_connections: usize,
+	/// Connect with TLS.
 	tls: bool,
+	/// Extra CA certificate file to trust, for a self-signed server.
 	tls_ca_file: Option<PathBuf>,
+	/// Accept any server certificate.
 	tls_insecure: bool,
 ) -> ByondResult<()> {
 	let pool = pool::build(pool::Settings {
@@ -120,7 +127,9 @@ pub fn sql_pool_del(src: ByondSlotKey) -> bool {
 pub fn sql_transaction_new(
 	mut src: ByondValue,
 	pool: Option<ByondSlotKey>,
+	/// Seconds to get a connection and begin.
 	timeout: Option<f32>,
+	/// Seconds with no new statement before it rolls back by itself.
 	idle_timeout: Option<f32>,
 ) -> ByondResult<()> {
 	let pool = pool.and_then(|key| POOLS.with(key, Clone::clone));
@@ -132,24 +141,31 @@ pub fn sql_transaction_new(
 	Ok(())
 }
 
-/// Lets go of a transaction. Statements already started still run, then it
-/// rolls back unless it was committed.
+/// Lets go of a transaction.
+/// Statements already started still run,
+/// then it rolls back unless it was committed.
 #[byond_fn(name = "aneri_raw_sql_transaction_del")]
 pub fn sql_transaction_del(src: ByondSlotKey) -> bool {
 	TRANSACTIONS.remove(src).is_some()
 }
 
-/// Runs a statement. `mode` 0 runs it in the background and returns an id for
-/// `/proc/__aneri_sql_finish`, 1 blocks and returns
-/// `list(columns, rows, affected, last_insert_id, error, error_code)`, 2 runs
-/// it in the background and reports nothing.
+/// Runs a statement on a pool or in a transaction.
+/// Mistakes in the query come back as the result's error, not as runtimes.
 #[byond_fn(name = "aneri_raw_sql_execute")]
 pub fn sql_execute(
+	/// 0 runs in the background and returns an id for `/proc/__aneri_sql_finish`.
+	/// 1 blocks and returns `list(columns, rows, affected, last_insert_id, error, error_code)`.
+	/// 2 runs in the background and reports nothing.
 	mode: u8,
 	pool: Option<ByondSlotKey>,
+	/// Used instead of `pool` when set.
 	transaction: Option<ByondSlotKey>,
 	sql: String,
+	/// A list of values for `?` placeholders,
+	/// or an assoc list for `:name` ones.
 	arguments: ByondValue,
+	/// Seconds for getting a connection plus running the query.
+	/// Null waits forever.
 	timeout: Option<f32>,
 ) -> ByondResult<ByondValue> {
 	let mode = Mode::from_number(mode)?;
@@ -161,18 +177,29 @@ pub fn sql_execute(
 	dispatch(mode, Target::find(pool, transaction), request)
 }
 
-/// Runs a mass insert built from a list of assoc lists, with the same modes
-/// as `aneri_raw_sql_execute`.
+/// Inserts many rows in one statement, like tgstation's `SSdbcore.MassInsert`.
+/// Takes the same modes as `aneri_raw_sql_execute`.
 #[byond_fn(name = "aneri_raw_sql_insert")]
 pub fn sql_insert(
+	/// Same as `aneri_raw_sql_execute`.
 	mode: u8,
 	pool: Option<ByondSlotKey>,
+	/// Used instead of `pool` when set.
 	transaction: Option<ByondSlotKey>,
 	table: String,
+	/// A list of assoc lists, column name to value.
+	/// At most 65535 values in total.
 	rows: ByondValue,
+	/// TRUE updates every column on a duplicate key.
+	/// Text is appended to the statement as-is.
 	duplicate_key: ByondValue,
+	/// Use `INSERT IGNORE`.
 	ignore_errors: bool,
+	/// Column name to SQL expression used for every row.
+	/// Each `?` in it is that row's value for the column.
 	special_columns: Option<Vec<(String, String)>>,
+	/// Seconds for getting a connection plus running the query.
+	/// Null waits forever.
 	timeout: Option<f32>,
 ) -> ByondResult<ByondValue> {
 	let mode = Mode::from_number(mode)?;
@@ -191,8 +218,8 @@ pub fn sql_insert(
 	dispatch(mode, Target::find(pool, transaction), request)
 }
 
-/// Commits or rolls back a transaction in the background and returns an id
-/// for `/proc/__aneri_sql_finish`.
+/// Commits or rolls back a transaction in the background.
+/// Returns an id for `/proc/__aneri_sql_finish`.
 #[byond_fn(name = "aneri_raw_sql_transaction_end")]
 pub fn sql_transaction_end(
 	transaction: Option<ByondSlotKey>,
@@ -210,8 +237,8 @@ pub fn sql_transaction_end(
 	id
 }
 
-/// Cancels a background query that is not part of a transaction. Its finish
-/// proc will not be called.
+/// Cancels a background query that is not part of a transaction.
+/// Its finish proc will not be called.
 #[byond_fn(name = "aneri_raw_sql_cancel")]
 pub fn sql_cancel(id: String) -> bool {
 	id.parse().is_ok_and(job::cancel)

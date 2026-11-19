@@ -1,8 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 use meowtonin::byond_fn;
 
+/// Encodes text as hex, two characters per byte.
 #[byond_fn]
-pub fn hex_encode(input: String, upper: Option<bool>) -> String {
+pub fn hex_encode(
+	input: String,
+	/// Use `A-F` instead of `a-f`, default false.
+	upper: Option<bool>,
+) -> String {
 	let input = input.as_bytes();
 	match upper {
 		Some(true) => faster_hex::hex_string_upper(input),
@@ -10,6 +15,9 @@ pub fn hex_encode(input: String, upper: Option<bool>) -> String {
 	}
 }
 
+/// Decodes hex into text.
+/// Bytes that aren't valid UTF-8 are replaced, so binary data won't survive.
+/// Returns null if the input isn't valid hex.
 #[byond_fn]
 pub fn hex_decode(input: String) -> Option<String> {
 	faster_hex::hex_decode_vec(input.trim().as_bytes())

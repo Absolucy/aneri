@@ -3,9 +3,9 @@
 	/// The name of the capture group, if it has one.
 	/// Unnamed capture groups will be null.
 	var/name
-	/// The starting index of the capture in the original string.
+	/// Byte position where the capture starts, counting from 1.
 	var/start
-	/// The ending index of the capture in the original string.
+	/// Byte position just after the capture, so `copytext(haystack, start, end)` is the capture.
 	var/end
 	/// The actual string value of the captured text.
 	var/value
@@ -20,12 +20,12 @@
 /datum/regex_match
 	/// The full string that matched the entire regex pattern.
 	var/match
-	/// The starting index of the entire match in the original string.
+	/// Byte position where the match starts, counting from 1.
 	var/start
-	/// The ending index of the entire match in the original string.
+	/// Byte position just after the match, so `copytext(haystack, start, end)` is the match.
 	var/end
 	/// A list containing data for each capture group in the match.
-    /// This includes both named and unnamed captures.
+	/// This includes both named and unnamed captures.
 	var/list/datum/regex_capture_group/captures
 
 /datum/regex_match/New(match, start, end, list/datum/regex_capture_group/captures)
@@ -39,4 +39,4 @@
 	RETURN_TYPE(/datum/regex_capture_group)
 	for(var/datum/regex_capture_group/capture as anything in captures)
 		if(capture.name == group)
-			return group
+			return capture

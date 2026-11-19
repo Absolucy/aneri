@@ -16,6 +16,10 @@ pub fn clear_cache() {
 	REGEX_CACHE.lock().clear();
 }
 
+/// Whether `regex` matches anywhere in `haystack`.
+/// Uses Rust regex syntax, which has no lookaround or backreferences.
+/// Runtimes on an invalid pattern.
+/// The last 32 patterns stay compiled, so reusing one is cheap.
 #[byond_fn]
 pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 	REGEX_CACHE
@@ -25,6 +29,9 @@ pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 		.map_err(ByondError::boxed)
 }
 
+/// Every match of `regex` in `haystack`, as a list of `/datum/regex_match`.
+/// Positions are byte offsets, starting at 1.
+/// Runtimes on an invalid pattern.
 #[byond_fn(name = "aneri_raw_regex_find")]
 pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
@@ -34,6 +41,8 @@ pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	shared::regex_find(regex, &haystack)
 }
 
+/// Splits `haystack` on every match of `regex` and returns the pieces.
+/// Runtimes on an invalid pattern.
 #[byond_fn]
 pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
@@ -43,6 +52,8 @@ pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	shared::regex_split(regex, &haystack)
 }
 
+/// Like `aneri_regex_split`, but returns at most `limit` pieces.
+/// The last piece holds the rest of the text, unsplit.
 #[byond_fn(name = "aneri_raw_regex_splitn")]
 pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
@@ -52,8 +63,16 @@ pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResul
 	shared::regex_splitn(regex, &haystack, limit)
 }
 
+/// Replaces the first match of `regex` in `haystack`.
+/// Runtimes on an invalid pattern.
 #[byond_fn]
-pub fn regex_replace(regex: String, haystack: String, with: String) -> ByondResult<ByondValue> {
+pub fn regex_replace(
+	regex: String,
+	haystack: String,
+	/// The replacement.
+	/// `$1` or `$name` inserts a capture group, `$$` is a literal `$`.
+	with: String,
+) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
 		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))
@@ -61,8 +80,16 @@ pub fn regex_replace(regex: String, haystack: String, with: String) -> ByondResu
 	shared::regex_replace(regex, &haystack, &with)
 }
 
+/// Replaces every match of `regex` in `haystack`.
+/// Runtimes on an invalid pattern.
 #[byond_fn]
-pub fn regex_replace_all(regex: String, haystack: String, with: String) -> ByondResult<ByondValue> {
+pub fn regex_replace_all(
+	regex: String,
+	haystack: String,
+	/// The replacement.
+	/// `$1` or `$name` inserts a capture group, `$$` is a literal `$`.
+	with: String,
+) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
 		.try_get_or_insert_ref(regex.as_str(), || Regex::new(&regex))

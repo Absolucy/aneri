@@ -11,6 +11,10 @@ use symphonia::{
 	default::get_probe,
 };
 
+/// How long a sound file is, in deciseconds.
+/// Reads the length from the file header without decoding the audio.
+/// Returns null if the header has no length.
+/// Runtimes if the file can't be opened or isn't a format it knows.
 #[byond_fn]
 pub fn audio_length(path: PathBuf) -> Option<f32> {
 	// If the path has an extension, include it as a hint.

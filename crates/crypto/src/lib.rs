@@ -45,13 +45,31 @@ impl_hasher!(
 
 const FILE_CHUNK_SIZE: usize = 64 * 1024;
 
+/// Hashes text and returns the hash as lowercase hex.
+/// For `xxh*` and `crc32*` the bytes are little-endian,
+/// so the hex is reversed compared to most other tools.
+/// Returns null for an unknown algorithm.
 #[byond_fn]
-pub fn hash(algorithm: String, data: String) -> Option<String> {
+pub fn hash(
+	/// `md5`, `sha1`, `sha224`, `sha256` (or `sha2`), `sha384`, `sha512`,
+	/// `sha512_224`, `sha512_256`,
+	/// `sha3_224`, `sha3_256` (or `sha3`), `sha3_384`, `sha3_512`,
+	/// `blake3`, `xxh32`, `xxh64`, `xxh3`, `crc32` or `crc32c`.
+	algorithm: String,
+	data: String,
+) -> Option<String> {
 	hash_data(&algorithm, Input::Bytes(data.as_bytes()))
 }
 
+/// Hashes a file and returns the hash as lowercase hex, like `aneri_hash`.
+/// Reads the file in chunks, so big files are fine.
+/// Returns null for an unknown algorithm or a file that can't be read.
 #[byond_fn]
-pub fn hash_file(algorithm: String, file: PathBuf) -> Option<String> {
+pub fn hash_file(
+	/// Same names as `aneri_hash`.
+	algorithm: String,
+	file: PathBuf,
+) -> Option<String> {
 	let file = File::open(file).ok()?;
 	hash_data(&algorithm, Input::File(file))
 }
