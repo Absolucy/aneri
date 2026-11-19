@@ -10,8 +10,8 @@ use thread_counter::Ticket;
 use thread_priority::{ThreadBuilderExt, ThreadPriority};
 use time::format_description::BorrowedFormatItem;
 
-/// Default stack size for logger threads (1 MiB)
-pub const DEFAULT_STACK_SIZE: usize = 1024 * 1024;
+/// Default stack size for logger threads (128 KiB)
+pub const DEFAULT_STACK_SIZE: usize = 128 * 1024;
 
 static TIMESTAMP_FORMATTER: &[BorrowedFormatItem] = time::macros::format_description!(
 	"[year]-[month]-[day] [hour]:[minute]:[second].[subsecond digits:3]"
