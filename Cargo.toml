@@ -15,8 +15,8 @@ version = "0.1.0"
 rustc-hash = "2"
 # meowtonin = { git = "https://github.com/Absolucy/meowtonin", branch = "oh-god-why" }
 # meowtonin-serde = { git = "https://github.com/Absolucy/meowtonin", branch = "oh-god-why" }
-meowtonin = { version = "0.3" }
-meowtonin-serde = { version = "0.3" }
+meowtonin = { version = "0.4" }
+meowtonin-serde = { version = "0.4" }
 faster-hex = "1"
 parking_lot = "0.13"
 slotmap = "1"

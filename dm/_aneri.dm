@@ -9,8 +9,6 @@
 #define ANERI (__aneri || __detect_aneri())
 #define ANERI_CALL(name, args...) call_ext(ANERI, "byond:" + name)(args)
 
-/proc/aneri_version()	return ANERI_CALL("aneri_version")
-/proc/aneri_features()	return ANERI_CALL("aneri_features")
 /proc/aneri_cleanup()	return ANERI_CALL("cleanup")
 
 /datum/aneri

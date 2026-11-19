@@ -9,7 +9,7 @@ pub(crate) fn free_instances() {
 	INSTANCES.clear();
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_new")]
 pub fn instant_new(mut src: ByondValue) -> ByondResult<()> {
 	let instant = Instant::now();
 	INSTANCES
@@ -18,12 +18,12 @@ pub fn instant_new(mut src: ByondValue) -> ByondResult<()> {
 		.map_err(ByondError::boxed)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_del")]
 pub fn instant_del(src: ByondSlotKey) -> bool {
 	INSTANCES.remove(src).is_some()
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_reset")]
 pub fn instant_reset(src: ByondSlotKey) -> bool {
 	INSTANCES
 		.with_mut(src, |instant| {
@@ -33,22 +33,22 @@ pub fn instant_reset(src: ByondSlotKey) -> bool {
 		.unwrap_or(false)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_microseconds")]
 pub fn instant_microseconds(src: ByondSlotKey) -> Option<u32> {
 	INSTANCES.with(src, |instant| instant.elapsed().as_micros() as u32)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_nanoseconds")]
 pub fn instant_nanoseconds(src: ByondSlotKey) -> Option<u32> {
 	INSTANCES.with(src, |instant| instant.elapsed().as_nanos() as u32)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_milliseconds")]
 pub fn instant_milliseconds(src: ByondSlotKey) -> Option<u32> {
 	INSTANCES.with(src, |instant| instant.elapsed().as_millis() as u32)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instant_seconds")]
 pub fn instant_seconds(src: ByondSlotKey) -> Option<f32> {
 	INSTANCES.with(src, |instant| instant.elapsed().as_secs_f32())
 }

@@ -7,7 +7,7 @@ pub fn toml_is_valid(toml: String) -> bool {
 	toml::from_str::<toml::Table>(&toml).is_ok()
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_toml_file_is_valid")]
 pub fn toml_file_is_valid(path: PathBuf) -> bool {
 	std::fs::read_to_string(path)
 		.ok()
@@ -22,7 +22,7 @@ pub fn toml_decode(toml: String) -> ByondResult<ByondValue> {
 		.and_then(|table| meowtonin_serde::serialize(&table).map_err(ByondError::boxed))
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_toml_decode_file")]
 pub fn toml_decode_file(path: PathBuf) -> ByondResult<ByondValue> {
 	std::fs::read_to_string(path)
 		.map_err(ByondError::boxed)

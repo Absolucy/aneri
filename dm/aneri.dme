@@ -16,10 +16,8 @@
 // BEGIN_INCLUDE
 #include "__spaceman_dmm.dm"
 #include "_aneri.dm"
+#include "_bindings.dm"
 #include "dmi.dm"
-#include "encode.dm"
-#include "file.dm"
-#include "logger.dm"
 #include "sort.dm"
 #include "test.dm"
 #include "time.dm"

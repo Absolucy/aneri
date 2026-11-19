@@ -33,7 +33,7 @@ use meowtonin::byond_fn;
 
 /// Cleans up any resources used by Aneri.
 /// This should be run on initialization and shutdown.
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_cleanup")]
 pub fn cleanup() {
 	#[cfg(feature = "logger")]
 	aneri_logger::queue::clear_log_queue();
@@ -45,6 +45,25 @@ pub fn cleanup() {
 	aneri_time::cleanup();
 	#[cfg(feature = "util")]
 	aneri_util::cleanup();
+}
+
+#[test]
+fn generate_dm_bindings() {
+	let dm = meowtonin::bindings::generate_dm("aneri")
+		.lines()
+		.map(|line| {
+			let Some(rest) = line.strip_prefix("#define ") else {
+				return format!("{line}\n");
+			};
+			let name = rest.split(['(', ' ']).next().unwrap_or_default();
+			if name.starts_with("aneri_") || !rest[name.len()..].starts_with('(') {
+				return format!("{line}\n");
+			}
+			format!("#define aneri_{rest}\n")
+		})
+		.collect::<String>();
+	let path = concat!(env!("CARGO_MANIFEST_DIR"), "/../../dm/_bindings.dm");
+	std::fs::write(path, dm).expect("failed to write dm/_bindings.dm");
 }
 
 #[byond_fn]

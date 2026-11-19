@@ -3,12 +3,12 @@ use super::global;
 use crate::shared;
 use meowtonin::byond_fn;
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_random_string_alphanumeric")]
 pub fn random_string_alphanumeric(length: usize, secure: Option<bool>) -> String {
 	shared::random_string_alphanumeric(&mut global(secure), length)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_replace_chars_prob")]
 pub fn replace_chars_prob(
 	input: String,
 	replacement: String,

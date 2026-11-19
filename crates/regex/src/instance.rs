@@ -10,7 +10,7 @@ pub(crate) fn free_instances() {
 	INSTANCES.clear();
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_regex_new")]
 pub fn regex_new(mut src: ByondValue, regex: String) -> ByondResult<()> {
 	let regex = Regex::new(&regex).map_err(ByondError::boxed)?;
 	INSTANCES
@@ -19,17 +19,17 @@ pub fn regex_new(mut src: ByondValue, regex: String) -> ByondResult<()> {
 		.map_err(ByondError::boxed)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_regex_del")]
 pub fn regex_del(src: ByondSlotKey) -> bool {
 	INSTANCES.remove(src).is_some()
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_regex_is_match")]
 pub fn instanced_regex_is_match(src: ByondSlotKey, haystack: String) -> Option<bool> {
 	INSTANCES.with(src, |regex| regex.is_match(&haystack))
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_regex_find")]
 pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
 	match INSTANCES.with(src, |regex| shared::regex_find(regex, &haystack)) {
 		Some(result) => result,
@@ -37,7 +37,7 @@ pub fn instanced_regex_find(src: ByondSlotKey, haystack: String) -> ByondResult<
 	}
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_regex_split")]
 pub fn instanced_regex_split(src: ByondSlotKey, haystack: String) -> ByondResult<ByondValue> {
 	match INSTANCES.with(src, |regex| shared::regex_split(regex, &haystack)) {
 		Some(result) => result,
@@ -45,7 +45,7 @@ pub fn instanced_regex_split(src: ByondSlotKey, haystack: String) -> ByondResult
 	}
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_regex_splitn")]
 pub fn instanced_regex_splitn(
 	src: ByondSlotKey,
 	haystack: String,
@@ -57,7 +57,7 @@ pub fn instanced_regex_splitn(
 	}
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_regex_replace")]
 pub fn instanced_regex_replace(
 	src: ByondSlotKey,
 	haystack: String,
@@ -69,7 +69,7 @@ pub fn instanced_regex_replace(
 	}
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_regex_replace_all")]
 pub fn instanced_regex_replace_all(
 	src: ByondSlotKey,
 	haystack: String,

@@ -1,6 +1,3 @@
-/proc/aneri_unix_timestamp()
-	return ANERI_CALL("unix_timestamp")
-
 /datum/instant
 	parent_type = /datum/aneri
 

@@ -3,12 +3,12 @@ use super::global;
 use crate::shared;
 use meowtonin::byond_fn;
 
-#[byond_fn]
+#[byond_fn(name = "aneri_rand_prob")]
 pub fn prob(probability: f64, secure: Option<bool>) -> bool {
 	shared::prob(&mut global(secure), probability)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_rand_prob_ratio")]
 pub fn prob_ratio(numerator: u32, denominator: u32, secure: Option<bool>) -> bool {
 	shared::prob_ratio(&mut global(secure), numerator, denominator)
 }

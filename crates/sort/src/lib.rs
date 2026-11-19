@@ -2,7 +2,7 @@
 use meowtonin::{ByondResult, ByondValue, byond_fn};
 use std::cmp::{Ordering, Reverse};
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_sort_with_proc")]
 pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<ByondValue> {
 	list.sort_by(|a, b| {
 		match meowtonin::call_global::<_, _, _, Option<isize>>(&proc_name, [a, b])
@@ -15,7 +15,7 @@ pub fn sort_with_proc(mut list: Vec<ByondValue>, proc_name: String) -> Vec<Byond
 	list
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_sort_by_number")]
 pub fn sort_by_number(list: Vec<ByondValue>, descending: Option<bool>) -> Vec<f32> {
 	let mut list = list
 		.into_iter()
@@ -33,7 +33,7 @@ pub fn sort_by_number(list: Vec<ByondValue>, descending: Option<bool>) -> Vec<f3
 	list
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_sort_by_number_var")]
 pub fn sort_by_number_var(
 	list: Vec<ByondValue>,
 	var: String,
@@ -58,7 +58,7 @@ pub fn sort_by_number_var(
 	Ok(list.into_iter().map(|(value, _)| value).collect())
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_sort_by_string")]
 pub fn sort_by_string(
 	mut list: Vec<String>,
 	descending: Option<bool>,
@@ -75,7 +75,7 @@ pub fn sort_by_string(
 	list
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_sort_by_string_var")]
 pub fn sort_by_string_var(
 	list: Vec<ByondValue>,
 	var: String,

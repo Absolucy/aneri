@@ -15,7 +15,7 @@ pub(crate) fn free_instances() {
 	INSTANCES.clear();
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_rng_new")]
 pub fn rng_new(mut src: ByondValue, secure: Option<bool>, seed: Option<u32>) -> ByondResult<()> {
 	let secure = secure.unwrap_or(false);
 	let rng = if secure {
@@ -26,7 +26,7 @@ pub fn rng_new(mut src: ByondValue, secure: Option<bool>, seed: Option<u32>) -> 
 	INSTANCES.insert(rng).save(&mut src)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_rng_del")]
 pub fn rng_del(src: ByondSlotKey) -> bool {
 	INSTANCES.remove(src).is_some()
 }

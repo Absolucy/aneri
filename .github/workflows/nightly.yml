@@ -33,8 +33,6 @@ jobs:
                 features:
                     - name: release
                       features: all
-                    - name: release-debug
-                      features: all,ref-debugging
         concurrency:
             group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.os.name }}-${{ matrix.features.name }}
             cancel-in-progress: true

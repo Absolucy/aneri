@@ -14,32 +14,32 @@ where
 {
 	INSTANCES.with_mut(src, |rng| rng.random())
 }
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_random_byte")]
 pub fn instanced_random_byte(src: ByondSlotKey) -> Option<u8> {
 	rand_impl(src)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_random_float")]
 pub fn instanced_random_float(src: ByondSlotKey) -> Option<f32> {
 	rand_impl(src)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_random_int_unsigned")]
 pub fn instanced_random_int_unsigned(src: ByondSlotKey) -> Option<u32> {
 	rand_impl(src)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_random_int_signed")]
 pub fn instanced_random_int_signed(src: ByondSlotKey) -> Option<i32> {
 	rand_impl(src)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_random_range_int_unsigned")]
 pub fn instanced_random_range_int_unsigned(src: ByondSlotKey, min: u32, max: u32) -> Option<u32> {
 	INSTANCES.with_mut(src, |rng| shared::random_range_int_unsigned(rng, min, max))
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_instanced_random_range_int_signed")]
 pub fn instanced_random_range_int_signed(src: ByondSlotKey, min: i32, max: i32) -> Option<i32> {
 	INSTANCES.with_mut(src, |rng| shared::random_range_int_signed(rng, min, max))
 }

@@ -23,7 +23,7 @@ pub fn dmi_resize_png(
 	image.save(path).map_err(ByondError::boxed)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_dmi_read_states")]
 pub fn dmi_read_states(path: PathBuf) -> ByondResult<Vec<String>> {
 	let file = File::open(path)
 		.map(BufReader::new)

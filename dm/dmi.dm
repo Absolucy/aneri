@@ -4,9 +4,6 @@
 #define ANERI_RESIZE_LANCZOS3	"lanczos3"
 #define ANERI_RESIZE_TRIANGLE	"triangle"
 
-/proc/aneri_dmi_resize_png(path, width, height, resize_type = ANERI_RESIZE_NEAREST)
-	return ANERI_CALL("dmi_resize_png", path, width, height, resize_type)
-
 /proc/aneri_dmi_read_states(path) as /list
 	RETURN_TYPE(/list)
 	return ANERI_CALL("dmi_read_states", path)

@@ -25,7 +25,7 @@ pub fn regex_is_match(regex: String, haystack: String) -> ByondResult<bool> {
 		.map_err(ByondError::boxed)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_regex_find")]
 pub fn regex_find(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
@@ -43,7 +43,7 @@ pub fn regex_split(regex: String, haystack: String) -> ByondResult<ByondValue> {
 	shared::regex_split(regex, &haystack)
 }
 
-#[byond_fn]
+#[byond_fn(name = "aneri_raw_regex_splitn")]
 pub fn regex_splitn(regex: String, haystack: String, limit: usize) -> ByondResult<ByondValue> {
 	let mut cache = REGEX_CACHE.lock();
 	let regex = cache
