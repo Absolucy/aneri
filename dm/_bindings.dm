@@ -318,6 +318,98 @@
 #define aneri_raw_set_panic_output_folder(path) call_ext(__aneri_set_panic_output_folder ||= load_ext(ANERI, "byond:set_panic_output_folder"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_set_panic_output_folder
 
+/// Cancels a background query that is not part of a transaction. Its finish
+/// proc will not be called.
+///
+/// Rust: `fn sql_cancel(id: String) -> bool`
+#define aneri_raw_sql_cancel(id) call_ext(__aneri_sql_cancel ||= load_ext(ANERI, "byond:sql_cancel"))(id)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_cancel
+
+/// Runs a statement. `mode` 0 runs it in the background and returns an id for
+/// `/proc/__aneri_sql_finish`, 1 blocks and returns
+/// `list(columns, rows, affected, last_insert_id, error, error_code)`, 2 runs
+/// it in the background and reports nothing.
+///
+/// Arguments:
+/// * mode
+/// * pool
+/// * transaction
+/// * sql
+/// * arguments
+/// * timeout - (optional)
+///
+/// Rust: `fn sql_execute(mode: u8, pool: Option<ByondSlotKey>, transaction: Option<ByondSlotKey>, sql: String, arguments: ByondValue, timeout: Option<f32>) -> ByondResult<ByondValue>`
+#define aneri_raw_sql_execute(mode, pool, transaction, sql, arguments, timeout...) call_ext(__aneri_sql_execute ||= load_ext(ANERI, "byond:sql_execute"))(mode, pool, transaction, sql, arguments, timeout)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_execute
+
+/// How many fire-and-forget queries are still running or waiting.
+///
+/// Rust: `fn sql_forgotten_in_flight() -> f32`
+#define aneri_raw_sql_forgotten_in_flight(...) call_ext(__aneri_sql_forgotten_in_flight ||= load_ext(ANERI, "byond:sql_forgotten_in_flight"))()
+/* This comment bypasses grep checks */ var/static/__aneri_sql_forgotten_in_flight
+
+/// Runs a mass insert built from a list of assoc lists, with the same modes
+/// as `aneri_raw_sql_execute`.
+///
+/// Arguments:
+/// * mode
+/// * pool
+/// * transaction
+/// * table
+/// * rows
+/// * duplicate_key
+/// * ignore_errors
+/// * special_columns - (optional)
+/// * timeout - (optional)
+///
+/// Rust: `fn sql_insert(mode: u8, pool: Option<ByondSlotKey>, transaction: Option<ByondSlotKey>, table: String, rows: ByondValue, duplicate_key: ByondValue, ignore_errors: bool, special_columns: Option<Vec<(String, String)>>, timeout: Option<f32>) -> ByondResult<ByondValue>`
+#define aneri_raw_sql_insert(mode, pool, transaction, table, rows, duplicate_key, ignore_errors, special_columns...) call_ext(__aneri_sql_insert ||= load_ext(ANERI, "byond:sql_insert"))(mode, pool, transaction, table, rows, duplicate_key, ignore_errors, special_columns)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_insert
+
+/// Closes a pool. Queries already running on it still finish.
+///
+/// Rust: `fn sql_pool_del(src: ByondSlotKey) -> bool`
+#define aneri_raw_sql_pool_del(src) call_ext(__aneri_sql_pool_del ||= load_ext(ANERI, "byond:sql_pool_del"))(src)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_pool_del
+
+/// Creates the pool behind a `/datum/sql_pool`. Connections open on first
+/// use.
+///
+/// Rust: `fn sql_pool_new(mut src: ByondValue, host: String, port: u16, user: Option<String>, password: Option<String>, database: Option<String>, min_connections: usize, max_connections: usize, tls: bool, tls_ca_file: Option<PathBuf>, tls_insecure: bool) -> ByondResult<()>`
+#define aneri_raw_sql_pool_new(src, host, port, user, password, database, min_connections, max_connections, tls, tls_ca_file, tls_insecure) call_ext(__aneri_sql_pool_new ||= load_ext(ANERI, "byond:sql_pool_new"))(src, host, port, user, password, database, min_connections, max_connections, tls, tls_ca_file, tls_insecure)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_pool_new
+
+/// Lets go of a transaction. Statements already started still run, then it
+/// rolls back unless it was committed.
+///
+/// Rust: `fn sql_transaction_del(src: ByondSlotKey) -> bool`
+#define aneri_raw_sql_transaction_del(src) call_ext(__aneri_sql_transaction_del ||= load_ext(ANERI, "byond:sql_transaction_del"))(src)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_transaction_del
+
+/// Commits or rolls back a transaction in the background and returns an id
+/// for `/proc/__aneri_sql_finish`.
+///
+/// Arguments:
+/// * transaction
+/// * commit
+/// * timeout - (optional)
+///
+/// Rust: `fn sql_transaction_end(transaction: Option<ByondSlotKey>, commit: bool, timeout: Option<f32>) -> String`
+#define aneri_raw_sql_transaction_end(transaction, commit, timeout...) call_ext(__aneri_sql_transaction_end ||= load_ext(ANERI, "byond:sql_transaction_end"))(transaction, commit, timeout)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_transaction_end
+
+/// Starts a transaction on a pool, for a `/datum/sql_transaction`.
+///
+/// Arguments:
+/// * src
+/// * pool - (optional)
+/// * timeout - (optional)
+/// * idle_timeout - (optional)
+///
+/// Rust: `fn sql_transaction_new(mut src: ByondValue, pool: Option<ByondSlotKey>, timeout: Option<f32>, idle_timeout: Option<f32>) -> ByondResult<()>`
+#define aneri_raw_sql_transaction_new(src, pool...) call_ext(__aneri_sql_transaction_new ||= load_ext(ANERI, "byond:sql_transaction_new"))(src, pool)
+/* This comment bypasses grep checks */ var/static/__aneri_sql_transaction_new
+
 /// Rust: `fn toml_decode_file(path: PathBuf) -> ByondResult<ByondValue>`
 #define aneri_raw_toml_decode_file(path) call_ext(__aneri_toml_decode_file ||= load_ext(ANERI, "byond:toml_decode_file"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_toml_decode_file

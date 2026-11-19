@@ -36,9 +36,9 @@ const_format = "0.2"
 bosion = "1"
 
 [features]
-default = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "time", "util"]
+default = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "sql", "time", "util"]
 # sub-crates
-all = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "time", "util"]
+all = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "sql", "time", "util"]
 audio = ["aneri-audio"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
@@ -48,8 +48,8 @@ http = ["aneri-http", "aneri-core/runtime"]
 logger = ["aneri-logger"]
 rand = ["aneri-rand"]
 regex = ["aneri-regex"]
+sql = ["aneri-sql", "aneri-core/runtime"]
 time = ["aneri-time"]
 util = ["aneri-util"]
 # modules that aren't ready or working yet
 sort = ["aneri-sort"]
-sql = ["aneri-sql"]

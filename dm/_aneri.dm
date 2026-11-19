@@ -25,6 +25,10 @@
 	aneri_cleanup()
 	..()
 
+/world/Del()
+	aneri_cleanup()
+	..()
+
 // placeholder
 /datum/Del()
 	Destroy()

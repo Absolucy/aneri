@@ -38,7 +38,8 @@ pub fn cancel(id: u64) -> bool {
 	true
 }
 
-pub(crate) fn cancel_all() {
+/// Cancels every job.
+pub fn cancel_all() {
 	let jobs = std::mem::take(&mut *JOBS.lock());
 	for task in jobs.into_values() {
 		task.abort();

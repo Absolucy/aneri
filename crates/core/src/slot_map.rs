@@ -45,6 +45,15 @@ impl<T> ByondSlotMap<T> {
 		self.instances.write().get_mut(key).map(f)
 	}
 
+	pub fn take_all(&self) -> Vec<T> {
+		let mut instances = self.instances.write();
+		let old = std::mem::replace(
+			&mut *instances,
+			SlotMap::with_capacity_and_key(DEFAULT_CAPACITY),
+		);
+		old.into_iter().map(|(_, value)| value).collect()
+	}
+
 	pub fn clear(&self) {
 		let mut instances = self.instances.write();
 		if instances.capacity() > DEFAULT_CAPACITY {

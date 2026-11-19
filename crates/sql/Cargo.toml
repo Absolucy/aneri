@@ -12,18 +12,13 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
-rustc-hash = { workspace = true }
-aneri-core = { path = "../core" }
-crossbeam-channel = "0.5"
+aneri-core = { path = "../core", features = ["runtime"] }
 meowtonin = { workspace = true }
-meowtonin-serde = { workspace = true }
-mysql = { git = "https://github.com/ZeWaka/rust-mysql-simple.git", tag = "v26.0.0", default-features = false, features = ["default-rust"] }
-scopeguard = "1"
-serde = { version = "1", features = ["derive"] }
-serde_json = "1"
-slotmap = { workspace = true }
+mysql_async = { version = "0.37", default-features = false, features = ["minimal-rust"] }
+mysql_common = { version = "0.37", default-features = false }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"], optional = true }
+tokio = { version = "1", features = ["sync", "time"] }
 
 [features]
-default = ["rustls"]
-rustls = ["mysql/rustls-tls"]
-native-tls = ["mysql/native-tls"]
+default = ["tls"]
+tls = ["dep:rustls", "mysql_async/rustls-tls", "mysql_async/tls12", "mysql_async/ring"]

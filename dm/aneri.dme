@@ -20,6 +20,7 @@
 #include "dmi.dm"
 #include "http.dm"
 #include "sort.dm"
+#include "sql.dm"
 #include "test.dm"
 #include "time.dm"
 #include "util.dm"
