@@ -14,8 +14,9 @@ workspace = true
 [dependencies]
 meowtonin = { workspace = true }
 parking_lot = { workspace = true }
+rustc-hash = { workspace = true, optional = true }
 slotmap = { workspace = true }
-tokio = { version = "1", features = ["full"], optional = true }
+tokio = { version = "1", features = ["rt-multi-thread", "net", "time"], optional = true }
 
 [features]
-runtime = ["tokio"]
+runtime = ["dep:rustc-hash", "dep:tokio"]

@@ -19,6 +19,7 @@ aneri-audio = { path = "../audio", optional = true }
 aneri-crypto = { path = "../crypto", optional = true }
 aneri-dmi = { path = "../dmi", optional = true }
 aneri-encode = { path = "../encode", optional = true }
+aneri-core = { path = "../core", optional = true }
 aneri-file = { path = "../file", optional = true }
 aneri-http = { path = "../http", optional = true }
 aneri-logger = { path = "../logger", optional = true }
@@ -35,20 +36,20 @@ const_format = "0.2"
 bosion = "1"
 
 [features]
-default = ["audio", "crypto", "dmi", "encode", "file", "logger", "rand", "regex", "time", "util"]
+default = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "time", "util"]
 # sub-crates
-all = ["audio", "crypto", "dmi", "encode", "file", "logger", "rand", "regex", "time", "util"]
+all = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "rand", "regex", "time", "util"]
 audio = ["aneri-audio"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
 encode = ["aneri-encode"]
 file = ["aneri-file"]
+http = ["aneri-http", "aneri-core/runtime"]
 logger = ["aneri-logger"]
 rand = ["aneri-rand"]
 regex = ["aneri-regex"]
 time = ["aneri-time"]
 util = ["aneri-util"]
 # modules that aren't ready or working yet
-http = ["aneri-http"]
 sort = ["aneri-sort"]
 sql = ["aneri-sql"]

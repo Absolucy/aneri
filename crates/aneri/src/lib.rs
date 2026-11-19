@@ -45,6 +45,11 @@ pub fn cleanup() {
 	aneri_time::cleanup();
 	#[cfg(feature = "util")]
 	aneri_util::cleanup();
+	#[cfg(feature = "http")]
+	{
+		aneri_http::cleanup();
+		aneri_core::runtime::shutdown();
+	}
 }
 
 #[test]

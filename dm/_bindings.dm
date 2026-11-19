@@ -65,6 +65,62 @@ var/static/__aneri_cleanup
 #define aneri_raw_dmi_read_states(path) call_ext(__aneri_dmi_read_states ||= load_ext(ANERI, "byond:dmi_read_states"))(path)
 var/static/__aneri_dmi_read_states
 
+/// Cancels a request started with `aneri_raw_http_send`. Its finish proc will
+/// not be called. Returns false if the request already finished.
+///
+/// Rust: `fn http_cancel(id: String) -> bool`
+#define aneri_raw_http_cancel(id) call_ext(__aneri_http_cancel ||= load_ext(ANERI, "byond:http_cancel"))(id)
+var/static/__aneri_http_cancel
+
+/// Starts an HTTP request in the background and returns its id.
+/// When it finishes, `/proc/__aneri_http_finish` is called with the id and the
+/// result.
+///
+/// Arguments:
+/// * method
+/// * url
+/// * headers - (optional)
+/// * body - (optional)
+/// * body_file - (optional)
+/// * output_file - (optional)
+/// * timeout - (optional)
+///
+/// Rust: `fn http_send(method: String, url: String, headers: Option<Vec<(String, String)>>, body: Option<String>, body_file: Option<PathBuf>, output_file: Option<PathBuf>, timeout: Option<f32>) -> String`
+#define aneri_raw_http_send(method, url, headers...) call_ext(__aneri_http_send ||= load_ext(ANERI, "byond:http_send"))(method, url, headers)
+var/static/__aneri_http_send
+
+/// Starts an HTTP request in the background and never reports back. The
+/// result, including any error, is thrown away.
+///
+/// Arguments:
+/// * method
+/// * url
+/// * headers - (optional)
+/// * body - (optional)
+/// * body_file - (optional)
+/// * output_file - (optional)
+/// * timeout - (optional)
+///
+/// Rust: `fn http_send_and_forget(method: String, url: String, headers: Option<Vec<(String, String)>>, body: Option<String>, body_file: Option<PathBuf>, output_file: Option<PathBuf>, timeout: Option<f32>)`
+#define aneri_raw_http_send_and_forget(method, url, headers...) call_ext(__aneri_http_send_and_forget ||= load_ext(ANERI, "byond:http_send_and_forget"))(method, url, headers)
+var/static/__aneri_http_send_and_forget
+
+/// Runs an HTTP request and waits for it, freezing the server until it is
+/// done. Returns `list(status_code, headers, body, error)`.
+///
+/// Arguments:
+/// * method
+/// * url
+/// * headers - (optional)
+/// * body - (optional)
+/// * body_file - (optional)
+/// * output_file - (optional)
+/// * timeout - (optional)
+///
+/// Rust: `fn http_send_blocking(method: String, url: String, headers: Option<Vec<(String, String)>>, body: Option<String>, body_file: Option<PathBuf>, output_file: Option<PathBuf>, timeout: Option<f32>) -> ByondResult<[ByondValue; 4]>`
+#define aneri_raw_http_send_blocking(method, url, headers...) call_ext(__aneri_http_send_blocking ||= load_ext(ANERI, "byond:http_send_blocking"))(method, url, headers)
+var/static/__aneri_http_send_blocking
+
 /// Rust: `fn instanced_pick(src: ByondSlotKey, options: ByondValue) -> ByondResult<Option<ByondValue>>`
 #define aneri_raw_instanced_pick(src, options) call_ext(__aneri_instanced_pick ||= load_ext(ANERI, "byond:instanced_pick"))(src, options)
 var/static/__aneri_instanced_pick

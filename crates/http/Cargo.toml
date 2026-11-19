@@ -12,10 +12,10 @@ publish.workspace = true
 workspace = true
 
 [dependencies]
+aneri-core = { path = "../core", features = ["runtime"] }
 meowtonin = { workspace = true }
-ureq = { version = "3.0.0-rc1", default-features = false, features = ["gzip", "brotli"] }
-
-[features]
-default = ["rustls"]
-rustls = ["ureq/rustls"]
-native-tls = ["ureq/native-tls"]
+parking_lot = { workspace = true }
+reqwest = { version = "0.13", default-features = false, features = ["rustls-no-provider", "http2", "gzip", "zstd", "stream"] }
+rustls = { version = "0.23", default-features = false, features = ["ring", "std", "tls12"] }
+tokio = { version = "1", features = ["fs", "io-util", "sync", "time"] }
+webpki-root-certs = "1"
