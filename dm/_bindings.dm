@@ -266,7 +266,7 @@ var/static/__aneri_toml_file_is_valid
 #define aneri_version(...) call_ext(__aneri_aneri_version ||= load_ext(ANERI, "byond:aneri_version"))()
 var/static/__aneri_aneri_version
 
-/// Rust: `fn audio_length(path: PathBuf) -> f32`
+/// Rust: `fn audio_length(path: PathBuf) -> Option<f32>`
 #define aneri_audio_length(path) call_ext(__aneri_audio_length ||= load_ext(ANERI, "byond:audio_length"))(path)
 var/static/__aneri_audio_length
 
