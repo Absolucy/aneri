@@ -344,6 +344,130 @@
 #define aneri_raw_instant_seconds(src) call_ext(__aneri_instant_seconds ||= load_ext(ANERI, "byond:instant_seconds"))(src)
 /* This comment bypasses grep checks */ var/static/__aneri_instant_seconds
 
+/// Generates a procedural dungeon map using BSP tree partitioning, prefab placement,
+/// MST corridor generation, and cellular automata smoothing.
+///
+/// Returns a list of 1 (floor) and 0 (wall), row by row: cell `(x, y)`, counting
+/// from 1, is at index `(y - 1) * width + x`.
+/// Every floor is connected to a room, a corridor, or an open prefab.
+/// Rooms, corridors and prefabs are never changed by the smoothing.
+///
+/// Arguments:
+/// * width: Grid width.
+/// * height: Grid height.
+/// * settings: Assoc list, every key optional (default in brackets).
+///   An unknown key runtimes.
+///   * min_bsp_size: Minimum BSP leaf dimension [20]
+///   * max_ratio: Maximum aspect ratio for BSP splits [2.5]
+///   * padding: Room edge padding within a BSP leaf [2]
+///   * room_fill_percent: How much of each BSP leaf a room fills, 0 to 100 [80]
+///   * corridor_width: Width of corridors between rooms [1]
+///   * loop_percent: Chance to add extra MST edges for loops, 0 to 100 [15]
+///   * noise_percent: Initial random floor density, 0 to 100 [48]
+///   * ca_steps: Cellular automata smoothing iterations [6]
+///   * birth_limit: Neighbors to create floor (>=) [5]
+///   * survival_limit: Neighbors to survive as floor (>=) [4]
+///   * edges_alive: Whether out-of-bounds cells count as floor for neighbor counts [FALSE]
+/// * prefabs: List of `list("x" = , "y" = , "width" = , "height" = , "enclosed" = )`.
+///   x and y are the bottom-left turf, counting from 1.
+///   An enclosed prefab is kept solid wall, an open one is kept as floor.
+/// * seed: The same seed always gives the same map.
+///   Random if left out.
+///
+/// Arguments:
+/// * width
+/// * height
+/// * settings - (optional)
+/// * prefabs - (optional)
+/// * seed - (optional)
+///
+/// Rust: `fn noise_cave_system(width: u32, height: u32, settings: Option<ByondValue>, prefabs: Option<ByondValue>, seed: Option<u32>) -> ByondResult<Vec<u8>>`
+#define aneri_raw_noise_cave_system(width, height, settings...) call_ext(__aneri_noise_cave_system ||= load_ext(ANERI, "byond:noise_cave_system"))(width, height, settings)
+/* This comment bypasses grep checks */ var/static/__aneri_noise_cave_system
+
+/// Generates a cellular automata noise grid, which can be used in procedural generation methods.
+///
+/// Returns a list of 1 (alive cell) and 0 (dead cell), row by row: cell `(x, y)`,
+/// counting from 1, is at index `(y - 1) * width + x`.
+///
+/// Arguments:
+/// * width: The width of the grid.
+/// * height: The height of the grid.
+/// * fill_percent: The chance (0 to 100) that a cell starts alive.
+/// * iterations: The amount of iterations the cellular automata simulates before returning the results.
+/// * birth_limit: A dead cell with at least this many alive neighbors (of 8) is born.
+/// * survival_limit: An alive cell with fewer alive neighbors than this dies.
+/// * edges_alive: Whether cells outside the grid count as alive (default false).
+/// * seed: The same seed always gives the same grid.
+///   Random if left out.
+///
+/// rust-g's `cnoise_generate` used strict comparisons, so its `birth_limit`
+/// needs +1 here, and its `death_limit` is this `survival_limit`.
+///
+/// Arguments:
+/// * width
+/// * height
+/// * fill_percent
+/// * iterations
+/// * birth_limit
+/// * survival_limit
+/// * edges_alive - (optional)
+/// * seed - (optional)
+///
+/// Rust: `fn noise_cellular_automata(width: u32, height: u32, fill_percent: f32, iterations: u32, birth_limit: u32, survival_limit: u32, edges_alive: Option<bool>, seed: Option<u32>) -> Vec<u8>`
+#define aneri_raw_noise_cellular_automata(width, height, fill_percent, iterations, birth_limit, survival_limit, edges_alive...) call_ext(__aneri_noise_cellular_automata ||= load_ext(ANERI, "byond:noise_cellular_automata"))(width, height, fill_percent, iterations, birth_limit, survival_limit, edges_alive)
+/* This comment bypasses grep checks */ var/static/__aneri_noise_cellular_automata
+
+/// Generates a grid of noise values, each from 0 to 1.
+///
+/// Returns a list, row by row: cell `(x, y)`, counting from 1, is at index
+/// `(y - 1) * width + x` and matches `aneri_noise_at(kind, seed, x, y, frequency, octaves)`.
+///
+/// Arguments:
+/// * kind: "perlin", "simplex" or "worley".
+///   Runtimes for anything else.
+/// * seed: Seed for the noise.
+/// * width: The width of the grid.
+/// * height: The height of the grid.
+/// * frequency: How many noise features fit in one unit (default 0.01).
+/// * octaves: Above 1, layers that many passes of finer detail.
+///
+/// Rows are computed in parallel.
+///
+/// Arguments:
+/// * kind
+/// * seed
+/// * width
+/// * height
+/// * frequency - (optional)
+/// * octaves - (optional)
+///
+/// Rust: `fn noise_grid(kind: String, seed: u32, width: u32, height: u32, frequency: Option<f32>, octaves: Option<u32>) -> ByondResult<Vec<f32>>`
+#define aneri_raw_noise_grid(kind, seed, width, height, frequency...) call_ext(__aneri_noise_grid ||= load_ext(ANERI, "byond:noise_grid"))(kind, seed, width, height, frequency)
+/* This comment bypasses grep checks */ var/static/__aneri_noise_grid
+
+/// Generates a 2D poisson disk distribution ('blue noise'), which is relatively uniform.
+///
+/// Returns a list of `list(x, y)` points, counting from 1.
+///
+/// Arguments:
+/// * width: Width of the noisemap (see world.maxx).
+/// * height: Height of the noisemap (see world.maxy).
+/// * radius: Minimum distance between points.
+///   Under 1 is treated as 1.
+/// * seed: The same seed always gives the same points.
+///   Random if left out.
+///
+/// Arguments:
+/// * width
+/// * height
+/// * radius
+/// * seed - (optional)
+///
+/// Rust: `fn noise_poisson(width: u32, height: u32, radius: f32, seed: Option<u32>) -> Vec<[u32; 2]>`
+#define aneri_raw_noise_poisson(width, height, radius, seed...) call_ext(__aneri_noise_poisson ||= load_ext(ANERI, "byond:noise_poisson"))(width, height, radius, seed)
+/* This comment bypasses grep checks */ var/static/__aneri_noise_poisson
+
 /// A random item from a list.
 /// Returns null for an empty list or a non-list.
 ///
@@ -839,6 +963,25 @@
 /// Rust: `fn mkdir(path: PathBuf) -> bool`
 #define aneri_mkdir(path) call_ext(__aneri_mkdir ||= load_ext(ANERI, "byond:mkdir"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_mkdir
+
+/// Noise value at one point, from 0 to 1.
+/// `kind` is "perlin", "simplex" or "worley" (distance to the second-nearest
+/// feature point minus the nearest, so it is near 0 along cell borders).
+/// `frequency` is how many noise features fit in one unit, default 0.01.
+/// `octaves` above 1 layers that many passes of finer detail.
+/// Runtimes if `kind` is anything else.
+///
+/// Arguments:
+/// * kind
+/// * seed
+/// * x
+/// * y
+/// * frequency - (optional)
+/// * octaves - (optional)
+///
+/// Rust: `fn noise_at(kind: String, seed: u32, x: f32, y: f32, frequency: Option<f32>, octaves: Option<u32>) -> ByondResult<f32>`
+#define aneri_noise_at(kind, seed, x, y, frequency...) call_ext(__aneri_noise_at ||= load_ext(ANERI, "byond:noise_at"))(kind, seed, x, y, frequency)
+/* This comment bypasses grep checks */ var/static/__aneri_noise_at
 
 /// `aneri_damerau_levenshtein` scaled from 0 to 1,
 /// where 1 means the strings are the same.

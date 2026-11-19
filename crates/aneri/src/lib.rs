@@ -16,6 +16,8 @@ pub use aneri_file;
 pub use aneri_http;
 #[cfg(feature = "logger")]
 pub use aneri_logger;
+#[cfg(feature = "noise")]
+pub use aneri_noise;
 #[cfg(feature = "rand")]
 pub use aneri_rand;
 #[cfg(feature = "regex")]

@@ -20,6 +20,7 @@
 #include "audio.dm"
 #include "dmi.dm"
 #include "http.dm"
+#include "noise.dm"
 #include "sort.dm"
 #include "sql.dm"
 #include "test.dm"

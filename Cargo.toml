@@ -19,6 +19,7 @@ meowtonin = { version = "0.4" }
 meowtonin-serde = { version = "0.4" }
 faster-hex = "1"
 parking_lot = "0.13"
+rand = "0.10"
 slotmap = "1"
 
 [workspace.lints.clippy]

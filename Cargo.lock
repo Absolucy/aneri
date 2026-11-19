@@ -66,6 +66,7 @@ dependencies = [
  "aneri-file",
  "aneri-http",
  "aneri-logger",
+ "aneri-noise",
  "aneri-rand",
  "aneri-regex",
  "aneri-sort",
@@ -166,6 +167,17 @@ dependencies = [
  "thread-counter",
  "thread-priority",
  "time",
+]
+
+[[package]]
+name = "aneri-noise"
+version = "0.1.0"
+dependencies = [
+ "fastnoise-lite",
+ "meowtonin",
+ "meowtonin-serde",
+ "rand",
+ "serde",
 ]
 
 [[package]]
@@ -885,6 +897,15 @@ checksum = "6d8d873f78e1d3e1998ed2084da9147e3cd2bb34b67814cd49a3902b970eb124"
 dependencies = [
  "defmt 0.3.101",
  "serde",
+]
+
+[[package]]
+name = "fastnoise-lite"
+version = "1.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3e5f3c3cc9081e5d0e18bcd50e80cd33cba47fc22f88a9da9c33ecd1c87ea5c0"
+dependencies = [
+ "num-traits",
 ]
 
 [[package]]

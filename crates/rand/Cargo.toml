@@ -16,4 +16,4 @@ rustc-hash = { workspace = true }
 aneri-core = { path = "../core" }
 meowtonin = { workspace = true }
 parking_lot = { workspace = true }
-rand = "0.10"
+rand = { workspace = true }
