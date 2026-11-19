@@ -78,6 +78,16 @@
 #define aneri_raw_aneri_version(...) call_ext(__aneri_aneri_version ||= load_ext(ANERI, "byond:aneri_version"))()
 /* This comment bypasses grep checks */ var/static/__aneri_aneri_version
 
+/// How long each sound file in a list is, in deciseconds.
+/// Returns `list("successes" = list(path = length), "errors" = list(path = message))`,
+/// where every path you passed appears in exactly one of the two.
+/// A file whose header has no length goes in "errors".
+/// Files are read in parallel. Runtimes if an entry isn't a string.
+///
+/// Rust: `fn audio_length_list(paths: Vec<String>) -> ByondResult<Vec<(&'static str, ByondValue)>>`
+#define aneri_raw_audio_length_list(paths) call_ext(__aneri_audio_length_list ||= load_ext(ANERI, "byond:audio_length_list"))(paths)
+/* This comment bypasses grep checks */ var/static/__aneri_audio_length_list
+
 /// Deletes every Rust-side object, cancels background work,
 /// and closes log files.
 /// `/world/New()` and `/world/Del()` already call this.
@@ -585,7 +595,7 @@
 /// Returns null if the header has no length.
 /// Runtimes if the file can't be opened or isn't a format it knows.
 ///
-/// Rust: `fn audio_length(path: PathBuf) -> Option<f32>`
+/// Rust: `fn audio_length(path: PathBuf) -> ByondResult<Option<f32>>`
 #define aneri_audio_length(path) call_ext(__aneri_audio_length ||= load_ext(ANERI, "byond:audio_length"))(path)
 /* This comment bypasses grep checks */ var/static/__aneri_audio_length
 
