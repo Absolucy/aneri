@@ -21,6 +21,7 @@ aneri-dmi = { path = "../dmi", optional = true }
 aneri-encode = { path = "../encode", optional = true }
 aneri-core = { path = "../core", optional = true }
 aneri-file = { path = "../file", optional = true }
+aneri-git = { path = "../git", optional = true }
 aneri-http = { path = "../http", optional = true }
 aneri-logger = { path = "../logger", optional = true }
 aneri-noise = { path = "../noise", optional = true }
@@ -37,14 +38,15 @@ const_format = "0.2"
 bosion = "1"
 
 [features]
-default = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "noise", "rand", "regex", "sql", "time", "util"]
+default = ["audio", "crypto", "dmi", "encode", "file", "git", "http", "logger", "noise", "rand", "regex", "sql", "time", "util"]
 # sub-crates
-all = ["audio", "crypto", "dmi", "encode", "file", "http", "logger", "noise", "rand", "regex", "sql", "time", "util"]
+all = ["audio", "crypto", "dmi", "encode", "file", "git", "http", "logger", "noise", "rand", "regex", "sql", "time", "util"]
 audio = ["aneri-audio"]
 crypto = ["aneri-crypto"]
 dmi = ["aneri-dmi"]
 encode = ["aneri-encode"]
 file = ["aneri-file"]
+git = ["aneri-git"]
 http = ["aneri-http", "aneri-core/runtime"]
 logger = ["aneri-logger"]
 noise = ["aneri-noise"]

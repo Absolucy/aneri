@@ -865,6 +865,41 @@
 #define aneri_format_timestamp(format, offset...) call_ext(__aneri_format_timestamp ||= load_ext(ANERI, "byond:format_timestamp"))(format, offset)
 /* This comment bypasses grep checks */ var/static/__aneri_format_timestamp
 
+/// The commit date of a git revision, in UTC.
+/// Returns null if there is no repository or the revision is not a commit.
+/// Runtimes on an unknown `%` code.
+///
+/// Arguments:
+/// * rev - Anything `git rev-parse` accepts.
+/// * format - (optional) A strftime-style string, like `%Y-%m-%d %H:%M`. Null gives `%F`, which is `YYYY-MM-DD`.
+///
+/// Rust: `fn git_commit_date(rev: String, format: Option<String>) -> Option<String>`
+#define aneri_git_commit_date(rev, format...) call_ext(__aneri_git_commit_date ||= load_ext(ANERI, "byond:git_commit_date"))(rev, format)
+/* This comment bypasses grep checks */ var/static/__aneri_git_commit_date
+
+/// When `HEAD` last moved, in UTC.
+/// That is the newest line of the `HEAD` reflog, so it is the date of the last checkout or commit, not of the commit itself.
+/// Only reads `logs/HEAD`, so it works without the object database.
+/// Returns null if there is no repository or the log is empty.
+/// Runtimes on an unknown `%` code.
+///
+/// Arguments:
+/// * format - (optional) A strftime-style string, like `%Y-%m-%d %H:%M`. Null gives `%F`, which is `YYYY-MM-DD`.
+///
+/// Rust: `fn git_commit_date_head(format: Option<String>) -> Option<String>`
+#define aneri_git_commit_date_head(format...) call_ext(__aneri_git_commit_date_head ||= load_ext(ANERI, "byond:git_commit_date_head"))(format)
+/* This comment bypasses grep checks */ var/static/__aneri_git_commit_date_head
+
+/// The full hash of a git revision, like `HEAD` or `master~3`.
+/// Returns null if there is no repository or the revision does not resolve.
+///
+/// Arguments:
+/// * rev - Anything `git rev-parse` accepts.
+///
+/// Rust: `fn git_revparse(rev: String) -> Option<String>`
+#define aneri_git_revparse(rev) call_ext(__aneri_git_revparse ||= load_ext(ANERI, "byond:git_revparse"))(rev)
+/* This comment bypasses grep checks */ var/static/__aneri_git_revparse
+
 /// How many positions have a different character in `a` and `b`.
 /// Returns null if they aren't the same length.
 ///
