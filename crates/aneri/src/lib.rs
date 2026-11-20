@@ -74,7 +74,10 @@ fn generate_dm_bindings() {
 				return format!("{line}\n");
 			};
 			let name = rest.split(['(', ' ']).next().unwrap_or_default();
-			if name.starts_with("aneri_") || !rest[name.len()..].starts_with('(') {
+			if name.starts_with("aneri_")
+				|| name.starts_with("__")
+				|| !rest[name.len()..].starts_with('(')
+			{
 				return format!("{line}\n");
 			}
 			format!("#define aneri_{rest}\n")

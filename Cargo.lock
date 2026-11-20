@@ -452,9 +452,9 @@ checksum = "776dfebd015e2d8732c684a2c71003674ccb49457b539b9e82151ba38e96dd7c"
 
 [[package]]
 name = "cc"
-version = "1.11.2"
+version = "1.11.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "33ef9e3e8154a45c7a95cff4c1299702106ad94062d7bb85fdc5d3a5afd91d45"
+checksum = "02f0e023adb368345ce0ca6cdfc0f24a06554468d0e8503e14a0841de79bfa69"
 dependencies = [
  "find-msvc-tools",
  "jobserver",
@@ -3005,9 +3005,9 @@ dependencies = [
 
 [[package]]
 name = "meowtonin"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e2b52adfd06e30287710943d07bc030e66bff4ba768ac490df89ad35ad1959ab"
+checksum = "9c9951c776fc3109823399c68435e7fa8deab54ec3685b65e1128638f822ded7"
 dependencies = [
  "aho-corasick",
  "backtrace",
@@ -3030,9 +3030,9 @@ dependencies = [
 
 [[package]]
 name = "meowtonin-byondapi-sys"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1145c6b6cd4dce31bf6d6628fa6c0fc770c2c0f429510db99ea3fd46ea609632"
+checksum = "251a82177ffebccb296159cb72b3079a3020b5029d566a5bf6dc93ec32294fa7"
 dependencies = [
  "bytemuck",
  "cfg-if",
@@ -3041,9 +3041,9 @@ dependencies = [
 
 [[package]]
 name = "meowtonin-impl"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3f0a2de47fe661c80deb8f5e791f348214d9c52605562c4db6a3ffeb7c685e1b"
+checksum = "828efe573e0300edcc6bb46e043d96fe83bf04d3430ee44ee4d1c897aa5d6b9b"
 dependencies = [
  "darling",
  "proc-macro2",
@@ -3053,9 +3053,9 @@ dependencies = [
 
 [[package]]
 name = "meowtonin-serde"
-version = "0.4.0"
+version = "0.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9000f55ad364d55b1b2b2131e7641a260c3474ff9ae42eab333db25d5db11f3a"
+checksum = "284bea04580354a29efd40af89330e3f7c562500237ffddd399fd38d6da3cbcf"
 dependencies = [
  "meowtonin",
  "serde",
@@ -3330,9 +3330,9 @@ checksum = "9b4f627cb1b25917193a259e49bdad08f671f8d9708acfd5fe0a8c1455d87220"
 
 [[package]]
 name = "pin-project-lite"
-version = "0.2.17"
+version = "0.2.18"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a89322df9ebe1c1578d689c92318e070967d1042b512afbe49518723f4e6d5cd"
+checksum = "c938015719552d665fd0553b90d96cd7ff58e83e4c061ca99e6bb78865a72752"
 
 [[package]]
 name = "pkg-config"
