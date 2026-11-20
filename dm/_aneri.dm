@@ -10,7 +10,7 @@
 #define ANERI_CALL(name, args...) call_ext(__aneri_##name ||= load_ext(ANERI, "byond:" + #name))(args)
 
 /// Deletes every Rust-side object, cancels background work, and closes log files.
-/// `/world/New()` and `/world/Del()` already call this.
+/// Call it first thing in `/world/New()` and `/world/Del()`.
 /proc/aneri_cleanup()	return call_ext(ANERI, "byond:cleanup")()
 
 /// The library's name, version and git commit, like `aneri v1.2.3 (abc1234)`.
@@ -27,18 +27,3 @@
 /datum/aneri
 	VAR_FINAL/__aneri_key_low
 	VAR_FINAL/__aneri_key_high
-
-/world/New()
-	aneri_cleanup()
-	..()
-
-/world/Del()
-	aneri_cleanup()
-	..()
-
-// placeholder
-/datum/Del()
-	Destroy()
-	return ..()
-
-/datum/proc/Destroy()

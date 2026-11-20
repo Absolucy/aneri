@@ -17,6 +17,7 @@
 #include "__spaceman_dmm.dm"
 #include "_aneri.dm"
 #include "_bindings.dm"
+#include "_test_env.dm"
 #include "audio.dm"
 #include "dmi.dm"
 #include "http.dm"

@@ -301,26 +301,23 @@
 /* This comment bypasses grep checks */ var/static/__aneri_instant_del
 
 /// Microseconds since the stopwatch started or was reset.
-/// Wraps back to 0 after about 71 minutes.
 /// Null if it was deleted.
 ///
-/// Rust: `fn instant_microseconds(src: ByondSlotKey) -> Option<u32>`
+/// Rust: `fn instant_microseconds(src: ByondSlotKey) -> Option<f64>`
 #define aneri_raw_instant_microseconds(src) call_ext(__aneri_instant_microseconds ||= load_ext(ANERI, "byond:instant_microseconds"))(src)
 /* This comment bypasses grep checks */ var/static/__aneri_instant_microseconds
 
 /// Milliseconds since the stopwatch started or was reset.
-/// Wraps back to 0 after about 49 days.
 /// Null if it was deleted.
 ///
-/// Rust: `fn instant_milliseconds(src: ByondSlotKey) -> Option<u32>`
+/// Rust: `fn instant_milliseconds(src: ByondSlotKey) -> Option<f64>`
 #define aneri_raw_instant_milliseconds(src) call_ext(__aneri_instant_milliseconds ||= load_ext(ANERI, "byond:instant_milliseconds"))(src)
 /* This comment bypasses grep checks */ var/static/__aneri_instant_milliseconds
 
 /// Nanoseconds since the stopwatch started or was reset.
-/// Wraps back to 0 after about 4.3 seconds.
 /// Null if it was deleted.
 ///
-/// Rust: `fn instant_nanoseconds(src: ByondSlotKey) -> Option<u32>`
+/// Rust: `fn instant_nanoseconds(src: ByondSlotKey) -> Option<f64>`
 #define aneri_raw_instant_nanoseconds(src) call_ext(__aneri_instant_nanoseconds ||= load_ext(ANERI, "byond:instant_nanoseconds"))(src)
 /* This comment bypasses grep checks */ var/static/__aneri_instant_nanoseconds
 

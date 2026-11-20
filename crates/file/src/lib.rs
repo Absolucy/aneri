@@ -34,10 +34,14 @@ pub fn file_write(path: PathBuf, data: String) -> bool {
 		if let Some(parent) = path.parent().filter(|parent| !parent.exists()) {
 			std::fs::create_dir_all(parent).ok()?;
 		}
-		let mut file = File::create(path).ok().map(BufWriter::new)?;
+		// write next to it and rename over it, so a crash mid-write leaves the old file intact
+		let mut tmp_path = path.clone().into_os_string();
+		tmp_path.push(".tmp");
+		let tmp_path = PathBuf::from(tmp_path);
+		let mut file = BufWriter::new(File::create(&tmp_path).ok()?);
 		file.write_all(data.as_bytes()).ok()?;
-		file.flush().ok()?;
-		Some(())
+		file.into_inner().ok()?.sync_all().ok()?;
+		std::fs::rename(&tmp_path, &path).ok()
 	};
 	file_write_impl().is_some()
 }

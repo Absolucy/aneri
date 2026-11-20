@@ -16,17 +16,16 @@
 	return ANERI_CALL(instant_reset, src)
 
 /// Microseconds since the stopwatch started or was reset.
-/// Wraps back to 0 after about 71 minutes.
+/// A DM number holds about 7 digits, so this loses precision after about 17 seconds.
 /datum/instant/proc/microseconds()
 	return ANERI_CALL(instant_microseconds, src)
 
 /// Nanoseconds since the stopwatch started or was reset.
-/// Wraps back to 0 after about 4.3 seconds.
+/// A DM number holds about 7 digits, so this loses precision after about 17 milliseconds.
 /datum/instant/proc/nanoseconds()
 	return ANERI_CALL(instant_nanoseconds, src)
 
 /// Milliseconds since the stopwatch started or was reset.
-/// Wraps back to 0 after about 49 days.
 /datum/instant/proc/milliseconds()
 	return ANERI_CALL(instant_milliseconds, src)
 
